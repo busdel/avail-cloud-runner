@@ -216,6 +216,17 @@ def run_generic_pipeline(data_root, out_dir, classes=None, n_estimators=300,
     pred_df.to_csv(out_dir / "loo_predictions.tsv", sep="\t", index=False)
 
     try:
+        from .biomarkers import run_biomarker_analysis
+        if verbose:
+            print("[avail] biomarker discovery (SHAP + differential abundance) ...",
+                  flush=True)
+        run_biomarker_analysis(mods, feat_names, ids, label, classes, out_dir)
+    except Exception as e:
+        if verbose:
+            print(f"[avail] biomarker analysis skipped: "
+                  f"{type(e).__name__}: {str(e)[:150]}", flush=True)
+
+    try:
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
