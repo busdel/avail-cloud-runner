@@ -296,10 +296,13 @@ def run_meta_loo(X, y, n_mods, K, model_names=MODEL_NAMES, device=None,
                                ('MoE', lambda: _MoE(n_mods, K)),
                                ('GNN', lambda: _GNN(n_nodes=n_mods, K=K)),
                                ('Transformer', lambda: _Transformer(n_nodes=n_mods, K=K))]:
+            if not HAS_TORCH:
+                preds[mname][fold] = preds['SimpleMean'][fold]
+                continue
             ps = []
             for s in range(n_seeds):
-                mdl = factory()
                 try:
+                    mdl = factory()
                     train_nn(mdl, Xtr, ytr, seed=random_state + s, K=K, device=device)
                     ps.append(predict_nn(mdl, Xte, device=device)[0])
                 except Exception:
