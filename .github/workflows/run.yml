@@ -25,7 +25,7 @@ jobs:
 
       - name: Install core dependencies
         run: |
-          pip install --quiet numpy pandas scikit-learn scipy statsmodels xgboost matplotlib openpyxl shap
+          pip install --quiet numpy pandas scikit-learn scipy statsmodels xgboost matplotlib seaborn openpyxl shap
 
       - name: Download data
         run: curl -sL "${{ inputs.data_url }}" -o data.zip
