@@ -1,0 +1,51 @@
+name: AVAIL cloud run
+
+on:
+  workflow_dispatch:
+    inputs:
+      job_id:
+        description: Job id (used as run name for polling)
+        required: true
+      data_url:
+        description: Public URL of the data ZIP
+        required: true
+
+run-name: "${{ inputs.job_id }}"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install core dependencies
+        run: |
+          pip install --quiet numpy pandas scikit-learn scipy xgboost matplotlib openpyxl shap
+
+      - name: Download data
+        run: curl -sL "${{ inputs.data_url }}" -o data.zip
+
+      - name: Run AVAIL pipeline
+        shell: bash
+        run: |
+          set -e
+          cd "$GITHUB_WORKSPACE"
+          unzip -qo data.zip -d avail_data
+          ROOT=$(find avail_data -maxdepth 1 -mindepth 1 -type d | head -1)
+          [ -z "$ROOT" ] && ROOT=avail_data
+          echo "data root: $ROOT"
+          ls -la "$ROOT"
+          python run_generic.py --data-root "$ROOT" --out results
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results
+          path: results/
+          retention-days: 7
+          if-no-files-found: warn
