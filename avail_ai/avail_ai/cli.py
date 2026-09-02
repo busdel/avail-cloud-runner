@@ -68,6 +68,13 @@ def _cmd_run_generic(args):
     return 0
 
 
+def _cmd_figures(args):
+    from .figures_publication import make_all_figures
+    make_all_figures(args.out)
+    print(f'Done. Publication figures written to {args.out}')
+    return 0
+
+
 def _cmd_set_key(args):
     key = args.key
     if args.clear:
@@ -134,6 +141,12 @@ def main(argv=None):
     g.add_argument('--classes', nargs='+', default=None,
                    help='ordered class labels (default: 3 most frequent)')
     g.set_defaults(func=_cmd_run_generic)
+
+    f = sub.add_parser('figures',
+                       help='publication-style figures (600dpi PDF/PNG + 300dpi TIFF) '
+                            'from an existing results folder')
+    f.add_argument('--out', required=True, help='results directory')
+    f.set_defaults(func=_cmd_figures)
 
     a = sub.add_parser('advise', help='LLM-driven model recommendation')
     _add_common(a)

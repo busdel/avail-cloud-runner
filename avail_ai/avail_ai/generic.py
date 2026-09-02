@@ -227,20 +227,14 @@ def run_generic_pipeline(data_root, out_dir, classes=None, n_estimators=300,
                   f"{type(e).__name__}: {str(e)[:150]}", flush=True)
 
     try:
-        import matplotlib
-        matplotlib.use("Agg")
-        import matplotlib.pyplot as plt
-        piv_tab = res.pivot(index="model", columns="subgroup", values="macro_auc")
-        ax = piv_tab.plot(kind="barh", figsize=(9, 6))
-        ax.set_xlabel("macro-AUC")
-        ax.set_title("AVAIL-AI meta-learner benchmark (generic data)")
-        plt.tight_layout()
-        plt.savefig(out_dir / "fig_meta_benchmark.png", dpi=300)
-        plt.savefig(out_dir / "fig_meta_benchmark.pdf")
-        plt.close()
+        from .figures_publication import make_all_figures
+        if verbose:
+            print("[avail] publication figures ...", flush=True)
+        make_all_figures(out_dir)
     except Exception as e:
         if verbose:
-            print(f"[avail] figure skipped: {e}", flush=True)
+            print(f"[avail] figures skipped: {type(e).__name__}: {str(e)[:150]}",
+                  flush=True)
 
     return {"results": res, "preds": preds, "X": X, "y": y,
             "ids": ids, "label": label, "mods": mods, "classes": classes}
