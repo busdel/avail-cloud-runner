@@ -36,8 +36,11 @@ jobs:
           set -e
           cd "$GITHUB_WORKSPACE"
           unzip -qo data.zip -d avail_data
-          ROOT=$(find avail_data -maxdepth 1 -mindepth 1 -type d | head -1)
-          [ -z "$ROOT" ] && ROOT=avail_data
+          ROOT=avail_data
+          if [ ! -f avail_data/metadata.tsv ] && [ ! -f avail_data/metadata.csv ]; then
+            D=$(find avail_data -maxdepth 1 -mindepth 1 -type d | head -1)
+            [ -n "$D" ] && ROOT="$D"
+          fi
           echo "data root: $ROOT"
           ls -la "$ROOT"
           python run_generic.py --data-root "$ROOT" --out results
