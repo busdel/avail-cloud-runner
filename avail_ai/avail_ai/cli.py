@@ -57,6 +57,17 @@ def _cmd_hyper(args):
     return 0
 
 
+def _cmd_run_generic(args):
+    from .generic import run_generic_pipeline
+    out = run_generic_pipeline(args.data_root, args.out, classes=tuple(args.classes)
+                               if args.classes else None)
+    res = out["results"]
+    print(res.pivot(index="model", columns="subgroup", values="macro_auc")
+          .round(3).to_string())
+    print(f"Done. Results in {args.out}")
+    return 0
+
+
 def _cmd_set_key(args):
     key = args.key
     if args.clear:
@@ -114,6 +125,15 @@ def main(argv=None):
     r.add_argument('--no-cache', action='store_true')
     r.add_argument('--figures', action='store_true', help='generate publication figures')
     r.set_defaults(func=_cmd_run)
+
+    g = sub.add_parser('run-generic',
+                       help='full 11-model benchmark on ANY tabular multimodal data '
+                            '(metadata.tsv + features/*.tsv)')
+    g.add_argument('--data-root', required=True)
+    g.add_argument('--out', default='avail_results')
+    g.add_argument('--classes', nargs='+', default=None,
+                   help='ordered class labels (default: 3 most frequent)')
+    g.set_defaults(func=_cmd_run_generic)
 
     a = sub.add_parser('advise', help='LLM-driven model recommendation')
     _add_common(a)
