@@ -13,7 +13,8 @@ Every subject contributes to the model, regardless of which modalities they have
 A framework for multimodal clinical cohorts with **missing modalities**. Built for the
 oral&ndash;gut&ndash;brain axis in Parkinson's cognitive trajectory (HC vs MCI vs PDD),
 combining fMRI connectivity, 16S rRNA, shotgun metagenomics (MGS + KEGG functional
-modules) &mdash; and generalizable to **any tabular omics layers**.
+modules) &mdash; and generalizable to **any tabular omics layers**, with genuine
+missingness handled as data instead of discarded or fabricated.
 
 ### Pipeline
 
@@ -21,26 +22,42 @@ modules) &mdash; and generalizable to **any tabular omics layers**.
 2. **Meta-features** &mdash; `[p_1..p_K, flag_1..flag_K]` per subject (probabilities + availability flags)
 3. **11 meta-learners** &mdash; SimpleMean, WSimpleMean, ElasticNetLR, MLP, MoE, GNN,
    Transformer, XGBoost, TabNet, TabPFN, TabICL
-4. **Biomarker discovery** &mdash; SHAP importance + differential abundance (Mann&ndash;Whitney, BH-FDR)
-5. **AI advisor** &mdash; model decision, biomarker plausibility with **real PubMed citations**
+4. **Strategy benchmark** &mdash; 16 missing-data strategies + hybrid + decision curves,
+   bootstrap CIs, conformal prediction sets, calibration
+5. **Biomarker discovery** &mdash; SHAP importance + differential abundance (Mann&ndash;Whitney, BH-FDR)
+6. **AI advisor** &mdash; model decision, biomarker plausibility with **real PubMed citations**
    (free NCBI E-utilities, no API key), manuscript-ready interpretation
-6. **Publication figures** &mdash; 600 dpi PDF/PNG + 300 dpi TIFF in the manuscript style
+7. **Publication figures** &mdash; 600 dpi PDF/PNG + 300 dpi TIFF
 
-## Web tool
+## Live web tool
 
-A public web interface: upload a ZIP &rarr; automatic validation + AI data-quality
-feedback &rarr; run on the free cloud (GitHub Actions), on the server GPU, or on your
-own computer &rarr; AI decision report + publication figures.
+**Stable link: https://busdel.github.io/avail-cloud-runner/** (redirects to the current
+session; access password shared on request while the manuscript is under review).
 
-> URL and access password are shared on request while the manuscript is under review.
+Upload a ZIP &rarr; automatic validation + AI data-quality feedback &rarr; run on the
+**free cloud (GitHub Actions)** or **on your own computer** &rarr; AI decision report +
+publication figures. The hosted interface **never executes jobs on maintainer
+infrastructure**; see [BYO_COMPUTE.md](BYO_COMPUTE.md) for the four deployment tiers
+(local runner &middot; self-hosted &middot; your own cloud runner &middot; future
+pull-based GPU worker) and the security model.
 
-## Try it locally
+**External validation** (live numbers in the app's comparison hub): Wallen 2022 (PD),
+preclinical AD, HMP2 IBD, **MetaCardis (n=1087, informative clinical missingness)**,
+and independent rs-fMRI cohorts processed end-to-end with the same pipeline
+(OpenNeuro ds004392, ds005892).
+
+## Install the Python package
+
+**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (v1.0.0, MIT, Python 3.10&ndash;3.12)
 
 ```bash
 pip install avail-omics            # core (CPU is fine)
 pip install "avail-omics[deep]"    # + torch, TabNet, TabPFN, TabICL
 
-avail run-generic --data-root mydata --out results
+avail-omics run-generic --data-root mydata --out results
+avail-omics robustness  --data-root mydata --out results   # leak-free permutation
+avail-omics sensitivity --data-root mydata --out results   # modality ablation
+avail-omics figures     --out results
 ```
 
 Generic data layout (any omics layers):
@@ -51,7 +68,7 @@ mydata/
   features/
     brain.tsv         # rows = samples, first column = SampleID, rest = features
     stool16S.tsv
-    ...
+  compositional.txt   # optional: one modality name per line (log/CLR layers)
 ```
 
 Outputs: `meta_benchmark_results.tsv`, `per_class_auc.tsv`, `loo_predictions.tsv`,
@@ -65,9 +82,9 @@ interpretation). Any OpenAI-compatible endpoint works; Gemini is the default and
 **Groq/OpenRouter free tiers** are used as automatic fallbacks when quotas run out.
 
 ```bash
-avail set-key            # saves to ~/.config/avail/llm_key (0600)
-avail figures --out results
-avail advise --out results
+avail-omics set-key            # saves to ~/.config/avail/llm_key (0600)
+avail-omics figures --out results
+avail-omics advise  --out results
 ```
 
 ## Repository layout
@@ -75,6 +92,7 @@ avail advise --out results
 ```
 avail_ai/avail_ai/      # the avail-omics Python package
 run_generic.py          # generic multi-omics pipeline entry point
+BYO_COMPUTE.md          # bring-your-own-compute tiers & security guide
 .github/workflows/run.yml   # free-cloud compute backend (GitHub Actions)
 ```
 
