@@ -17,6 +17,8 @@ are handled natively by the availability flags.
 """
 import subprocess
 import sys
+import hashlib
+import json
 import warnings
 from collections import Counter
 from pathlib import Path
@@ -35,6 +37,49 @@ def _read_table(path):
     df = pd.read_csv(path, sep=sep)
     df.columns = [str(c).strip() for c in df.columns]
     return df
+
+
+def _num(v):
+    try:
+        return float(v)
+    except Exception:
+        return np.nan
+
+
+def detect_compositional(data_root, mods, ids, verbose=True):
+    """Single source of truth for compositional-modality detection.
+
+    Priority: explicit compositional.txt (one modality name per line),
+    then a row-sum-scale heuristic (relative abundances / counts).
+    Used by the main pipeline AND the robustness toolkit so both run the
+    identical preprocessing protocol.
+    """
+    if data_root is not None:
+        comp_f = Path(data_root) / "compositional.txt"
+        if comp_f.exists():
+            micro = {m.strip() for m in comp_f.read_text().split()
+                     if m.strip() in mods}
+            if verbose:
+                print(f"[avail] compositional (explicit) modalities: "
+                      f"{sorted(micro) or '-'}", flush=True)
+            return micro
+
+    def _is_comp(a):
+        if not np.all(np.isfinite(a)) or np.any(a < 0):
+            return False
+        t = float(np.sum(a))
+        return ((0.5 < t < 1.5) or (50 < t < 150) or (5e5 < t < 2e6)
+                or t == 0.0)
+
+    micro = set()
+    for m in mods:
+        arrs = [mods[m][i] for i in ids if i in mods[m]]
+        if arrs and all(_is_comp(a) for a in arrs):
+            micro.add(m)
+    if verbose:
+        print(f"[avail] compositional (CLR) modalities: {sorted(micro) or '-'}",
+              flush=True)
+    return micro
 
 
 def load_generic(data_root):
@@ -67,8 +112,8 @@ def load_generic(data_root):
                         (0.0 if v.upper() in ("F", "FEMALE", "0") else np.nan)
                         for v in vals]
             else:
-                nums = [np.nan if v in ("", "nan", "NA", "Missing_Data") else float(v)
-                        for v in vals]
+                nums = [np.nan if v in ("", "nan", "NA", "Missing_Data")
+                        else _num(v) for v in vals]
             for sid, v in zip(meta[id_col], nums):
                 conf.setdefault(sid, []).append(v)
     for sid in meta[id_col]:
@@ -138,35 +183,29 @@ def run_generic_pipeline(data_root, out_dir, classes=None, n_estimators=300,
         Cmat[:, j] = np.where(np.isnan(Cmat[:, j]), med, Cmat[:, j])
     conf = {i: Cmat[k] for k, i in enumerate(ids)}
 
-    comp_f = data_root / "compositional.txt"
-    if comp_f.exists():
-        micro = {m.strip() for m in comp_f.read_text().split()
-                 if m.strip() in mods}
-    else:
-        def _is_comp(a):
-            if not np.all(np.isfinite(a)) or np.any(a < 0):
-                return False
-            s = float(np.sum(a))
-            return ((0.5 < s < 1.5) or (50 < s < 150) or (5e5 < s < 2e6)
-                    or s == 0.0)
-
-        micro = set()
-        for m in mods:
-            arrs = [mods[m][i] for i in ids if i in mods[m]]
-            if arrs and all(_is_comp(a) for a in arrs):
-                micro.add(m)
-    if verbose:
-        print(f"[avail] compositional (CLR) modalities: {sorted(micro) or '-'}",
-              flush=True)
+    micro = detect_compositional(data_root, mods, ids,
+                             verbose=verbose)
 
     cache = out_dir / "base_predictions_generic.tsv"
+    cache_meta = out_dir / "base_predictions_generic.meta.json"
+    ids_fp = hashlib.md5("|".join(sorted(ids)).encode()).hexdigest()[:16]
     piv = None
-    if cache.exists():
-        df = pd.read_csv(cache, sep="\t")
-        piv = {}
-        for _, r in df.iterrows():
-            piv.setdefault(str(r["patient"]).strip(), {})[r["modality"]] = \
-                [r[f"p_{c}"] for c in range(K)]
+    if cache.exists() and cache_meta.exists():
+        try:
+            m = json.loads(cache_meta.read_text())
+            if m.get("ids_fp") == ids_fp and m.get("K") == K:
+                df = pd.read_csv(cache, sep="\t")
+                need = {"patient", "modality"} | {f"p_{c}" for c in range(K)}
+                if need.issubset(df.columns):
+                    piv = {}
+                    for _, r in df.iterrows():
+                        piv.setdefault(str(r["patient"]).strip(), {})[r["modality"]] = \
+                            [r[f"p_{c}"] for c in range(K)]
+        except Exception:
+            piv = None
+    if piv is None and verbose and cache.exists():
+        print("[avail] base-prediction cache stale or missing metadata; "
+              "recomputing stage 1", flush=True)
     if piv is None:
         if verbose:
             print("[avail] stage 1: leak-free LOO base predictions ...", flush=True)
@@ -181,6 +220,8 @@ def run_generic_pipeline(data_root, out_dir, classes=None, n_estimators=300,
                     row[f"p_{c}"] = pv[c]
                 rows.append(row)
         pd.DataFrame(rows).to_csv(cache, sep="\t", index=False)
+        cache_meta.write_text(json.dumps(
+            {"n": len(ids), "K": K, "ids_fp": ids_fp}))
 
     X, y = build_meta_features(piv, ids, label, n_mods, mod_order, K, 0.0)
     if verbose:
