@@ -37,7 +37,7 @@ session; access password shared on request while the manuscript is under review)
 Upload a ZIP &rarr; automatic validation + AI data-quality feedback &rarr; run on the
 **free cloud (GitHub Actions)** or **on your own computer** &rarr; AI decision report +
 publication figures. The hosted interface **never executes jobs on maintainer
-infrastructure**; see [BYO_COMPUTE.md](BYO_COMPUTE.md) for the four deployment tiers
+infrastructure**; see [BYO_COMPUTE.md](BYO_COMPUTE.md) for the four deployment tiers and [DATA_SECURITY.md](DATA_SECURITY.md) for the complete outbound-call inventory and offline mode
 (local runner &middot; self-hosted &middot; your own cloud runner &middot; future
 pull-based GPU worker) and the security model.
 
@@ -48,7 +48,7 @@ and independent rs-fMRI cohorts processed end-to-end with the same pipeline
 
 ## Install the Python package
 
-**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.0.2**, MIT, Python 3.10&ndash;3.12) &mdash; `pip install avail-omics`
+**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.0.3**, MIT, Python 3.10&ndash;3.12) &mdash; `pip install avail-omics`
 
 ```bash
 pip install avail-omics            # core (CPU is fine)
