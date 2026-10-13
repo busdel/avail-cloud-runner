@@ -1,9 +1,9 @@
 # Changelog
 
-## 1.0.1 — hardening release
+## 1.0.1 — robustness & imaging release
 - **imaging**: `sanitize_ts` guard — non-finite entries zeroed and
-  empty/constant parcels neutralised before connectivity (a single empty
-  parcel could previously NaN an entire correlation matrix silicaly).
+  empty/constant parcels are neutralised before correlation, keeping
+  feature tables well-defined under incomplete acquisition coverage.
 - **imaging**: Schaefer-2018 atlas now resolves from the locally bundled
   copy first (`atlas/schaefer_2018/`, CC-BY) with nilearn as fallback —
   reproducible offline.
