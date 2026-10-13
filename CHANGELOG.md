@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.3 — data-security release
+- `AVAIL_OFFLINE=1` hard-disables every outbound call (LLM providers,
+  PubMed look-ups, atlas downloads); PubMed helpers return empty results
+  and imaging/radiomics raise an explicit error when no local atlas is
+  bundled. For fully offline imaging: ship `atlas/schaefer_2018/`.
+- New `docs/DATA_SECURITY.md`: complete outbound-call inventory with
+  what is sent, when, and how to disable each path; verification recipes.
+- No telemetry of any kind has ever been included.
+
 ## 1.0.2 — maintenance release
 - Unified compositional-modality detection between the main pipeline and
   the robustness toolkit (single helper; `compositional.txt` honoured
