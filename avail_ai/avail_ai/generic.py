@@ -138,9 +138,23 @@ def run_generic_pipeline(data_root, out_dir, classes=None, n_estimators=300,
         Cmat[:, j] = np.where(np.isnan(Cmat[:, j]), med, Cmat[:, j])
     conf = {i: Cmat[k] for k, i in enumerate(ids)}
 
-    micro = {m for m in mods
-             if all(np.all(np.isfinite(mods[m][i]) & (mods[m][i] >= 0))
-                    for i in ids if i in mods[m])}
+    comp_f = data_root / "compositional.txt"
+    if comp_f.exists():
+        micro = {m.strip() for m in comp_f.read_text().split()
+                 if m.strip() in mods}
+    else:
+        def _is_comp(a):
+            if not np.all(np.isfinite(a)) or np.any(a < 0):
+                return False
+            s = float(np.sum(a))
+            return ((0.5 < s < 1.5) or (50 < s < 150) or (5e5 < s < 2e6)
+                    or s == 0.0)
+
+        micro = set()
+        for m in mods:
+            arrs = [mods[m][i] for i in ids if i in mods[m]]
+            if arrs and all(_is_comp(a) for a in arrs):
+                micro.add(m)
     if verbose:
         print(f"[avail] compositional (CLR) modalities: {sorted(micro) or '-'}",
               flush=True)
@@ -181,14 +195,26 @@ def run_generic_pipeline(data_root, out_dir, classes=None, n_estimators=300,
     half = max(2, n_mods // 2 + 1)
     ge_half = np.array([sum(i in mods[mo] for mo in mod_order) >= half
                         for i in ids])
+    def balanced_acc(yv, Pv):
+        rec = []
+        for c in range(K):
+            yc = (yv == c)
+            if yc.sum() > 0:
+                rec.append((Pv.argmax(axis=1)[yc] == c).mean())
+        return float(np.mean(rec))
+
     for m in MODEL_NAMES:
-        P = preds[m]
+        P = np.nan_to_num(np.asarray(preds[m], dtype=float), nan=0.0,
+                          posinf=0.0, neginf=0.0)
+        rowsum = P.sum(axis=1, keepdims=True)
+        P = np.where(rowsum == 0, 1.0 / max(1, P.shape[1]), P)
         for tag, mask in [("all", np.ones(len(y), bool)),
                           ("complete", complete),
                           (f"ge{half}mod", ge_half)]:
             if mask.sum() >= 5:
                 rows.append({"model": m, "subgroup": tag, "n": int(mask.sum()),
-                             "macro_auc": macro_auc(y[mask], P[mask])})
+                             "macro_auc": macro_auc(y[mask], P[mask]),
+                             "balanced_acc": balanced_acc(y[mask], P[mask])})
     res = pd.DataFrame(rows)
     res.to_csv(out_dir / "meta_benchmark_results.tsv", sep="\t", index=False)
     res.to_csv(out_dir / "meta_benchmark_3class_results.tsv", sep="\t",
@@ -203,7 +229,7 @@ def run_generic_pipeline(data_root, out_dir, classes=None, n_estimators=300,
         vals = {}
         for c, cls in enumerate(classes):
             yc = (y == c).astype(int)
-            vals[cls] = macro_auc(yc[:, None], P[:, c:c + 1]) \
+            vals[cls] = macro_auc(yc, P[:, c:c + 1]) \
                 if len(np.unique(yc)) == 2 else np.nan
         class_rows.append({"model": m, **vals})
     pd.DataFrame(class_rows).to_csv(out_dir / "per_class_auc.tsv",
