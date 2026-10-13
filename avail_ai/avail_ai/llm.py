@@ -161,7 +161,10 @@ class LLMClient:
                     break
                 except urllib.error.HTTPError as e:
                     body = e.read().decode("utf-8", errors="replace")
-                    if e.code in (429, 403):
+                    bl = body.lower()
+                    if e.code == 429 or (e.code == 403 and
+                                         ("quota" in bl or "rate" in bl or
+                                          "limit" in bl)):
                         raise QuotaError(f"LLM quota/limit ({e.code}): {body[:200]}")
                     last_err = RuntimeError(f"LLM API error {e.code}: {body[:400]}")
                     if e.code in (500, 502, 503, 504) and attempt < 2:
