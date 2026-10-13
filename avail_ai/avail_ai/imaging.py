@@ -26,7 +26,9 @@ import numpy as np
 
 BASE = Path(os.environ.get("AVAIL_WEB_ROOT", "/media/suleyman_disk/AVAIL_GPU")).resolve()
 PY = os.environ.get("AVAIL_PYTHON") or "python3"
-DCM2NIIX = "/root/venv/bin/dcm2niix"
+DCM2NIIX = (os.environ.get("DCM2NIIX")
+           or shutil.which("dcm2niix")
+           or "/root/venv/bin/dcm2niix")
 N_ROIS = 100
 HORIZON = 32
 ATLAS_CANDIDATES = [
@@ -131,13 +133,26 @@ def radiomics_features(image_path, binwidth=25.0, atlas_path=None):
             if k.startswith("original_")}
 
 
+def timesfm_available():
+    try:
+        import timesfm  # noqa: F401
+        return True
+    except Exception:
+        return False
+
+
 def _timesfm():
     global _tfm
     if _tfm is None:
         import timesfm
-        log("loading TimesFM-3 (google/timesfm-3.0-pytorch) ...")
+        try:
+            import torch
+            device = "cuda:0" if torch.cuda.is_available() else "cpu"
+        except Exception:
+            device = "cpu"
+        log(f"loading TimesFM-3 (google/timesfm-3.0-pytorch) on {device} ...")
         _tfm = timesfm.TimesFM3Forecaster.from_pretrained(
-            "google/timesfm-3.0-pytorch", device="cuda:0")
+            "google/timesfm-3.0-pytorch", device=device)
     return _tfm
 
 
@@ -237,6 +252,11 @@ def process_imaging(data_root, out_features_dir):
     tmp = root / "_imaging_tmp"
     tmp.mkdir(exist_ok=True)
 
+    have_tfm = timesfm_available()
+    if not have_tfm:
+        log("TimesFM layer unavailable (pip install 'avail-omics[timesfm]'); "
+            "skipping that representation layer")
+
     rows_cl, rows_tf, series = {}, {}, {}
     matched = 0
     for sid in ids:
@@ -255,7 +275,11 @@ def process_imaging(data_root, out_features_dir):
         if nbad:
             log(f"subject {sid}: {nbad} empty/constant parcels zeroed")
         rows_cl[sid] = classical_features(ts)
-        rows_tf[sid] = timesfm_features(ts)
+        if have_tfm:
+            try:
+                rows_tf[sid] = timesfm_features(ts)
+            except Exception as e:
+                log(f"{sid}: TimesFM layer failed ({e})")
         series[sid] = ts
         matched += 1
         log(f"subject {sid}: ROI series {ts.shape} done ({matched})")
@@ -276,11 +300,12 @@ def process_imaging(data_root, out_features_dir):
                     f"{v:.6f}" for v in rows[sid]) + "\n")
 
     write("imaging_classical.tsv", rows_cl, (N_ROIS * (N_ROIS - 1)) // 2)
-    write("imaging_timesfm.tsv", rows_tf, N_ROIS * HORIZON)
+    if rows_tf:
+        write("imaging_timesfm.tsv", rows_tf, N_ROIS * HORIZON)
     shutil.rmtree(tmp, ignore_errors=True)
     return {"subjects": matched, "n_rois": N_ROIS,
             "classical_features": (N_ROIS * (N_ROIS - 1)) // 2,
-            "timesfm_features": N_ROIS * HORIZON}
+            "timesfm_features": (N_ROIS * HORIZON) if rows_tf else 0}
 
 
 if __name__ == "__main__":
