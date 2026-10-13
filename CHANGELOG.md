@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.2 — maintenance release
+- Unified compositional-modality detection between the main pipeline and
+  the robustness toolkit (single helper; `compositional.txt` honoured
+  everywhere, so permutation/sensitivity runs use the identical protocol).
+- Base-prediction cache validated against a cohort fingerprint, class
+  count and schema; stale caches recomputed automatically.
+- Confounder parsing tolerates non-numeric entries (treated as missing).
+- Imaging: configurable `dcm2niix`, automatic CPU/GPU device selection,
+  bundled-atlas fallback, graceful skip when the optional TimesFM layer
+  is absent (new `[timesfm]` extra).
+- Radiomics: exact-token subject matching (no S1/S10 prefix collisions).
+- LLM client: HTTP 403 without quota/rate context no longer counts as a
+  quota error.
+- `__version__` now consistent with distribution metadata.
+
 ## 1.0.1 — robustness & imaging release
 - **imaging**: `sanitize_ts` guard — non-finite entries zeroed and
   empty/constant parcels are neutralised before correlation, keeping
