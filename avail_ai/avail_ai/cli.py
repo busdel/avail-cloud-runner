@@ -3,6 +3,7 @@
 import argparse
 import getpass
 import json
+import os
 import sys
 from pathlib import Path
 from .pipeline import run_pipeline
@@ -75,6 +76,30 @@ def _cmd_figures(args):
     return 0
 
 
+def _cmd_robustness(args):
+    from .robustness import label_permutation_test
+    label_permutation_test(args.data_root, args.out,
+                           n_perm=args.permutations, jobs=args.jobs,
+                           models=tuple(args.models), seed=args.seed)
+    return 0
+
+
+def _cmd_radiomics(args):
+    from . import radiomics as R
+    summary = R.extract_dataset(args.data_root, args.out, mode=args.mode,
+                                maps=args.maps,
+                                afni_bin=(args.afni_bin or None))
+    print(f"[radiomics] done: {summary}")
+    return 0
+
+
+def _cmd_sensitivity(args):
+    from .robustness import sensitivity_subsets
+    sensitivity_subsets(args.data_root, args.out,
+                        models=tuple(args.models) if args.models else None)
+    return 0
+
+
 def _cmd_set_key(args):
     key = args.key
     if args.clear:
@@ -111,8 +136,8 @@ def _cmd_status(args):
 
 def main(argv=None):
     p = argparse.ArgumentParser(
-        prog='avail',
-        description='AVAIL-AI: availability-aware multimodal integration & learning.')
+        prog="avail-omics",
+        description='AVAIL-omics: availability-aware multimodal integration & learning.')
     sub = p.add_subparsers(dest='command')
 
     k = sub.add_parser('set-key', help='save/update the LLM API key (chmod 600)')
@@ -147,6 +172,41 @@ def main(argv=None):
                             'from an existing results folder')
     f.add_argument('--out', required=True, help='results directory')
     f.set_defaults(func=_cmd_figures)
+
+    rb = sub.add_parser('robustness',
+                        help='full-pipeline label-permutation test '
+                             '(leakage control, H0: chance)')
+    rb.add_argument('--data-root', required=True)
+    rb.add_argument('--out', required=True)
+    rb.add_argument('--permutations', type=int, default=25)
+    rb.add_argument('--jobs', type=int, default=4)
+    rb.add_argument('--models', nargs='+',
+                    default=['SimpleMean', 'WSimpleMean', 'ElasticNetLR',
+                             'MLP'])
+    rb.add_argument('--seed', type=int, default=0)
+    rb.set_defaults(func=_cmd_robustness)
+
+    se = sub.add_parser('sensitivity',
+                        help='modality sensitivity/ablation with the full '
+                             'meta-benchmark (full, no_<m>, only_<m>)')
+    se.add_argument('--data-root', required=True)
+    se.add_argument('--out', required=True)
+    se.add_argument('--models', nargs='+', default=None)
+    se.set_defaults(func=_cmd_sensitivity)
+
+    rd = sub.add_parser(
+        'radiomics',
+        help='optional radiomics features: T1 (whole-brain + 17 networks) '
+             'and/or functional maps ALFF/fALFF/ReHo (needs AFNI); writes '
+             'radiomics.tsv in the standard modality layout')
+    rd.add_argument('--data-root', required=True)
+    rd.add_argument('--out', required=True)
+    rd.add_argument('--mode', choices=['wb', 'both'], default='wb')
+    rd.add_argument('--maps', default='',
+                    help='comma list: alff,falff,reho (requires '
+                         'bold_clean.nii.gz and AFNI)')
+    rd.add_argument('--afni-bin', default=os.environ.get('AFNI_BIN', ''))
+    rd.set_defaults(func=_cmd_radiomics)
 
     a = sub.add_parser('advise', help='LLM-driven model recommendation')
     _add_common(a)
