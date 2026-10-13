@@ -128,6 +128,11 @@ class LLMClient:
         self.timeout = timeout
 
     def chat(self, messages, temperature=None, max_tokens=2048, tools=None):
+        from ._net import offline
+        if offline():
+            raise RuntimeError(
+                "offline mode (AVAIL_OFFLINE=1): outbound LLM calls are "
+                "disabled; unset AVAIL_OFFLINE to use the assistant/advisor")
         if not self.api_key:
             raise RuntimeError(
                 "No LLM API key found. Set AVAIL_LLM_API_KEY (or pass api_key=...).")
