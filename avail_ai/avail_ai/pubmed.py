@@ -26,6 +26,9 @@ def _get(path, params):
 
 def search_pubmed(query, retmax=5, use_cache=True):
     """Return top PMIDs for a PubMed query."""
+    from ._net import offline
+    if offline():
+        return []
     key = "q_" + query.replace(" ", "_")[:200]
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     cf = CACHE_DIR / f"{key}.json"
@@ -49,6 +52,9 @@ def search_pubmed(query, retmax=5, use_cache=True):
 
 def fetch_summaries(pmids, use_cache=True):
     """Return article dicts (title, journal, year, pmid, authors) for PMIDs."""
+    from ._net import offline
+    if offline():
+        return []
     if not pmids:
         return []
     key = "s_" + "_".join(pmids[:20])
@@ -85,6 +91,9 @@ def fetch_summaries(pmids, use_cache=True):
 
 def literature_for(biomarker, context, n=3, use_cache=True):
     """PubMed evidence for a biomarker in a disease/context. Returns list of dicts."""
+    from ._net import offline
+    if offline():
+        return []
     if not biomarker or not context:
         return []
     q = f'"{biomarker}" AND {context}'
