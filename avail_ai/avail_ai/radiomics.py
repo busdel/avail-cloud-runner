@@ -92,6 +92,10 @@ def order_path():
         c = Path(p).parent / "Schaefer2018_100Parcels_17Networks_order.txt"
         if c.exists():
             return c
+    from ._net import offline
+    if offline():
+        raise RuntimeError("offline mode: Schaefer order file not found "
+                           "locally (bundle atlas/schaefer_2018/)")
     from nilearn.datasets import fetch_atlas_schaefer_2018
     m = fetch_atlas_schaefer_2018(n_rois=100, yeo_networks=17).maps
     return Path(m).parent / "Schaefer2018_100Parcels_17Networks_order.txt"
@@ -183,6 +187,10 @@ def extract_subject(t1=None, bold=None, mode="wb", maps="",
 
     ap = atlas_path or _atlas_path(1)
     if ap is None:
+        from ._net import offline
+        if offline():
+            raise RuntimeError("offline mode: no local Schaefer atlas found; "
+                               "pass atlas_path or bundle atlas/schaefer_2018/")
         from nilearn.datasets import fetch_atlas_schaefer_2018
         ap = fetch_atlas_schaefer_2018(n_rois=100, resolution_mm=1).maps
     atlas_img = sitk.ReadImage(str(ap))
