@@ -48,8 +48,7 @@ and independent rs-fMRI cohorts processed end-to-end with the same pipeline
 
 ## Install the Python package
 
-**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (v1.0.0, MIT, Python 3.10&ndash;3.12) &middot; **[v1.0.1 release](https://github.com/busdel/avail-cloud-runner/releases/tag/v1.0.1)** (hardening: imaging guards, offline atlas, radiomics module + CLI) &mdash; install directly:
-`pip install https://github.com/busdel/avail-cloud-runner/releases/download/v1.0.1/avail_omics-1.0.1-py3-none-any.whl`
+**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.0.1**, MIT, Python 3.10&ndash;3.12) &mdash; `pip install avail-omics`
 
 ```bash
 pip install avail-omics            # core (CPU is fine)
