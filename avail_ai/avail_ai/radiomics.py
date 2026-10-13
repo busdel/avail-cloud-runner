@@ -54,6 +54,19 @@ def radiomics_available():
         return False
 
 
+def match_sid(path, ids_set):
+    """Exact-token subject id matching (no substring collisions S1/S10)."""
+    path = Path(path)
+    for part in path.parts:
+        if part in ids_set:
+            return part
+    tokens = re.split(r"[^A-Za-z0-9\-]+", path.name)
+    for sid in ids_set:
+        if sid in tokens:
+            return sid
+    return None
+
+
 def _require():
     try:
         import SimpleITK as sitk
@@ -274,19 +287,10 @@ def extract_dataset(data_root, out, mode="wb", maps="", afni_bin=None,
 
     ids_set = set(ids)
 
-    def _match_sid(path):
-        for part in path.parts:
-            if part in ids_set:
-                return part
-        for sid in ids_set:
-            if sid in path.name:
-                return sid
-        return None
-
     t1_map, bold_map = {}, {}
     for p in root.rglob("*.nii.gz"):
         b = p.name.lower()
-        sid = _match_sid(p)
+        sid = match_sid(p, ids_set)
         if sid is None:
             continue
         if "t1" in b or "t1w" in b:
