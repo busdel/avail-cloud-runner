@@ -17,6 +17,7 @@ Outputs under <data_root>/features/:
 Requires <data_root>/metadata.tsv (SampleID + Group) to match subjects.
 """
 import os
+import re
 import shutil
 import subprocess
 import zipfile
@@ -32,6 +33,7 @@ DCM2NIIX = (os.environ.get("DCM2NIIX")
 N_ROIS = 100
 HORIZON = 32
 ATLAS_CANDIDATES = [
+    Path(__file__).resolve().parents[2] / "atlas" / "schaefer_2018",
     BASE / "atlas" / "schaefer_2018",
     Path("/media/suleyman_disk/AVAIL_GPU/atlas/schaefer_2018"),
     Path.home() / "nilearn_data" / "schaefer_2018",
@@ -63,6 +65,12 @@ def _get_masker():
         from nilearn.maskers import NiftiLabelsMasker
         p = _atlas_path(2)
         if p is None:
+            from ._net import offline
+            if offline():
+                raise RuntimeError(
+                    "offline mode: no local Schaefer atlas found; provide "
+                    "the atlas under atlas/schaefer_2018/ or unset "
+                    "AVAIL_OFFLINE")
             from nilearn.datasets import fetch_atlas_schaefer_2018
             p = fetch_atlas_schaefer_2018(n_rois=N_ROIS,
                                           resolution_mm=2).maps
@@ -114,6 +122,11 @@ def radiomics_features(image_path, binwidth=25.0, atlas_path=None):
     img = sitk.ReadImage(str(image_path))
     ap = atlas_path or _atlas_path(1)
     if ap is None:
+        from ._net import offline
+        if offline():
+            raise RuntimeError(
+                "offline mode: no local Schaefer atlas found; pass "
+                "atlas_path or place it under atlas/schaefer_2018/")
         from nilearn.datasets import fetch_atlas_schaefer_2018
         ap = fetch_atlas_schaefer_2018(n_rois=N_ROIS, resolution_mm=1).maps
     atlas = sitk.ReadImage(str(ap))
@@ -241,10 +254,21 @@ def process_imaging(data_root, out_features_dir):
 
     # collect subject data
     nii_by_subj = {}
-    for p in root.rglob("*.nii.gz"):
+    all_nii = []
+    for p in list(root.rglob("*.nii.gz")) + list(root.rglob("*.nii")):
+        all_nii.append(p)
         nii_by_subj.setdefault(p.stem.split(".")[0], p)
-    for p in root.rglob("*.nii"):
-        nii_by_subj.setdefault(p.stem, p)
+
+    def _resolve_nii(sid):
+        p = nii_by_subj.get(sid)
+        if p is not None:
+            return p
+        toks = re.split(r"[^A-Za-z0-9\-]+", sid)
+        for q in all_nii:
+            qt = re.split(r"[^A-Za-z0-9\-]+", q.name)
+            if sid in qt or (toks and toks[0] in qt and sid in q.name):
+                return q
+        return None
     dicom_dirs = {}
     for p in root.rglob("*.dcm"):
         dicom_dirs.setdefault(p.parent.name, p.parent)
@@ -260,7 +284,7 @@ def process_imaging(data_root, out_features_dir):
     rows_cl, rows_tf, series = {}, {}, {}
     matched = 0
     for sid in ids:
-        nii = nii_by_subj.get(sid)
+        nii = _resolve_nii(sid)
         if nii is None and sid in dicom_dirs:
             nii = convert_dicom(dicom_dirs[sid], tmp / sid)
         if nii is None:
