@@ -75,7 +75,9 @@ def _get_masker():
             p = fetch_atlas_schaefer_2018(n_rois=N_ROIS,
                                           resolution_mm=2).maps
         _masker_obj = NiftiLabelsMasker(labels_img=str(p),
-                                        standardize=False)
+                                        standardize=True,
+                                        detrend=False,
+                                        resampling_target="data")
     return _masker_obj
 
 
@@ -95,6 +97,90 @@ def sanitize_ts(ts):
         ts[:, bad] = 0.0
     return ts, int(bad.sum())
 
+
+
+NET_PAIRS = [("VisCent", "Visual Central"), ("VisPeri", "Visual Peripheral"),
+             ("SomMotA", "Somatomotor A"),
+             ("SomMotB_Aud", "Somatomotor B Auditory"),
+             ("SomMotB", "Somatomotor B"),
+             ("DorsAttnA", "Dorsal Attention A"),
+             ("DorsAttnB", "Dorsal Attention B"),
+             ("SalVentAttnA", "Salience Ventral Attention A"),
+             ("SalVentAttnB", "Salience Ventral Attention B"),
+             ("LimbicA", "Limbic Temporopolar"),
+             ("LimbicB", "Limbic Orbitofrontal"),
+             ("ContA", "Frontoparietal Control A"),
+             ("ContB", "Frontoparietal Control B"),
+             ("ContC", "Frontoparietal Control C"),
+             ("DefaultA", "Default A"), ("DefaultB", "Default B"),
+             ("DefaultC", "Default C"), ("TempPar", "Temporoparietal")]
+
+
+def _canon_net(name):
+    for k, v in NET_PAIRS:
+        if k in name:
+            return v
+    return None
+
+
+def _net_labels(p):
+    order = Path(p).parent / "Schaefer2018_100Parcels_17Networks_order.txt"
+    labels = []
+    for line in order.read_text().strip().split("\n"):
+        labels.append(_canon_net(line.split()[1]))
+    return labels
+
+
+def _net_summaries(mat, labels, nets):
+    rows = {}
+    for nn in nets:
+        idx = np.where(np.array(labels) == nn)[0]
+        up = mat[np.ix_(idx, idx)][np.triu_indices(len(idx), k=1)]
+        rows["within_" + nn] = float(np.mean(up)) if len(up) else np.nan
+    for i, a in enumerate(nets):
+        for b in nets[i + 1:]:
+            ia = np.where(np.array(labels) == a)[0]
+            ib = np.where(np.array(labels) == b)[0]
+            rows["between_" + a + "__" + b] = float(mat[np.ix_(ia, ib)].mean())
+    return rows
+
+
+def fc_protocol_features(ts):
+    """Paper-protocol connectivity features from ROI time series (T x 100).
+
+    Full Pearson (Fisher-z) and partial (Ledoit-Wolf precision) matrices,
+    summarised within/between the 18 named network groups -> 171 + 171
+    features (keys ``full_*`` / ``part_*``), identical to the published
+    extraction protocol.
+    """
+    from sklearn.covariance import LedoitWolf
+    p = _atlas_path(2) or _atlas_path(1)
+    if p is None:
+        from ._net import offline
+        if offline():
+            raise RuntimeError("offline mode: atlas order file not found "
+                               "locally (bundle atlas/schaefer_2018/)")
+        from nilearn.datasets import fetch_atlas_schaefer_2018
+        p = fetch_atlas_schaefer_2018(n_rois=N_ROIS, yeo_networks=17,
+                                      resolution_mm=2).maps
+    labels = _net_labels(p)
+    nets = sorted(set(labels))
+    C = np.corrcoef(ts.T)
+    if not np.isfinite(C).all():
+        C = np.nan_to_num(C, nan=0.0, posinf=0.0, neginf=0.0)
+        np.fill_diagonal(C, 1.0)
+    Z = np.arctanh(np.clip(C, -0.999999, 0.999999))
+    np.fill_diagonal(Z, 0.0)
+    lw = LedoitWolf().fit(ts)
+    P = lw.precision_
+    d = np.sqrt(np.diag(P))
+    pc = -P / np.outer(d, d)
+    np.fill_diagonal(pc, 0.0)
+    Zp = np.arctanh(np.clip(pc, -0.999999, 0.999999))
+    np.fill_diagonal(Zp, 0.0)
+    rows = {f"full_{k}": v for k, v in _net_summaries(Z, labels, nets).items()}
+    rows.update({f"part_{k}": v for k, v in _net_summaries(Zp, labels, nets).items()})
+    return {k: float(v) for k, v in rows.items()}
 
 def radiomics_available():
     try:
@@ -298,7 +384,7 @@ def process_imaging(data_root, out_features_dir):
         ts, nbad = sanitize_ts(ts)
         if nbad:
             log(f"subject {sid}: {nbad} empty/constant parcels zeroed")
-        rows_cl[sid] = classical_features(ts)
+        rows_cl[sid] = fc_protocol_features(ts)
         if have_tfm:
             try:
                 rows_tf[sid] = timesfm_features(ts)
@@ -315,20 +401,28 @@ def process_imaging(data_root, out_features_dir):
 
     def write(fname, rows, nfeat):
         with open(feats_dir / fname, "w") as f:
-            f.write("SampleID\t" + "\t".join(f"{fname.split('.')[0]}_{i}"
-                                             for i in range(nfeat)) + "\n")
+            header = None
+            for sid in ids:
+                if sid in rows:
+                    header = (list(rows[sid].keys()) if isinstance(
+                        rows[sid], dict) else
+                        [f"{fname.split('.')[0]}_{i}" for i in range(nfeat)])
+                    break
+            f.write("SampleID\t" + "\t".join(header) + "\n")
             for sid in ids:
                 if sid not in rows:
                     continue
+                v = rows[sid]
+                vals = (list(v.values()) if isinstance(v, dict) else v)
                 f.write(sid + "\t" + "\t".join(
-                    f"{v:.6f}" for v in rows[sid]) + "\n")
+                    f"{float(x):.6f}" for x in vals) + "\n")
 
-    write("imaging_classical.tsv", rows_cl, (N_ROIS * (N_ROIS - 1)) // 2)
+    write("imaging_classical.tsv", rows_cl, 342)
     if rows_tf:
         write("imaging_timesfm.tsv", rows_tf, N_ROIS * HORIZON)
     shutil.rmtree(tmp, ignore_errors=True)
     return {"subjects": matched, "n_rois": N_ROIS,
-            "classical_features": (N_ROIS * (N_ROIS - 1)) // 2,
+            "classical_features": 342,
             "timesfm_features": (N_ROIS * HORIZON) if rows_tf else 0}
 
 
