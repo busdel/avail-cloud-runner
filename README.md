@@ -48,7 +48,7 @@ and independent rs-fMRI cohorts processed end-to-end with the same pipeline
 
 ## Install the Python package
 
-**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.0.3**, MIT, Python 3.10&ndash;3.12) &mdash; `pip install avail-omics`
+**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.0.5**, MIT, Python 3.10&ndash;3.12) &mdash; `pip install avail-omics`
 
 ```bash
 pip install avail-omics            # core (CPU is fine)
