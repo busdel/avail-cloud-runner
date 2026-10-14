@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.0.5 — guard follow-up
+- Protocol connectivity: correlation matrices are sanitized for
+  zero-variance parcels (finite fallback, unit diagonal) before the
+  Fisher-z/partial steps; a constant parcel can no longer leak NaN into
+  the network summaries. Regression test included.
+
+## 1.0.4 — one protocol everywhere
+- Imaging feature definition aligned with the published extraction
+  protocol: the automatic adapter (package and web) now produces the same
+  342 connectivity features (full Pearson Fisher-z + partial Ledoit-Wolf,
+  within/between network summaries) as the paper pipeline and the
+  downloadable ds004392 FC tables. Masker settings (standardize, detrend,
+  resampling) now match the protocol script exactly; NaN/constant guard
+  retained.
+- The imaging writer now emits semantically named columns
+  (``full_*`` / ``part_*``).
+
 ## 1.0.3 — data-security release
 - `AVAIL_OFFLINE=1` hard-disables every outbound call (LLM providers,
   PubMed look-ups, atlas downloads); PubMed helpers return empty results
