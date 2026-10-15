@@ -39,12 +39,14 @@ Job dispatch then goes to **your** GitHub account's runner.
 **Trust:** code and data flow to your account; keep uploads
 aggregate-only if data is sensitive.
 
-### Tier 4 - Pull-based worker agent (roadmap)
-A small worker daemon for user GPU servers: it connects **outbound only**
-(no inbound ports), registers with a per-worker, short-lived token, and
-pulls jobs from the queue into a per-job container sandbox with CPU/GPU/
-memory limits. Nothing is exposed; the server can revoke the worker at any
-time. Planned for a future release.
+### Tier 4 - Worker agent on your own server (available)
+`avail-omics worker` runs a small job server on your own machine: bearer
+token required, binds to 127.0.0.1 by default, per-job sandbox
+directories, optional memory cap, one job at a time. You expose it with an
+outbound-only tunnel (tailscale serve/funnel or cloudflared) and connect
+it from any AVAIL interface via the **"Run on my own server"** card.
+Nothing inbound to configure; revoke by rotating the token. Full guide:
+WORKER.md.
 
 ### Security checklist (any tier)
 - Outbound-only connections; never open inbound GPU ports to the internet.
@@ -58,3 +60,9 @@ time. Planned for a future release.
 - The web platform itself: password + rate limiting, TLS via the tunnel,
   static file serving restricted to its own directory, fail-closed input
   validation.
+
+## Data security & trust
+
+For the complete outbound-call inventory (what leaves your machine, when,
+and how to disable each path), the per-tier data-flow table and the
+`AVAIL_OFFLINE=1` recipe, see **DATA_SECURITY.md** in this repository.
