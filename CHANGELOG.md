@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.6 — bring your own server
+- New `avail-omics worker` (+ `avail-omics worker-token`): a secure job
+  server for your own machine — bearer-token auth (constant-time), binds
+  to 127.0.0.1 by default, per-job sandbox directories with ZIP-slip
+  protection, optional memory cap and nice, one job at a time. Connect it
+  from any AVAIL interface ("Run on my own server"); expose it with an
+  outbound-only tunnel. Docs: WORKER.md.
+- Worker test suite added (auth, queueing, lifecycle).
+
 ## 1.0.5 — guard follow-up
 - Protocol connectivity: correlation matrices are sanitized for
   zero-variance parcels (finite fallback, unit diagonal) before the
