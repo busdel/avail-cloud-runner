@@ -6,7 +6,7 @@ families are produced, in three steps:
 
 ## 1. Preprocessing (AFNI, per subject)
 `tools/rsfmri_process_subject.sh` (voximul: linux_ubuntu_16_64):
-3dUnifize -> 3dAllineate (T1 -> MNI152) -> despike -> slice-timing ->
+3dUnifize -> 3dAllineate (T1 -> MNI152, cost LPC - robust two-pass; MI diverges on these cohorts) -> despike -> slice-timing ->
 volume registration -> EPI -> T1 -> composite transform -> 6 mm smoothing
 -> automask -> band-pass 0.01-0.10 Hz + motion regression.
 Outputs: `t1_mni.nii.gz`, `bold_clean.nii.gz`, `bold_blur.nii.gz`
@@ -29,9 +29,11 @@ single empty parcel can no longer NaN an entire matrix).
   17-network (1,674) IBSI features, bin width 25;
 - **functional maps** (`--maps alff,falff,reho --bold bold_clean.nii.gz`):
   ALFF = stdev(bold_clean) (already band-passed), fALFF =
-  ALFF / stdev(bold_blur), ReHo = 3dReHo (27-neighbourhood) on a 3 mm
-  downsampled volume (memory-safe: 1 mm 4-D operations peak at ~10 GB
-  per worker; 3 mm peaks at a few hundred MB);
+  ALFF / stdev(bold_blur), ReHo = 3dReHo (27-neighbourhood); every AFNI
+  statistic is written as float (short storage silently quantizes small
+  temporal standard deviations to zero - a failure mode we hit and
+  guard against). Maps are computed at the native resolution with low
+  parallelism to stay memory-safe;
   maps are robustly rescaled to [0,1] per subject (bin width 0.05), the
   atlas mask is resampled per-map grid, and out-of-coverage voxels are
   excluded.
