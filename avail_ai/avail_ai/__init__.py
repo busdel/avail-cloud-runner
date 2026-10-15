@@ -15,7 +15,7 @@ sys.modules[__name__] = _core
 
 _SUBMODULES = [
     "preprocess", "data", "learners", "pipeline", "figures",
-    "figures_publication", "networks", "llm", "advisor", "generic", "radiomics",
+    "figures_publication", "networks", "llm", "advisor", "generic", "radiomics", "worker",
     "cli", "imaging", "biomarkers", "vmr", "rag", "pubmed", "meta_learners",
     "robustness",
 ]
