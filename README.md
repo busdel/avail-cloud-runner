@@ -161,6 +161,10 @@ metadata is in [CITATION.cff](CITATION.cff):
 
 The companion manuscripts are in preparation; this entry will be updated with the DOIs.
 
+## Acknowledgements
+
+Repository graphics were generated with [Scientific Agent Skills](https://github.com/K-Dense-AI) (Kassis et al., 2026, arXiv:2609.00065).
+
 ## License
 
 MIT &mdash; see [LICENSE](LICENSE).
