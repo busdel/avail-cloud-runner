@@ -14,6 +14,10 @@ Every subject contributes to the model, regardless of which modalities they have
   <a href="https://pypi.org/project/avail-omics/"><img src="https://img.shields.io/pypi/dm/avail-omics" alt="Downloads"></a>
 </p>
 
+<p align="center">
+  <img src="docs/assets/avail_hero.png" width="880" alt="AVAIL-AI: availability-aware ML for incomplete multimodal clinical data">
+</p>
+
 ---
 
 ## What is AVAIL-AI?
@@ -52,6 +56,8 @@ missingness handled as data instead of discarded or fabricated.
   server. Raw data never sits on maintainer infrastructure.
 
 ## Gallery
+
+<p align="center"><img src="docs/assets/avail_pipeline.png" width="860" alt="How AVAIL works: base learners, availability representation, 11 meta-learners, validation core, outputs"></p>
 
 | Method schematic | Availability patterns |
 |---|---|
