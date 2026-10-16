@@ -14,10 +14,6 @@ Every subject contributes to the model, regardless of which modalities they have
   <a href="https://pypi.org/project/avail-omics/"><img src="https://img.shields.io/pypi/dm/avail-omics" alt="Downloads"></a>
 </p>
 
-<p align="center">
-  <img src="docs/assets/tour.gif" width="640" alt="AVAIL web interface &mdash; tour">
-</p>
-
 ---
 
 ## What is AVAIL-AI?
