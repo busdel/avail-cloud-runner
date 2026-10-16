@@ -63,7 +63,7 @@ missingness handled as data instead of discarded or fabricated.
 |---|---|
 | <img src="docs/assets/method_schematic.png" width="430"> | <img src="docs/assets/availability_patterns.png" width="430"> |
 
-<p align="center"><img src="docs/assets/architecture.png" width="760" alt="System architecture: data layer, availability-aware core, strategy layer, interfaces"></p>
+<p align="center"><img src="docs/assets/avail_architecture.png" width="880" alt="AVAIL system architecture: data layer, availability-aware core, strategy layer, outputs, validation wrap, bring-your-own-compute interfaces"></p>
 
 ## Install the Python package
 
