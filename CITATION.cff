@@ -11,7 +11,7 @@ abstract: >-
 authors:
   - family-names: Delice
     given-names: Busranur
-version: "1.0.15"
+version: "1.0.16"
 date-released: "2026-10-16"
 license: MIT
 repository-code: "https://github.com/busdel/avail-cloud-runner"
