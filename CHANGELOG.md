@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.16
+- OpenRouter fallback defaults to NVIDIA Nemotron-3 Super 120B (free
+  tier, tool calling verified); the provider joins the failover chain
+  after Gemini and Groq.
+
 ## 1.0.15
 - LLM robustness: the Groq fallback now uses openai/gpt-oss-120b (tool
   calling, higher token-per-minute limits); per-provider model overrides
