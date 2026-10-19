@@ -7,6 +7,22 @@ results travel back.
 
 Nothing is exposed by default and every request needs a bearer token.
 
+
+## Without pip: use the local-runner bundle
+
+The downloadable runner bundle can serve jobs directly (no package install
+commands needed; it sets up a private environment on first run):
+
+```bash
+python run_me.py --serve --port 8787
+# prints a bearer token; binds to 127.0.0.1
+```
+
+Then open a job page, choose "Run on my own server", and paste the URL and
+token. If the web interface runs elsewhere, expose the worker through your
+own outbound tunnel and paste that URL instead.
+
+
 ## Quickstart (on your server)
 
 ```bash
