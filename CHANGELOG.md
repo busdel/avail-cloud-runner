@@ -1,5 +1,65 @@
 # Changelog
 
+## 1.0.14
+- Biological figures: top differential features are now shown per group
+  (raw subject values with medians/IQR; fig8) and as signed effect-size
+  panels with BH-FDR (fig9). The pipeline exports
+  top_features_long.tsv for these panels.
+
+## 1.0.13
+- Fix: per-class one-vs-rest AUC was computed with the macro helper on a
+  single column, which inverted the score (reported 1-AUC). It now uses
+  roc_auc_score directly; subject_classes.tsv is written for group-aware
+  figures.
+- Web figures now show groups explicitly: coverage by group, class
+  stripe on the availability matrix, per-comparison volcano panels, and
+  a per-class AUC heatmap.
+
+## 1.0.12
+- Three additional web figures: availability-stratified model comparison
+  (slope chart), subject-level availability pattern (matrix), and a
+  differential-abundance volcano with a ranked callout panel. Label
+  placement avoids overlaps; provenance stays in the UI captions.
+
+## 1.0.11
+- Web figures redesigned for legibility: lollipop charts with value
+  labels, chance line explicit, coverage bars, and direction-colored
+  feature attribution; provenance note moved off the axes.
+
+## 1.0.10
+- Figures: the web pipeline now ships three deliberately simple PNG
+  figures (model performance, modality coverage, top features per
+  modality) instead of the dense multi-panel manuscript set; the latter
+  remains available in figures_publication for papers.
+- Meta-learner subset: AVAIL_META_MODELS (comma list) selects a subset
+  for fast runs; the built-in web demo uses four fast learners while
+  advanced comparisons still cover all of them.
+
+## 1.0.9
+- Faster provider failover: the last-resort retry wait in the LLM client
+  chain is now configurable (AVAIL_LLM_RETRY_SLEEP, default 15 s instead
+  of a fixed 70 s), cutting worst-case interactive latency after a
+  provider hiccup.
+
+## 1.0.8
+- LLM provider fallback now also triggers on transient failures
+  (HTTP 5xx after in-provider retries, connection errors and timeouts),
+  not only on quota/rate limits. With a secondary key configured
+  (~/.config/avail/llm_key_groq), assistant requests survive primary-
+  provider outages instead of surfacing a 503.
+
+## 1.0.7
+- Metadata parsing now tolerates missing Sex/Age/Education cells across
+  pandas versions (the pandas 3 string dtype yields float NaN, which
+  crashed the Sex normalizer); missing values map to NaN and are
+  imputed downstream exactly as before.
+- Offline mode (AVAIL_OFFLINE=1) now also disables the multi-database
+  literature lookup and skips the advisor evidence loop, so no outbound
+  request is attempted anywhere.
+- Local-runner bundle: fixed the import path when the tools are run from
+  the extracted ZIP layout; README command corrected.
+- Integrity-audit script path handling made portable; scans all result
+  directories containing saved leave-one-out predictions.
 ## 1.0.6 — bring your own server
 - New `avail-omics worker` (+ `avail-omics worker-token`): a secure job
   server for your own machine — bearer-token auth (constant-time), binds
