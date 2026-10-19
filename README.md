@@ -52,8 +52,13 @@ missingness handled as data instead of discarded or fabricated.
 - **Validated outside the lab** &mdash; Wallen 2022 (PD, n=724), preclinical AD
   (n=1457), HMP2 IBD, MetaCardis (n=1087), and independent rs-fMRI cohorts
   (OpenNeuro ds004392, ds005892) processed end-to-end with the same pipeline.
+- **Group-aware readouts** &mdash; every run reports HC / MCI / PDD breakdowns:
+  coverage by group, per-class one-vs-rest AUC, and group profiles of the top
+  differential features (with individual subjects shown).
 - **Yours to run** &mdash; free cloud, local runner, self-hosted, or your own
-  server. Raw data never sits on maintainer infrastructure.
+  server. Raw data never sits on maintainer infrastructure. The local-runner
+  bundle can also act as a worker (`python run_me.py --serve`) so the web page
+  dispatches jobs straight to your machine, no pip install needed.
 
 ## Gallery
 
@@ -63,11 +68,17 @@ missingness handled as data instead of discarded or fabricated.
 |---|---|
 | <img src="docs/assets/method_schematic.png" width="430"> | <img src="docs/assets/availability_patterns.png" width="430"> |
 
+<p align="center"><img src="docs/assets/fig8_group_profiles.png" width="880" alt="Group profiles of the top differential features (HC / MCI / PDD), individual subjects shown"></p>
+
+| Per-class performance | Effect sizes |
+|---|---|
+| <img src="docs/assets/fig7_per_class_auc.png" width="420"> | <img src="docs/assets/fig9_effect_sizes.png" width="420"> |
+
 <p align="center"><img src="docs/assets/avail_architecture.png" width="880" alt="AVAIL system architecture: data layer, availability-aware core, strategy layer, outputs, validation wrap, bring-your-own-compute interfaces"></p>
 
 ## Install the Python package
 
-**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.0.8**, MIT, Python 3.10&ndash;3.13) &mdash; `pip install avail-omics`
+**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.0.14**, MIT, Python 3.10&ndash;3.13) &mdash; `pip install avail-omics`
 
 ```bash
 pip install avail-omics            # core (CPU is fine)
