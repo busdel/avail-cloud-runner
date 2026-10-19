@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.15
+- LLM robustness: the Groq fallback now uses openai/gpt-oss-120b (tool
+  calling, higher token-per-minute limits); per-provider model overrides
+  via AVAIL_LLM_MODEL_<PROVIDER>.
+- Web assistant trims its context and returns a clear rate-limit message
+  instead of a raw provider error when all providers are throttled.
+
 ## 1.0.14
 - Biological figures: top differential features are now shown per group
   (raw subject values with medians/IQR; fig8) and as signed effect-size
