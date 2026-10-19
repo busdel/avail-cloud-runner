@@ -153,7 +153,7 @@ metadata is in [CITATION.cff](CITATION.cff):
 @software{delice2026avail,
   title   = {AVAIL-AI: availability-aware multimodal learning for incomplete clinical cohorts},
   author  = {Delice, Busranur},
-  version = {1.0.8},
+  version = {1.0.14},
   year    = {2026},
   url     = {https://github.com/busdel/avail-cloud-runner}
 }
