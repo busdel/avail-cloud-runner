@@ -15,6 +15,19 @@ yourself*).
 | **Schaefer atlas download** (nilearn, imaging/radiomics) | Only when **no local atlas copy exists** | Nothing is sent; a public file is fetched from the nilearn data mirror | Bundle `atlas/schaefer_2018/` (included in the runner bundle) or `AVAIL_OFFLINE=1` |
 | **Package installs** (`pip`) | First run of the local runner, or your own `pip install` | Package names to PyPI | Pre-install dependencies; the runtime pipeline itself installs nothing |
 
+### LLM providers (fallback order)
+
+| Order | Provider | Default model | Notes |
+|---|---|---|---|
+| 1 | Google Gemini | `gemini-3.6-flash` | primary if a Gemini key is configured |
+| 2 | Groq | `openai/gpt-oss-120b` | automatic fallback on quota/rate/5xx |
+| 3 | OpenRouter | `nvidia/nemotron-3-super-120b-a12b:free` | optional; free tier, tool calling tested |
+
+Only prompts and the aggregate context you ask about are sent; never raw
+subject rows unless you paste them. Free tiers are governed by each
+provider's own data policies (some may log prompts); use paid/private
+endpoints or `AVAIL_OFFLINE=1` if that is not acceptable.
+
 Nothing else — there is no other network code path in the package.
 
 ## Where your data lives, per deployment tier
@@ -24,7 +37,7 @@ Nothing else — there is no other network code path in the package.
 | **Local runner** (`run_me.py`) | Everything: raw images, features, models, results | Nothing. Uploading the small `results/` zip back to the web platform for the AI report is **optional** |
 | **Self-hosted platform** | Everything (you run the server) | Nothing, unless you enable the LLM advisor/PubMed **with your own key**; the same inventory above applies |
 | **Your own cloud runner** (GitHub Actions in *your* account) | Local preprocessing as you prefer | The uploaded data ZIP, inside your own GitHub account |
-| **Hosted demo** (maintainer instance) | — | Only what you upload and choose to run; the hosted instance **never executes jobs on maintainer machines**; comparisons/agent read aggregate results only |
+| **Hosted demo** (maintainer instance) | — | Only what you upload and choose to run; job execution on the maintainer machine is **off by default** and only enabled by the operator (`AVAIL_ALLOW_SERVER_RUN=1`); the built-in demo can run regardless; comparisons/agent read aggregate results only |
 
 ## Derived-data by design
 
