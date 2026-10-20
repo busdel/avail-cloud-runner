@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.17
+- Subjects with no modality at all are excluded from the analysis (and
+  reported), instead of entering as all-missing rows; deployment cohort
+  sizes now reflect analysed subjects.
+- The per-subject export for group-profile figures runs after the
+  differential-abundance step, so fig8 is produced in every run.
+
 ## 1.0.16
 - OpenRouter fallback defaults to NVIDIA Nemotron-3 Super 120B (free
   tier, tool calling verified); the provider joins the failover chain
