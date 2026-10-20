@@ -146,6 +146,22 @@ avail-omics advise  --out results
 | [DATA_SECURITY.md](DATA_SECURITY.md) | Outbound-call inventory, offline mode |
 | [CHANGELOG.md](CHANGELOG.md) | Release history |
 
+## Data & tools
+
+External datasets and methods used by the platform and the demo:
+
+- **OpenNeuro ds004392** — Wylie KP et al., *Parkinson's disease, functional
+  connectivity, and cognition* (CC0) — [DOI 10.18112/openneuro.ds004392.v1.0.2](https://doi.org/10.18112/openneuro.ds004392.v1.0.2)
+- **OpenNeuro ds005892** — Kemp AS et al., *Resting-state MRI from HC, PD-NC
+  and PD-MCI cohorts* (CC0) — [DOI 10.18112/openneuro.ds005892.v1.0.0](https://doi.org/10.18112/openneuro.ds005892.v1.0.0)
+- **Schaefer atlas** — [DOI 10.1093/cercor/bhx179](https://doi.org/10.1093/cercor/bhx179)
+- **Nilearn** — [DOI 10.3389/fninf.2014.00014](https://doi.org/10.3389/fninf.2014.00014) ·
+  **AFNI** — [DOI 10.1006/cbmr.1996.0014](https://doi.org/10.1006/cbmr.1996.0014) ·
+  **PyRadiomics** — [DOI 10.1158/0008-5472.CAN-17-0339](https://doi.org/10.1158/0008-5472.CAN-17-0339)
+- **scikit-learn** — [JMLR 2011](https://jmlr.org/papers/v12/pedregosa11a.html) ·
+  **SHAP** — [arXiv:1705.07874](https://arxiv.org/abs/1705.07874) ·
+  **PubMed E-utilities** — [NCBI documentation](https://www.ncbi.nlm.nih.gov/books/NBK25499/)
+
 ## Repository layout
 
 ```
