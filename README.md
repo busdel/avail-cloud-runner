@@ -4,7 +4,7 @@
 
 <h1 align="center">AVAIL-AI</h1>
 <p align="center"><b>Availability-Aware Multi-Omics Integration &amp; Learning</b><br>
-Every subject contributes to the model, regardless of which modalities they have &mdash; zero sample loss.</p>
+Every subject with at least one modality contributes to the model &mdash; no complete-case discard; all-missing subjects are explicitly reported.</p>
 
 <p align="center">
   <a href="https://pypi.org/project/avail-omics/"><img src="https://img.shields.io/pypi/v/avail-omics?color=0e7490" alt="PyPI"></a>
@@ -34,7 +34,7 @@ missingness handled as data instead of discarded or fabricated.
 2. **Meta-features** &mdash; `[p_1..p_K, flag_1..flag_K]` per subject (probabilities + availability flags)
 3. **11 meta-learners** &mdash; SimpleMean, WSimpleMean, ElasticNetLR, MLP, MoE, GNN,
    Transformer, XGBoost, TabNet, TabPFN, TabICL
-4. **Strategy benchmark** &mdash; 16 missing-data strategies + hybrid + decision curves,
+4. **Strategy benchmark** &mdash; 14 missing-data strategies (including hybrid) + decision curves,
    bootstrap CIs, conformal prediction sets, calibration
 5. **Biomarker discovery** &mdash; SHAP importance + differential abundance (Mann&ndash;Whitney, BH-FDR)
 6. **AI advisor** &mdash; model decision, biomarker plausibility with **real PubMed citations**
@@ -45,18 +45,21 @@ missingness handled as data instead of discarded or fabricated.
 
 - **Missingness is data, not noise** &mdash; availability flags enter the
   representation; sparse subjects are kept, never imputed away or dropped.
+  Subjects with no modality at all are excluded by the public pipeline and
+  reported; the paper's n=147 sensitivity is 0.663 vs 0.690 at rung 5 (Table S19).
 - **Leak-free by construction** &mdash; fold-internal preprocessing, meta-level
   leave-one-out, permutation nulls at chance.
 - **Benchmarked, not just built** &mdash; every design choice quantified against
-  16 missing-data strategies and 11 meta-learners.
+  14 missing-data strategies and 11 meta-learners.
 - **Validated outside the lab** &mdash; Wallen 2022 (PD, n=724), preclinical AD
-  (n=1457), HMP2 IBD, MetaCardis (n=1087), and independent rs-fMRI cohorts
+  (n=164), HMP2 IBD, MetaCardis (n=1087), and independent rs-fMRI cohorts
   (OpenNeuro ds004392, ds005892) processed end-to-end with the same pipeline.
 - **Group-aware readouts** &mdash; every run reports HC / MCI / PDD breakdowns:
   coverage by group, per-class one-vs-rest AUC, and group profiles of the top
   differential features (with individual subjects shown).
 - **Yours to run** &mdash; free cloud, local runner, self-hosted, or your own
-  server. Raw data never sits on maintainer infrastructure. The local-runner
+  server. Raw data is never sent to AI providers or used for model training;
+  user jobs run on the compute you choose. The local-runner
   bundle can also act as a worker (`python run_me.py --serve`) so the web page
   dispatches jobs straight to your machine, no pip install needed.
 
@@ -112,8 +115,9 @@ session; access password shared on request while the manuscript is under review)
 
 Upload a ZIP &rarr; automatic validation + AI data-quality feedback &rarr; run on the
 **free cloud (GitHub Actions)** or **on your own computer** &rarr; AI decision report +
-publication figures. The hosted interface **never executes jobs on maintainer
-infrastructure**: see [BYO_COMPUTE.md](BYO_COMPUTE.md) for the four deployment tiers
+publication figures. The hosted interface **never executes user-uploaded jobs
+on maintainer infrastructure**; only the fixed, de-identified demo runs
+server-side: see [BYO_COMPUTE.md](BYO_COMPUTE.md) for the four deployment tiers
 (local runner &middot; self-hosted &middot; your own cloud runner &middot; worker agent for
 your own server), [DATA_SECURITY.md](DATA_SECURITY.md) for the outbound-call inventory
 and offline mode, and [WORKER.md](WORKER.md) to attach your own server.

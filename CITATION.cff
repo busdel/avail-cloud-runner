@@ -3,16 +3,16 @@ message: "If you use this software in academic work, please cite it as below."
 title: "AVAIL-AI: availability-aware multimodal learning for incomplete clinical cohorts"
 abstract: >-
   AVAIL-AI is an availability-aware machine-learning framework for multimodal
-  clinical cohorts with missing modalities. It keeps every subject in the model,
+  clinical cohorts with missing modalities. It keeps every subject with at least one modality in the model,
   treats availability itself as data, and ships with a leak-free validation
   protocol (leave-one-out, permutation, conformal), a strategy benchmark against
-  16 missing-data approaches, a web platform, and bring-your-own-compute tooling
-  so raw data never leaves the user's infrastructure.
+  14 missing-data approaches, a web platform, and bring-your-own-compute tooling
+  so raw user data never leaves the chosen compute; only the fixed, de-identified demo runs server-side.
 authors:
   - family-names: Delice
     given-names: Busranur
 version: "1.0.17"
-date-released: "2026-10-16"
+date-released: "2026-10-20"
 license: MIT
 repository-code: "https://github.com/busdel/avail-cloud-runner"
 url: "https://busdel.github.io/avail-cloud-runner/"

@@ -1,6 +1,6 @@
 # Deploying AVAIL-AI with a stable public URL
 
-The hosted interface never executes heavy jobs on the hosting machine
+The hosted interface never executes user-uploaded heavy jobs on the hosting machine; only the fixed de-identified demo runs server-side
 (`AVAIL_ALLOW_SERVER_RUN=0` is enforced in the container image). Compute
 stays on the free cloud runner, the local runner bundle, or the
 `avail-omics` package.

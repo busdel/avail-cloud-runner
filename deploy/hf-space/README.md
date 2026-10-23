@@ -16,9 +16,10 @@ automatic validation + AI data-quality feedback -> run on the free cloud
 (GitHub Actions) or on your own computer -> AI decision report +
 publication figures.
 
-The hosted instance **never executes heavy jobs on the hosting
-infrastructure**: `AVAIL_ALLOW_SERVER_RUN=0` is enforced by the image.
-Compute paths are the free cloud runner, the local runner bundle, or the
+The hosted instance **never executes user-uploaded heavy jobs on the hosting
+infrastructure**: `AVAIL_ALLOW_SERVER_RUN=0` is enforced by the image; the
+fixed de-identified demo is the only server-side run. Compute for user data
+goes through the free cloud runner, the local runner bundle, or the
 `avail-omics` Python package (https://pypi.org/project/avail-omics/).
 
 ## Space secrets (Settings -> Variables and secrets)

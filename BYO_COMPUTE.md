@@ -1,6 +1,6 @@
 ## Bring your own compute (BYO): GPU tiers and trust model
 
-The hosted interface never executes jobs on maintainer machines. Compute
+The hosted interface never executes user-uploaded jobs on maintainer machines; the fixed de-identified demo is the only server-side run. Compute
 happens on infrastructure you control, in one of four tiers. Each tier
 keeps data inside a boundary you choose.
 
