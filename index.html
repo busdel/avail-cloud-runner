@@ -10,22 +10,21 @@
       --muted:#9fb3c8;--teal:#38e1c6;--blue:#4da3ff}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
-     background:radial-gradient(1200px 600px at 50% -10%,#12305a 0%,var(--bg) 60%);
+     background:#0b111a;
      color:var(--ink);font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
 .wrap{max-width:760px;padding:2.4rem 1.4rem;text-align:center}
-img.logo{width:120px;filter:drop-shadow(0 0 24px rgba(56,225,198,.35))}
+img.logo{width:96px;border-radius:14px}
 h1{margin:.6rem 0 .2rem;font-size:2rem;letter-spacing:-.01em}
-h1 span{background:linear-gradient(90deg,var(--blue),var(--teal));
-        -webkit-background-clip:text;background-clip:text;color:transparent}
+h1 span{color:var(--ink)}
 p.sub{color:var(--muted);margin:.2rem 0 1.4rem;font-size:1.02rem}
-a.btn{display:inline-block;background:linear-gradient(90deg,#2a9fd8,#38e1c6);
-      color:#04121f;font-weight:800;text-decoration:none;padding:.85rem 1.6rem;
-      border-radius:12px;font-size:1.05rem;box-shadow:0 10px 30px rgba(56,225,198,.25)}
-a.btn:hover{filter:brightness(1.07)}
+a.btn{display:inline-block;background:#2bb3a3;
+      color:#061a17;font-weight:700;text-decoration:none;padding:.75rem 1.4rem;
+      border-radius:8px;font-size:1rem}
+a.btn:hover{background:#35c4b3}
 .hint{color:var(--muted);font-size:.86rem;margin:.7rem 0 1.8rem}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.8rem;
       margin-top:1.6rem;text-align:left}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:1rem 1.1rem}
 .card b{display:block;margin-bottom:.25rem}
 .card a{color:var(--blue);text-decoration:none;font-size:.9rem}
 .card p{color:var(--muted);font-size:.86rem;margin:.3rem 0 0;line-height:1.5}
@@ -34,10 +33,9 @@ a.btn:hover{filter:brightness(1.07)}
 </head>
 <body>
 <div class="wrap">
-  <img class="logo" src="logo.png" alt="AVAIL-AI">
+  <img class="logo" src="logo_mark.png" alt="AVAIL-AI">
   <h1><span>AVAIL-AI</span></h1>
-  <p class="sub">Availability-aware multimodal integration &amp; learning —
-     every subject counts, regardless of which modalities they have.</p>
+  <p class="sub">Availability-aware analysis for incomplete multimodal clinical cohorts.</p>
   <a class="btn" href="https://recently-iso-les-trim.trycloudflare.com">Enter the live app →</a>
   <p class="hint">If you are not redirected automatically, use the button above.
      Access requires the session password.</p>
