@@ -110,6 +110,8 @@ and the AI advisor report (with PubMed literature).
 
 ## Live web tool
 
+> **Reviewers:** start with [REVIEWER_GUIDE.md](REVIEWER_GUIDE.md) for a short path through the demo, package, audit evidence and known limitations.
+
 **Stable link: https://busdel.github.io/avail-cloud-runner/** (redirects to the current
 session; access password shared on request while the manuscript is under review).
 
