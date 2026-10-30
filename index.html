@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="refresh" content="2; url=https://letdown-suffix-landlord.ngrok-free.dev">
-<title>AVAIL-AI · live app</title>
+<meta name="robots" content="noindex, nofollow">
+<title>AVAIL-AI · reviewer access</title>
 <style>
 :root{--bg:#0a1626;--card:#10213a;--line:rgba(120,160,200,.22);--ink:#e8f0f8;
       --muted:#9fb3c8;--teal:#38e1c6;--blue:#4da3ff}
@@ -12,24 +12,18 @@
 body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
      background:radial-gradient(1200px 600px at 50% -10%,#12305a 0%,var(--bg) 60%);
      color:var(--ink);font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
-.wrap{max-width:760px;padding:2.4rem 1.4rem;text-align:center}
+.wrap{max-width:720px;padding:2.4rem 1.4rem;text-align:center}
 img.logo{width:120px;filter:drop-shadow(0 0 24px rgba(56,225,198,.35))}
 h1{margin:.6rem 0 .2rem;font-size:2rem;letter-spacing:-.01em}
 h1 span{background:linear-gradient(90deg,var(--blue),var(--teal));
         -webkit-background-clip:text;background-clip:text;color:transparent}
 p.sub{color:var(--muted);margin:.2rem 0 1.4rem;font-size:1.02rem}
-a.btn{display:inline-block;background:linear-gradient(90deg,#2a9fd8,#38e1c6);
-      color:#04121f;font-weight:800;text-decoration:none;padding:.85rem 1.6rem;
-      border-radius:12px;font-size:1.05rem;box-shadow:0 10px 30px rgba(56,225,198,.25)}
-a.btn:hover{filter:brightness(1.07)}
-.hint{color:var(--muted);font-size:.86rem;margin:.7rem 0 1.8rem}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.8rem;
-      margin-top:1.6rem;text-align:left}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem}
-.card b{display:block;margin-bottom:.25rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+      padding:1.2rem 1.3rem;text-align:left;margin:1rem 0}
+.card b{display:block;margin-bottom:.3rem}
+.card p{color:var(--muted);font-size:.9rem;margin:.3rem 0 0;line-height:1.55}
 .card a{color:var(--blue);text-decoration:none;font-size:.9rem}
-.card p{color:var(--muted);font-size:.86rem;margin:.3rem 0 0;line-height:1.5}
-.foot{color:var(--muted);font-size:.78rem;margin-top:2rem;line-height:1.6}
+.foot{color:var(--muted);font-size:.78rem;margin-top:1.6rem;line-height:1.6}
 </style>
 </head>
 <body>
@@ -38,30 +32,24 @@ a.btn:hover{filter:brightness(1.07)}
   <h1><span>AVAIL-AI</span></h1>
   <p class="sub">Availability-aware multimodal integration &amp; learning —
      every subject counts, regardless of which modalities they have.</p>
-  <a class="btn" href="https://letdown-suffix-landlord.ngrok-free.dev">Enter the live app →</a>
-  <p class="hint">If you are not redirected automatically, use the button above.
-     Access requires the session password.</p>
-  <div class="grid">
-    <div class="card"><b>Python package</b>
-      <a href="https://pypi.org/project/avail-omics/">pypi.org/project/avail-omics</a>
-      <p>Same pipeline, validation protocol and comparison suite — one command
-         away: <code>pip install avail-omics</code>.</p></div>
-    <div class="card"><b>Comparison suite</b>
-      <a href="https://letdown-suffix-landlord.ngrok-free.dev/results">Strategies · decision curves · external validation</a>
-      <p>14-strategy missing-data benchmark, net-benefit curves, conformal sets,
-         and live numbers for independent public cohorts.</p></div>
-    <div class="card"><b>Imaging &amp; radiomics</b>
-      <a href="https://letdown-suffix-landlord.ngrok-free.dev/imaging">Raw T1 / rs-fMRI to features — live</a>
-      <p>Schaefer connectivity, PyRadiomics anatomical features and
-         ALFF/fALFF/ReHo texture from raw NIfTI or DICOM; open datasets
-         to download and inspect.</p></div>
-    <div class="card"><b>Bring your own GPU server</b>
-      <a href="https://github.com/busdel/avail-cloud-runner/blob/main/BYO_COMPUTE.md">Trust &amp; security guide</a>
-      <p>Four deployment tiers (local runner, self-hosted, own cloud runner,
-         worker agent) with outbound-only connections and scoped tokens.</p></div>
-  </div>
-  <p class="foot">Stable link — always points to the current live session
-     (the underlying quick tunnel rotates). MIT license · manuscript under review.</p>
+
+  <div class="card"><b>Reviewer access</b>
+    <p>The live web interface is invite-only while the manuscript is under
+       review. The link and session password are provided in the cover letter.
+       They are intentionally not published on this page.</p></div>
+
+  <div class="card"><b>Python package</b>
+    <a href="https://pypi.org/project/avail-omics/">pypi.org/project/avail-omics</a>
+    <p>Same pipeline, validation protocol and comparison suite:
+       <code>pip install avail-omics</code>.</p></div>
+
+  <div class="card"><b>Code &amp; deployment guide</b>
+    <a href="https://github.com/busdel/avail-cloud-runner">github.com/busdel/avail-cloud-runner</a>
+    <p>Local runner, self-hosting, own cloud runner and worker agent
+       instructions (outbound-only, scoped tokens).</p></div>
+
+  <p class="foot">MIT license · manuscript under review · access details are
+     not public yet.</p>
 </div>
 </body>
 </html>
