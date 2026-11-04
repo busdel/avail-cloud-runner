@@ -162,9 +162,25 @@ class JobStore:
         return bool(j)
 
 
-def make_handler(store, token, name):
+def make_handler(store, token, name, allow_origin="*"):
     class H(BaseHTTPRequestHandler):
         server_version = "avail-worker/1.0"
+
+        def end_headers(self):
+            self.send_header("Access-Control-Allow-Origin", allow_origin)
+            self.send_header("Access-Control-Allow-Methods",
+                             "GET, POST, DELETE, OPTIONS")
+            self.send_header("Access-Control-Allow-Headers",
+                             "Authorization, Content-Type")
+            self.send_header("Access-Control-Expose-Headers",
+                             "Content-Disposition")
+            self.send_header("Access-Control-Max-Age", "86400")
+            super().end_headers()
+
+        def do_OPTIONS(self):
+            self.send_response(204)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
 
         def _auth(self):
             h = self.headers.get("Authorization", "")
@@ -263,11 +279,11 @@ def make_handler(store, token, name):
 
 def serve(workdir=DEFAULT_WORKDIR, host="127.0.0.1", port=8787,
           token_file=DEFAULT_TOKEN_FILE, token=None, name="my-gpu",
-          max_parallel=1, mem_gb=None, nice=None):
+          max_parallel=1, mem_gb=None, nice=None, allow_origin="*"):
     token = token or load_token(token_file)
     store = JobStore(workdir, max_parallel=max_parallel, mem_gb=mem_gb,
                      nice=nice)
-    httpd = ThreadingHTTPServer((host, port), make_handler(store, token, name))
+    httpd = ThreadingHTTPServer((host, port), make_handler(store, token, name, allow_origin=allow_origin))
     print(f"[worker] serving on http://{host}:{port} (name={name})",
           flush=True)
     print(f"[worker] token file: {token_file}", flush=True)
@@ -287,8 +303,10 @@ def main(argv=None):
     ap.add_argument("--max-parallel", type=int, default=1)
     ap.add_argument("--mem-gb", type=float, default=None)
     ap.add_argument("--nice", type=int, default=10)
+    ap.add_argument("--allow-origin", default="*",
+                    help="CORS origin for browser uploads (default: *)")
     args = ap.parse_args(argv)
     serve(Path(args.workdir), args.host, args.port, Path(args.token_file),
           name=args.name, max_parallel=args.max_parallel, mem_gb=args.mem_gb,
-          nice=args.nice)
+          nice=args.nice, allow_origin=args.allow_origin)
     return 0
