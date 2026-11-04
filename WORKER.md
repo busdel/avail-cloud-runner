@@ -120,3 +120,18 @@ WantedBy=default.target
   are not yet exposed through the worker — submit those from a self-hosted
   full interface or the package directly.
 - No timeouts are imposed: long jobs are expected on training machines.
+
+## Browser direct upload (Bring your own GPU)
+
+The web app exposes a public `/byo` page that sends the data ZIP
+**directly from the browser to your worker**; the hosted server never
+receives it. This needs CORS support in the worker (v1.0.18+):
+
+```bash
+pip install -U avail-omics
+avail-omics worker --name my-gpu --allow-origin https://avail.example.org
+```
+
+The default `--allow-origin` is `*`; the bearer token is still required
+for every job, and the token stays in the browser tab. Use HTTPS for any
+non-localhost worker URL.
