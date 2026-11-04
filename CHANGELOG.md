@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.18
+- Worker CORS/OPTIONS support (`--allow-origin`, default `*`), enabling the
+  public `/byo` page to upload a dataset directly from the browser to the
+  user's own worker; no data transits the hosted server.
+
 ## 1.0.17
 - Subjects with no modality at all are excluded from the analysis (and
   reported), instead of entering as all-missing rows; deployment cohort
