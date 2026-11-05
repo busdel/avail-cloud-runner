@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AVAIL-AI - compatibility playback</title>
+<style>
+:root{--bg:#081220;--card:rgba(255,255,255,.05);--line:rgba(255,255,255,.12);--ink:#e8f0fa;--muted:#8fa3bd;--teal:#38e1c6}
+body{margin:0;background:radial-gradient(1200px 700px at 80% -10%,#123a63 0,transparent 60%),var(--bg);color:var(--ink);font-family:'Segoe UI',system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:1.2rem 1.2rem 3rem}
+.top{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.top img{width:54px;border-radius:50%;border:1px solid var(--line)}
+.top b{font-size:1.15rem}.top a{color:var(--teal);text-decoration:none;font-size:.9rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1rem}
+img#tour{width:100%;border-radius:12px;display:block;background:#081220}
+p{color:var(--muted);line-height:1.6;font-size:.9rem}
+a.btn{display:inline-block;margin:.5rem .5rem 0 0;padding:.55rem 1rem;border:1px solid var(--line);border-radius:10px;color:var(--ink);text-decoration:none;background:rgba(255,255,255,.06);font-size:.9rem}
+button.btn{cursor:pointer;font:inherit}
+</style></head><body><div class="wrap">
+<h1 style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">AVAIL-AI compatibility playback</h1>
+<div class="top"><img src="/static/logo.png" alt="AVAIL-AI"><b>AVAIL-AI tour - compatibility playback</b>
+<div style="flex:1"></div><a href="/">&larr; back to the app</a> · <a href="/video">video page</a></div>
+<div class="card">
+<img id="tour" src="/static/avail_video_v4.png" alt="AVAIL-AI interface tour (image-based playback)">
+<p>Image-based playback (no video decoding) - this renders even when a GPU driver
+shows a black video layer. It loops automatically; use the button to restart it
+together with the English voice-over.</p>
+<button class="btn" id="restart">Restart with sound</button>
+<a class="btn" href="/static/avail_video_v4.png" download>Download animation (APNG)</a>
+<a class="btn" href="/static/avail_video_v4.m4a" download>Download audio (M4A)</a>
+<audio id="vo" src="/static/avail_video_v4.m4a" preload="auto"></audio>
+</div>
+</div>
+<script>
+const img=document.getElementById('tour'), vo=document.getElementById('vo');
+document.getElementById('restart').addEventListener('click',()=>{
+  img.src='/static/avail_video_v4.png?t='+Date.now();
+  vo.currentTime=0; vo.play().catch(()=>{});
+});
+</script>
+</body></html>

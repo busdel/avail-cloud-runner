@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Imaging &amp; radiomics · AVAIL-AI</title>
+<style>
+:root{--bg:#081220;--card:rgba(255,255,255,.045);--line:rgba(255,255,255,.09);--ink:#e8f0fa;--muted:#8fa3bd;
+ --blue:#4da3ff;--teal:#38e1c6;--gold:#f2c14e}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:radial-gradient(1000px 600px at 85% -10%,#123a63 0%,transparent 60%),var(--bg);color:var(--ink)}
+.wrap{max-width:1000px;margin:0 auto;padding:1.6rem 1.2rem 4rem}
+a{color:#8ec7ff;text-decoration:none}
+h1{font-size:1.5rem}
+h2{font-size:1.15rem;margin:2rem 0 .6rem;color:var(--teal)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.2rem;margin:.5rem 0}
+.card b{color:var(--gold)}
+.card p{margin:.3rem 0 0;color:var(--muted);font-size:.9rem;line-height:1.6}
+.pend{display:inline-block;background:rgba(242,193,78,.15);border:1px solid rgba(242,193,78,.5);color:var(--gold);
+ border-radius:99px;padding:.1rem .7rem;font-size:.72rem;letter-spacing:.06em;margin-left:.4rem}
+.btn{display:inline-block;background:linear-gradient(90deg,#2a9fd8,#38e1c6);color:#04121f;font-weight:700;
+ text-decoration:none;padding:.45rem .9rem;border-radius:9px;font-size:.85rem;margin:.5rem .4rem 0 0}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--ink);font-weight:500}
+pre{background:rgba(0,0,0,.35);border-radius:10px;padding:.7rem .9rem;overflow:auto;font-size:.82rem;line-height:1.6}
+table{border-collapse:collapse;font-size:.74rem}
+th,td{border:1px solid var(--line);padding:.25rem .5rem;white-space:nowrap}
+th{background:rgba(255,255,255,.05);color:var(--teal);font-weight:600}
+.step{display:flex;gap:.8rem;margin:.55rem 0;align-items:baseline}
+.step .n{color:var(--teal);font-weight:800;min-width:1.4rem}
+.step div{color:var(--muted);font-size:.9rem;line-height:1.55}
+.step div b{color:var(--ink)}
+
+/* typography pass */
+body{line-height:1.65}
+h1,h2{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;letter-spacing:-.01em}
+
+/* restrained interface pass */
+body{background:#0b111a!important}
+.card,.step,.btn{border-radius:8px}
+.btn{background:#2bb3a3!important;color:#061a17!important;box-shadow:none}
+.btn.ghost{background:transparent!important;color:var(--ink)!important;border:1px solid var(--line)}
+pre{background:#0f1a29;border:1px solid #223349}
+</style></head><body>
+<div class="wrap">
+<p><a href="{{ url_for('index') }}">← back</a></p>
+<h1>Imaging &amp; radiomics</h1>
+<p style="color:var(--muted)">How AVAIL turns raw imaging into tabular modalities —
+and open datasets you can download and inspect.</p>
+
+<h2>Processing pipeline</h2>
+<div class="card">
+ <div class="step"><span class="n">1</span><div><b>Preprocess (AFNI):</b> T1 → MNI registration (robust LPC two-pass), EPI motion/band-pass cleanup (0.01–0.10 Hz), 6&nbsp;mm smoothing.</div></div>
+ <div class="step"><span class="n">2</span><div><b>Connectivity:</b> Schaefer-100 (17-network) atlas → full &amp; partial correlation (Ledoit-Wolf), Fisher-z, within/between network summaries.</div></div>
+ <div class="step"><span class="n">3</span><div><b>Anatomical radiomics:</b> PyRadiomics on the MNI T1 inside the Schaefer mask — whole-brain (<code>wb_*</code>) and per-network (<code>net_*</code>) first-order, texture and shape features (IBSI, bin width 25).</div></div>
+ <div class="step"><span class="n">4</span><div><b>Functional radiomics:</b> ALFF / fALFF / ReHo maps (float-safe, coverage-masked) → texture features (<code>alff_*</code>, <code>falff_*</code>, <code>reho_*</code>, bin width 0.05).</div></div>
+ <div class="step"><span class="n">5</span><div><b>Assemble:</b> one row per subject → the standard <code>metadata.tsv + features/*.tsv</code> layout → the same AVAIL benchmark as every other modality.</div></div>
+ <pre>pip install "avail-omics[radiomics]"
+avail-omics radiomics --data-root mydata --out mydata/features
+avail-omics run-generic --data-root mydata --out results</pre>
+ <p>Full technical notes: <a href="https://github.com/busdel/avail-cloud-runner/blob/main/IMAGING_ADAPTER.md" target="_blank">IMAGING_ADAPTER.md</a> ↗</p>
+ <p style="color:var(--muted);font-size:.88rem;margin-top:.6rem"><b style="color:var(--gold)">Two ways to process rs-fMRI:</b>
+ (a) BOLD already registered to a template space (MNI) → the runner/cloud extracts connectivity automatically, exactly as in the downloadable tables below;
+ (b) raw native-space fMRI → run the documented AFNI registration step once (see IMAGING_ADAPTER.md), then the same extraction. The downloadable FC table below is the output of this exact pipeline on ds004392.</p>
+</div>
+
+<h2>Process your own imaging data</h2>
+<div class="card">
+ <p>Upload a ZIP with <code>metadata.tsv</code> (SampleID + Group) plus, per subject, a 4D BOLD NIfTI
+ named after the SampleID (e.g. <code>sub-001_task-rest_bold.nii.gz</code>) or a DICOM folder named
+ <code>sub-001</code>. Set <code>radiomics</code> below to also extract PyRadiomics features from T1 volumes.</p>
+ <form method="post" action="{{ url_for('upload') }}" enctype="multipart/form-data"
+       style="display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;margin-top:.6rem">
+  <input type="file" name="file" accept=".zip" required
+         style="background:rgba(0,0,0,.3);border:1px dashed var(--line);border-radius:10px;padding:.6rem .8rem;color:var(--ink)">
+  <label style="font-size:.88rem;color:var(--muted)"><input type="checkbox" name="radiomics" value="1"> extract radiomics from T1</label>
+  <button class="btn" type="submit">Validate &amp; continue</button>
+ </form>
+ <p style="margin-top:.5rem">After validation you choose where it runs: <b>on your own computer</b> (local runner, no upload limits)
+ or the free cloud. Template-space (MNI) BOLD is extracted automatically; native-space runs need the documented
+ AFNI registration step first. Uploads through the tunnel are capped near 100&nbsp;MB — large cohorts: use the local runner.</p>
+</div>
+
+<h2>Ask Dr. Avail about imaging</h2>
+<div class="card">
+ <div style="display:flex;gap:.8rem;align-items:flex-start">
+  <img src="/static/dr_avail_head.png" alt="Dr. Avail" style="width:44px;border-radius:50%;border:1px solid var(--line)">
+  <div style="flex:1;min-width:260px">
+   <p style="margin:.1rem 0 .5rem">Grounded on the pipeline description and the two downloadable feature tables -
+   ask about columns, processing steps, or how to run your own images.</p>
+   <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.5rem">
+    <button class="btn ghost" style="font-size:.78rem;padding:.3rem .6rem" onclick="iaq('What do the alff_, falff_ and reho_ columns mean and how are they computed?')">alff/falff/reho?</button>
+    <button class="btn ghost" style="font-size:.78rem;padding:.3rem .6rem" onclick="iaq('How are the full_ and part_ connectivity features different?')">full_ vs part_?</button>
+    <button class="btn ghost" style="font-size:.78rem;padding:.3rem .6rem" onclick="iaq('I have raw rs-fMRI from my scanner. How do I process it with AVAIL?')">my own rs-fMRI</button>
+  </div>
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+   <input id="ia_q" aria-label="Ask Dr. Avail about imaging" placeholder="Ask about the imaging pipeline or datasets…"
+          style="flex:1;min-width:260px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:9px;padding:.55rem .8rem;color:var(--ink)">
+   <button class="btn" id="ia_btn" onclick="iaa()">Ask</button>
+  </div>
+  <pre id="ia_a" style="display:none;white-space:pre-wrap;font-size:.85rem;line-height:1.6;margin-top:.6rem"></pre>
+  <p style="color:var(--muted);font-size:.78rem;margin:.3rem 0 0">Answers are model-generated from the context shown here; verify before scientific use.</p>
+  </div>
+ </div>
+</div>
+
+<script>
+async function iaa(){
+  var q=document.getElementById('ia_q').value.trim(); if(!q)return;
+  var b=document.getElementById('ia_btn'), a=document.getElementById('ia_a');
+  b.disabled=true; b.textContent='…'; a.style.display='block'; a.textContent='Thinking…';
+  try{
+    var r=await fetch('/api/imaging-ask',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question:q})});
+    var j=await r.json(); a.textContent=j.answer||'No answer.';
+  }catch(e){ a.textContent='Request failed: '+e; }
+  b.disabled=false; b.textContent='Ask';
+}
+function iaq(q){ document.getElementById('ia_q').value=q; iaa(); }
+document.getElementById('ia_q').addEventListener('keydown',function(e){ if(e.key==='Enter')iaa(); });
+</script>
+
+<h2>Datasets — download &amp; inspect</h2>
+{% for d in datasets %}
+<div class="card">
+ <b>{{ d.name }}</b>{% if d.pending %}<span class="pend">PROCESSING</span>{% endif %}
+ <p>{{ d.desc }}</p>
+ <p style="color:var(--muted);font-size:.8rem">{% if d.size %}size: {{ d.size }}{% endif %}</p>
+ {% if 'ds004392' in d.name %}<p style="color:var(--muted);font-size:.8rem">Source: OpenNeuro ds004392 (CC0) — Wylie et al. · <a href="https://doi.org/10.18112/openneuro.ds004392.v1.0.2" target="_blank" rel="noopener">DOI</a></p>{% endif %}
+ {% if d.zip %}<a class="btn" href="{{ url_for('imaging_data', name=d.zip) }}">Download ZIP</a>{% endif %}
+ {% if d.raw %}<a class="btn ghost" href="{{ url_for('imaging_data', name=d.raw) }}">feature table (TSV)</a>{% endif %}
+ {% if d.meta %}<a class="btn ghost" href="{{ url_for('imaging_data', name=d.meta) }}">metadata (TSV)</a>{% endif %}
+</div>
+{% endfor %}
+
+{% for preview in previews %}
+<h2>Preview — {{ preview.name }}</h2>
+<div class="card">
+ <p>{{ preview.shape }} rows × {{ preview.ncols }} columns (constant columns retained; the pipeline drops them at modelling time). Showing the first 5 rows.</p>
+ <div style="overflow:auto"><table>
+  <tr>{% for c in preview.cols %}<th>{{ c }}</th>{% endfor %}</tr>
+  {% for r in preview.rows %}<tr>{% for v in r %}<td>{{ v }}</td>{% endfor %}</tr>
+  {% endfor %}
+ </table></div>
+ <p>Columns: <code>wb_*</code> whole-brain · <code>net_*</code> per-network groups · <code>alff_/falff_/reho_</code> functional-map texture.</p>
+</div>
+{% endfor %}
+
+<h2>Source &amp; licence</h2>
+<div class="card" style="font-size:.86rem;line-height:1.7;color:var(--muted)">
+<p style="margin:0 0 .5rem"><b style="color:var(--ink)">Dataset ds004392.</b>
+Wylie KP, Kluger BM, Medina LD, Holden SK, Kronberg E, Tregellas JR, Buard I.
+<i>Parkinson's disease, functional connectivity, and cognition.</i>
+OpenNeuro, CC0.
+<a href="https://doi.org/10.18112/openneuro.ds004392.v1.0.2" target="_blank" rel="noopener">DOI: 10.18112/openneuro.ds004392.v1.0.2</a> ·
+<a href="https://openneuro.org/datasets/ds004392" target="_blank" rel="noopener">dataset page</a>.</p>
+<p style="margin:0 0 .5rem"><b style="color:var(--ink)">Atlas.</b>
+Schaefer A, Kong R, Gordon EM, et al. Local-global parcellation of the human
+cerebral cortex from intrinsic functional connectivity MRI.
+<i>Cerebral Cortex</i> 2018.
+<a href="https://doi.org/10.1093/cercor/bhx179" target="_blank" rel="noopener">DOI: 10.1093/cercor/bhx179</a>.</p>
+<p style="margin:0 0 .5rem"><b style="color:var(--ink)">Processing tools.</b>
+Nilearn (<a href="https://doi.org/10.3389/fninf.2014.00014" target="_blank" rel="noopener">DOI</a>) ·
+AFNI (<a href="https://doi.org/10.1006/cbmr.1996.0014" target="_blank" rel="noopener">DOI</a>) ·
+PyRadiomics (<a href="https://doi.org/10.1158/0008-5472.CAN-17-0339" target="_blank" rel="noopener">DOI</a>).
+Derived tables are shared for inspection and reuse with attribution to the
+dataset; nothing here was hand-curated.</p>
+</div>
+</div></body></html>

@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: avail-ai
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./render/Dockerfile
+    dockerContext: ./render
+    healthCheckPath: /login
+    autoDeploy: true
+    envVars:
+      - key: AVAIL_WEB_ROOT
+        value: /app
+      - key: AVAIL_ALLOW_SERVER_RUN
+        value: "0"
+      - key: AVAIL_ALLOW_DEMO_RUN
+        value: "1"
+      - key: AVAIL_MAX_UPLOAD_MB
+        value: "512"
+      - key: AVAIL_COOKIE_SECURE
+        value: "1"
+      - key: AVAIL_WEB_PASSWORD
+        sync: false

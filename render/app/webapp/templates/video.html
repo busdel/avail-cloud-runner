@@ -1,0 +1,83 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AVAIL-AI - interface tour</title>
+<style>
+:root{--bg:#081220;--card:rgba(255,255,255,.05);--line:rgba(255,255,255,.12);--ink:#e8f0fa;--muted:#8fa3bd;--teal:#38e1c6}
+body{margin:0;background:radial-gradient(1200px 700px at 80% -10%,#123a63 0,transparent 60%),var(--bg);color:var(--ink);font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:1.2rem 1.2rem 3rem}
+.top{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.top img{width:54px;border-radius:50%;border:1px solid var(--line)}
+.top b{font-size:1.15rem}.top a{color:var(--teal);text-decoration:none;font-size:.9rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1rem}
+video{width:100%;border-radius:12px;display:block;background:#000}
+p{color:var(--muted);line-height:1.6;font-size:.9rem}
+a.btn{display:inline-block;margin:.4rem .5rem 0 0;padding:.5rem .9rem;border:1px solid var(--line);border-radius:10px;color:var(--ink);text-decoration:none;background:rgba(255,255,255,.06);font-size:.88rem}
+img.gif{width:100%;border-radius:12px;display:block;margin-top:.8rem}
+h2{font-size:1.05rem;margin:1.6rem 0 .4rem}
+</style></head><body><div class="wrap">
+<h1 style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">AVAIL-AI interface tour</h1>
+<div class="top"><img src="/static/logo.png" alt="AVAIL-AI"><b>AVAIL-AI interface tour</b>
+<div style="flex:1"></div><a href="/">&larr; back to the app</a></div>
+<div class="card">
+<video id="tour" controls autoplay muted playsinline preload="auto" poster="/static/poster_title.png">
+ <source src="/static/avail_video_v4.mp4" type="video/mp4">
+ <source src="/static/avail_video_v4_720.mp4" type="video/mp4">
+ <source src="/static/avail_video_v4.webm" type="video/webm">
+ Your browser does not support embedded video. Use the download links below.
+</video>
+<p>36 s · captions and English voice-over · current interface.</p>
+<a class="btn" href="/static/avail_video_v4.mp4" download>Download MP4 (1080p)</a>
+<a class="btn" href="/static/avail_video_v4_720.mp4" download>Download MP4 (720p)</a>
+<a class="btn" href="/static/avail_video_v4.webm" download>Download WebM</a>
+<a class="btn" href="/video-compat">Compatibility view</a>
+</div>
+<div class="card" id="compat-box" style="display:none;margin-top:1rem">
+<p style="color:var(--ink);font-weight:700;margin:.1rem 0 .6rem">Compatibility playback (automatic)</p>
+<img id="compat-img" style="width:100%;border-radius:12px;display:block" src="/static/avail_video_v4.png" alt="AVAIL-AI interface tour (image-based playback)">
+<p>The video layer is black on this device, so the same tour is shown as
+image-based playback. <button class="btn" id="compat-sound" type="button">Play with sound</button></p>
+<audio id="compat-audio" src="/static/avail_video_v4.m4a" preload="auto"></audio>
+</div>
+<script>
+(function(){
+  const v=document.getElementById('tour');
+  const box=document.getElementById('compat-box');
+  const vo=document.getElementById('compat-audio');
+  const force=new URLSearchParams(location.search).get('compat')==='1';
+  let black=0, timer=null;
+  function showCompat(){
+    if(!v || box.style.display!=='none') return;
+    box.style.display='block';
+    v.pause(); v.style.display='none';
+    clearInterval(timer);
+  }
+  function sample(){
+    if(!v || box.style.display!=='none') return;
+    if(v.error){ showCompat(); return; }
+    if(v.readyState<2) return;
+    try{
+      const c=document.createElement('canvas'); c.width=32; c.height=18;
+      const x=c.getContext('2d',{willReadFrequently:true});
+      x.drawImage(v,0,0,32,18);
+      const d=x.getImageData(0,0,32,18).data;
+      let s=0; for(let i=0;i<d.length;i+=4) s+=(d[i]+d[i+1]+d[i+2])/3;
+      const avg=s/(32*18);
+      if(avg<10) black++; else black=0;
+    }catch(e){ black=0; }
+    if(black>=6) showCompat();
+  }
+  if(force){ showCompat(); }
+  else {
+    timer=setInterval(sample,500);
+    setTimeout(()=>clearInterval(timer),25000);
+    v.addEventListener('playing',()=>setTimeout(sample,500));
+    v.addEventListener('error',showCompat);
+  }
+  document.getElementById('compat-sound').addEventListener('click',()=>{
+    const img=document.getElementById('compat-img');
+    img.src='/static/avail_video_v4.png?t='+Date.now();
+    vo.currentTime=0; vo.play().catch(()=>{});
+  });
+})();
+</script>
+</div></body></html>

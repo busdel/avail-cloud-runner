@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Bring your own GPU · AVAIL-AI</title>
+<style>
+ body{margin:0;background:#081220;color:#e8f0fa;font-family:'Segoe UI',system-ui,sans-serif;line-height:1.65}
+ .box{max-width:900px;margin:0 auto;padding:2.2rem 1.3rem 3rem}
+ h1{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:1.8rem;margin:.2rem 0 .6rem}
+ h2{font-size:1.02rem;margin:1.5rem 0 .4rem;color:#38e1c6}
+ p,li{color:#b7c7d9;font-size:.94rem}
+ a{color:#4da3ff}
+ .top{font-size:.85rem;color:#8fa3bd}
+ .note{border:1px solid rgba(56,225,198,.35);background:rgba(56,225,198,.08);
+       padding:.75rem .95rem;border-radius:10px;color:#b9f5ea;font-size:.9rem}
+ .warn{border:1px solid rgba(240,179,91,.45);background:rgba(240,179,91,.1);
+       padding:.75rem .95rem;border-radius:10px;color:#ffd89b;font-size:.9rem}
+ label{display:block;font-size:.82rem;color:#9fb3c8;margin:.7rem 0 .25rem}
+ input[type=text],input[type=password],input[type=file]{
+   width:100%;box-sizing:border-box;padding:.65rem .8rem;border:1px solid rgba(120,160,200,.3);
+   border-radius:9px;background:rgba(0,0,0,.3);color:#e8f0fa;font-size:.92rem}
+ input[type=checkbox]{margin-right:.4rem}
+ button{margin-top:.9rem;padding:.7rem 1.2rem;border:0;border-radius:9px;cursor:pointer;
+   background:linear-gradient(92deg,#1f6feb,#38e1c6);color:#04121f;font-weight:800}
+ button.secondary{background:#1b2c45;color:#e8f0fa;border:1px solid rgba(120,160,200,.3)}
+ pre{white-space:pre-wrap;background:#0d1a2b;border:1px solid rgba(120,160,200,.25);
+   border-radius:9px;padding:.8rem;font-size:.8rem;color:#cfe0f2;max-height:280px;overflow:auto}
+ code{background:#0d1a2b;padding:.1rem .3rem;border-radius:4px}
+ .row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+ @media(max-width:640px){.row{grid-template-columns:1fr}}
+ .hidden{display:none}
+</style></head><body><div class="box">
+<p class="top"><a href="/">← AVAIL-AI</a></p>
+<h1>Bring your own GPU / server</h1>
+<p class="sub">Your data goes <b>directly from this browser to your machine</b>.
+The AVAIL server never receives or stores it, and our GPUs are never exposed.</p>
+
+<div class="note">
+<b>How it works.</b> Run the worker on your own machine, keep it bound to
+<code>127.0.0.1</code>, and expose it with your own HTTPS tunnel
+(Tailscale, Cloudflare, ngrok). Paste the tunnel URL and worker token below;
+the ZIP is uploaded straight to your worker from this page.
+</div>
+
+<h2>1. Start the worker (on your machine)</h2>
+<pre>pip install -U avail-omics
+avail-omics worker-token          # create/print the bearer token
+avail-omics worker --name my-gpu  # serves on http://127.0.0.1:8787</pre>
+<p>Expose it over HTTPS with an outbound-only tunnel, for example:</p>
+<pre>tailscale serve --bg 8787
+# or: cloudflared tunnel --url http://localhost:8787
+# or: ngrok http 8787</pre>
+
+<h2>2. Send a dataset</h2>
+<div class="warn"><b>Do not upload patient identifiers or personal health data.</b>
+Use de-identified/derived features; you control the receiving machine and its logs.</div>
+
+<form id="byoform">
+ <label for="f">Data ZIP (AVAIL generic layout)</label>
+ <input id="f" type="file" accept=".zip,application/zip" required>
+
+ <div class="row">
+  <div>
+   <label for="wurl">Worker URL (HTTPS tunnel)</label>
+   <input id="wurl" type="text" placeholder="https://my-gpu.example.ts.net" required>
+  </div>
+  <div>
+   <label for="wtok">Worker token (stays in this tab)</label>
+   <input id="wtok" type="password" placeholder="Bearer token" required autocomplete="off">
+  </div>
+ </div>
+
+ <label for="wname">Optional job name</label>
+ <input id="wname" type="text" placeholder="e.g. cohort-2026-11">
+
+ <label style="margin-top:.9rem"><input id="robust" type="checkbox">
+   Run leak-free permutation robustness check (slower)</label>
+
+ <button type="submit" id="go">Upload directly to my worker</button>
+ <button type="button" class="secondary" id="forget">Forget token</button>
+</form>
+
+<div id="status" class="hidden">
+ <h2>Progress</h2>
+ <p id="statustext">—</p>
+ <pre id="log"></pre>
+ <p><button type="button" id="dl" class="hidden">Download results (.tgz)</button></p>
+</div>
+
+<h2>Security</h2>
+<ul>
+<li>The token is held only in this page's memory and sent only to your worker URL.</li>
+<li>Bind the worker to <code>127.0.0.1</code>; expose it with TLS, never an open port.</li>
+<li>One job at a time by default; per-job sandbox and optional memory cap.</li>
+<li>For clinical data, use your own local copy of the interface or the CLI end to end.</li>
+</ul>
+
+<p class="top" style="margin-top:2rem"><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/">Back to the app</a></p>
+</div>
+
+<script>
+(function(){
+  var form=document.getElementById('byoform');
+  var statusBox=document.getElementById('status');
+  var statustext=document.getElementById('statustext');
+  var logEl=document.getElementById('log');
+  var dl=document.getElementById('dl');
+  var state={base:'',token:'',id:''};
+
+  document.getElementById('forget').onclick=function(){
+    document.getElementById('wtok').value='';
+    state.token='';
+  };
+
+  function fail(msg){statusBox.classList.remove('hidden');statustext.textContent=msg;}
+
+  form.addEventListener('submit', async function(ev){
+    ev.preventDefault();
+    var file=document.getElementById('f').files[0];
+    var base=document.getElementById('wurl').value.trim().replace(/\/+$/,'');
+    var token=document.getElementById('wtok').value.trim();
+    var name=document.getElementById('wname').value.trim();
+    if(!file){return fail('Choose a ZIP file first.');}
+    if(!/^https?:\/\//i.test(base)){base='https://'+base;}
+    if(!token){return fail('Worker token is required.');}
+    if(base.indexOf('http://')===0 && !/^http:\/\/(127\.0\.0\.1|localhost)(:|\/|$)/.test(base)){
+      return fail('Use HTTPS for a remote worker (http is allowed only for localhost).');
+    }
+    state.base=base; state.token=token;
+    var flags=document.getElementById('robust').checked?'robustness':'';
+    statusBox.classList.remove('hidden'); dl.classList.add('hidden');
+    statustext.textContent='Uploading '+file.name+' directly to '+base+' …';
+    logEl.textContent='';
+    var r;
+    try{
+      r=await fetch(base+'/jobs?flags='+encodeURIComponent(flags)+'&name='+encodeURIComponent(name),{
+        method:'POST',
+        headers:{'Authorization':'Bearer '+token,'Content-Type':'application/zip'},
+        body:file
+      });
+    }catch(e){
+      return fail('Network/CORS error. Check the worker URL, its HTTPS tunnel, and that '+
+                  'the worker is v1.0.18+ (CORS). Update with: pip install -U avail-omics');
+    }
+    var txt=await r.text();
+    if(!r.ok){return fail('Worker error ('+r.status+'): '+txt.slice(0,400));}
+    var j; try{j=JSON.parse(txt);}catch(e){return fail('Unexpected worker response: '+txt.slice(0,300));}
+    state.id=j.id;
+    statustext.textContent='Queued as '+j.id+' — polling your worker…';
+    poll();
+  });
+
+  async function poll(){
+    for(var i=0;i<720;i++){
+      await new Promise(function(res){setTimeout(res,5000);});
+      var r;
+      try{
+        r=await fetch(state.base+'/jobs/'+encodeURIComponent(state.id),{
+          headers:{'Authorization':'Bearer '+state.token}
+        });
+      }catch(e){statustext.textContent='Connection lost; retrying…';continue;}
+      if(!r.ok){statustext.textContent='Worker returned '+r.status+'; retrying…';continue;}
+      var j=await r.json();
+      statustext.textContent='Status: '+(j.status||'unknown');
+      if(j.log_tail){logEl.textContent=j.log_tail;}
+      if(j.status==='done'){
+        statustext.textContent='Done — your results are ready.';
+        dl.classList.remove('hidden'); return;
+      }
+      if(j.status==='error'){
+        statustext.textContent='Run failed. See the log above.';
+        return;
+      }
+    }
+    statustext.textContent='Still running; you can keep this tab open or download later using the job id.';
+  }
+
+  dl.onclick=async function(){
+    try{
+      var r=await fetch(state.base+'/jobs/'+encodeURIComponent(state.id)+'/results.zip',{
+        headers:{'Authorization':'Bearer '+state.token}
+      });
+      if(!r.ok){return fail('Download failed ('+r.status+').');}
+      var b=await r.blob();
+      var a=document.createElement('a');
+      a.href=URL.createObjectURL(b);
+      a.download='avail_results_'+state.id+'.tgz';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){URL.revokeObjectURL(a.href);},5000);
+    }catch(e){fail('Download error: '+e);}
+  };
+})();
+</script>
+</body></html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparisons · AVAIL-AI</title>
+<style>
+:root{--bg:#081220;--card:rgba(255,255,255,.045);--line:rgba(255,255,255,.09);--ink:#e8f0fa;--muted:#8fa3bd;
+ --blue:#4da3ff;--teal:#38e1c6;--gold:#f2c14e}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:radial-gradient(1000px 600px at 85% -10%,#123a63 0%,transparent 60%),var(--bg);color:var(--ink)}
+.wrap{max-width:1000px;margin:0 auto;padding:1.6rem 1.2rem 4rem}
+a{color:#8ec7ff;text-decoration:none}
+h1{font-size:1.5rem}
+h2{font-size:1.15rem;margin:2rem 0 .6rem;color:var(--teal)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.2rem;margin:.5rem 0}
+.card b{color:var(--gold)}
+.card p{margin:.3rem 0 0;color:var(--muted);font-size:.9rem;line-height:1.6}
+.md{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1.4rem 1.8rem;line-height:1.65}
+.md h2{color:var(--ink)}
+.md h3{color:var(--teal)}
+.md pre{overflow-x:auto;max-width:100%}
+.md code{white-space:pre-wrap;word-break:break-word}
+.card p{overflow-wrap:anywhere}
+
+/* typography pass */
+body{line-height:1.65}
+h1,h2{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;letter-spacing:-.01em}
+</style></head><body>
+<div class="wrap">
+<p><a href="{{ url_for('index') }}">← back</a></p>
+<h1>Comparison suite</h1>
+<p style="color:var(--muted)">These analyses are available as optional checkboxes on your job page.
+They run on <b style="color:var(--ink)">your own data</b> after the main pipeline finishes - select the ones you want before starting the run.</p>
+
+<h2>Available comparisons</h2>
+<div class="card"><b>1 · Missing-data benchmark (14 strategies)</b>
+<p>Complete-case, zero/mean/median/KNN/MICE/MissForest/SoftImpute imputation (leak-free, fold-internal), early fusion, and ablations - all against the availability-aware fusion on the same data.</p></div>
+<div class="card"><b>2 · Bootstrap CIs + pairwise model comparison</b>
+<p>95% confidence intervals for every meta-learner and bootstrap significance tests between the top models.</p></div>
+<div class="card"><b>3 · Missingness-recovery benchmark</b>
+<p>On fully-measured subjects, modality layers are artificially dropped (10-70%) and the framework is compared against complete-case analysis and reference-fitted imputation.</p></div>
+<div class="card"><b>4 · Automatic hyperparameter tuning (optuna)</b>
+<p>Bayesian search with nested cross-validation - tuned vs prespecified hyperparameters.</p></div>
+<div class="card"><b>5 · Calibrated fusion</b>
+<p>Isotonic calibration of every base learner before fusion - raw vs calibrated probabilities.</p></div>
+<div class="card"><b>6 · Ordinal-aware fusion</b>
+<p>Embeds the class ordering (HC &lt; MCI &lt; PDD) in the meta-learner loss - useful when labels are ordinal.</p></div>
+<div class="card"><b>7 · Availability-aware prediction sets</b>
+<p>Mondrian conformal prediction with per-availability-pattern coverage - honest uncertainty: fewer modalities, wider (but valid) prediction sets.</p></div>
+<div class="card"><b>8 · Decision curves (net benefit)</b>
+<p>Net-benefit curves for the extreme class pair and the middle-class one-vs-rest target across decision thresholds - shows when acting on the model beats treat-all and treat-none.</p></div>
+
+<h2>External validation · public cohorts</h2>
+<p style="color:var(--muted)">The framework is retested on independent, fully public datasets
+(<i>your own study results are never shown here</i>). Numbers update automatically when the benchmarks are re-run.</p>
+{% if external and external.cohorts %}
+{% for c in external.cohorts %}
+<div class="card">
+ <b>{{ c.title }}</b>
+ <p>{{ c.desc }}<br>
+ {% if c.best %}
+ <span style="color:var(--teal)">Best non-degenerate model: {{ c.best.model }} · macro-AUC {{ c.best.auc }}</span>
+ · <a href="{{ c.url }}" target="_blank">source ↗</a>
+ {% else %}
+ <span style="color:var(--muted)">benchmark pending</span> · <a href="{{ c.url }}" target="_blank">source ↗</a>
+ {% endif %}
+ </p>
+</div>
+{% endfor %}
+{% endif %}
+{% if external and external.reconstruction %}
+<div class="card"><b>Label-free reconstruction · public 16S (Vascellari)</b>
+<p>No phenotype labels required: masked entries are imputed and compared with the true values.
+Best strategy: <span style="color:var(--teal)">{{ external.reconstruction.strategy }}</span>
+(RMSE {{ external.reconstruction.rmse }}, CLR space) on 115 subjects.</p></div>
+{% endif %}
+
+<h2>Methodology</h2>
+<p style="color:var(--muted)">The theoretical grounding of the availability-aware encoding (pattern-mixture equivalence, indicator-dimension argument, and the complement-leak theorem).</p>
+{% if theory %}
+<div class="md">{{ theory|safe }}</div>
+{% else %}
+<p style="color:var(--muted)">Not generated yet.</p>
+{% endif %}
+</div>
+</body></html>

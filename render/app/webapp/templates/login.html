@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AVAIL-AI  -  invite only</title>
+<style>
+ body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(900px 600px at 80% -10%,#123a63 0%,transparent 60%),radial-gradient(700px 500px at -10% 40%,#0d2b42 0%,transparent 55%),#081220}
+ .box{background:rgba(255,255,255,.05);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-radius:20px;
+  padding:2.4rem 2.6rem;width:min(92vw,400px);text-align:center;color:#e8f0fa;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+ .logo{width:76px;height:76px;margin-bottom:.4rem;filter:drop-shadow(0 0 12px rgba(77,163,255,.6))}
+ h1{font-size:1.35rem;margin:.8rem 0 .3rem}
+ p{color:#8fa3bd;font-size:.9rem;margin:0 0 1.3rem}
+ input{width:100%;box-sizing:border-box;padding:.75rem 1rem;border:1.5px solid rgba(255,255,255,.15);border-radius:10px;font-size:.95rem;background:rgba(0,0,0,.35);color:#e8f0fa}
+ input:focus{outline:none;border-color:#38e1c6}
+ button{width:100%;margin-top:.9rem;padding:.75rem;border:0;border-radius:10px;background:linear-gradient(92deg,#1f6feb,#38e1c6);color:#04121f;font-weight:800;font-size:.95rem;cursor:pointer}
+ button:hover{filter:brightness(1.1)}
+ .err{color:#ff9b9b;font-size:.85rem;margin-top:.8rem}
+
+/* typography pass */
+body{line-height:1.65}
+h1,h2{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;letter-spacing:-.01em}
+</style></head><body>
+<div class="box">
+   <img class="logo" src="/static/logo.png" alt="AVAIL-AI">
+ <h1>AVAIL-AI is invite-only</h1>
+ <p>Enter the access password to continue.</p>
+ <div style="border:1px solid rgba(240,179,91,.45);background:rgba(240,179,91,.1);color:#ffd89b;border-radius:10px;padding:.6rem .7rem;font-size:.78rem;line-height:1.5;margin:0 0 1rem;text-align:left">
+  <b>Research demo only.</b> Do not enter personal or health data. Not a medical device.
+ </div>
+ <form method="post">
+  <label for="pw" style="display:block;text-align:left;color:#8fa3bd;font-size:.82rem;margin:0 0 .35rem">Access password</label>
+  <input id="pw" type="password" name="pw" placeholder="Access password" autocomplete="current-password" autofocus>
+  <button type="submit">Enter</button>
+  {% if bad %}<div class="err">Wrong password.</div>{% endif %}
+ </form>
+ <p style="font-size:.75rem;margin:1.1rem 0 0"><a href="{{ url_for('byo') }}" style="color:#4da3ff;text-decoration:none">Bring your GPU</a> · <a href="{{ url_for('privacy') }}" style="color:#4da3ff;text-decoration:none">Privacy</a> · <a href="{{ url_for('terms') }}" style="color:#4da3ff;text-decoration:none">Terms</a></p>
+</div>
+</body></html>

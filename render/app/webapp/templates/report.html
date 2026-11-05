@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI report - {{ job_id }}</title>
+<style>
+:root{--bg:#f4f7fb;--ink:#12263a;--primary:#0f4c81;--teal:#2a9d8f;--line:#e3eaf2}
+body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:880px;margin:0 auto;padding:2rem 1.2rem 4rem}
+.topbar{display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem}
+.topbar .logo{width:52px;height:52px;filter:drop-shadow(0 0 8px rgba(15,76,129,.35))}
+.topbar .brand{font-size:1.25rem;font-weight:800;color:var(--primary)}
+.topbar .brand small{display:block;font-size:.68rem;font-weight:500;color:#5b6b7c;letter-spacing:.12em}
+.topbar .spacer{flex:1}
+.topbar a{color:var(--primary);font-size:.9rem}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:2rem 2.2rem;box-shadow:0 1px 3px rgba(18,38,58,.05)}
+h1{font-size:1.4rem;background:linear-gradient(90deg,var(--primary),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:1.1rem;margin-top:1.8rem;border-bottom:2px solid var(--line);padding-bottom:.35rem}
+h3{font-size:1rem;margin-top:1.2rem}
+li{margin:.3rem 0;line-height:1.55}
+p{line-height:1.65}
+a{color:var(--primary)}
+table{border-collapse:collapse;width:100%}
+td,th{border:1px solid var(--line);padding:.4rem .6rem;font-size:.9rem}
+.figs{display:grid;gap:1.2rem;margin-top:1.2rem}
+.figs figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:12px;padding:1rem}
+.figs img{width:100%;height:auto;border-radius:8px}
+.figs figcaption{font-size:.85rem;color:#5b6b7c;margin-top:.6rem}
+</style></head><body><div class="wrap">
+<div class="topbar">
+   <img class="logo" src="/static/logo.png" alt="AVAIL-AI">
+ <div class="brand">AVAIL-AI<small>AI ADVISOR REPORT</small></div>
+ <div class="spacer"></div>
+ <a href="{{ url_for('job_page', job_id=job_id) }}">← back to job</a>
+</div>
+<div class="card">{{ html|safe }}</div>
+{% if figs %}
+<h2 style="font-size:1.1rem;margin-top:2rem">Publication figures</h2>
+<div class="figs">
+{% for f in figs %}
+<figure>
+<img src="{{ url_for('result_file', job_id=job_id, name=f) }}" alt="{{ f }}">
+<figcaption>{{ f }}</figcaption>
+</figure>
+{% endfor %}
+</div>
+{% endif %}
+</div></body></html>

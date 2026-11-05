@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Job {{ job_id }} · AVAIL-AI</title>
+<style>
+.ic{width:18px;height:18px;display:inline-block;vertical-align:middle;flex:none}
+:root{--bg:#081220;--card:rgba(255,255,255,.045);--line:rgba(255,255,255,.09);--ink:#e8f0fa;--muted:#8fa3bd;
+ --blue:#4da3ff;--teal:#38e1c6;--gold:#f2c14e;--pink:#e18fb4}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:radial-gradient(1000px 600px at 85% -10%,#123a63 0%,transparent 60%),var(--bg);color:var(--ink)}
+.wrap{max-width:1040px;margin:0 auto;padding:1.4rem 1.2rem 3rem}
+.ic{width:18px;height:18px;display:inline-block;vertical-align:middle;flex:none}
+.btn .ic{width:16px;height:16px;margin-right:.2rem}
+.top{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:.45rem;padding:.3rem .9rem;border-radius:99px;font-size:.82rem;font-weight:700}
+.queued{background:rgba(143,163,189,.15);color:#9fb2c8}
+.validated{background:rgba(242,193,78,.14);color:var(--gold);border:1px solid rgba(242,193,78,.3)}
+.cloud{background:rgba(77,163,255,.14);color:#8ec7ff;border:1px solid rgba(77,163,255,.3)}
+.running{background:rgba(56,225,198,.13);color:var(--teal);border:1px solid rgba(56,225,198,.3)}
+.done{background:rgba(77,172,38,.16);color:#8fe08a;border:1px solid rgba(77,172,38,.35)}
+.error{background:rgba(226,90,90,.15);color:#ff9b9b;border:1px solid rgba(226,90,90,.35)}
+.pulse{width:9px;height:9px;border-radius:50%;background:var(--teal);animation:pl 1.1s infinite}
+@keyframes pl{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(56,225,198,.5)}50%{opacity:.4;box-shadow:0 0 0 5px rgba(56,225,198,0)}}
+h1{font-size:1.35rem;margin:.4rem 0 .2rem}
+.sub{color:var(--muted);font-size:.9rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.9rem;margin:1.1rem 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem}
+.card .k{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.card .v{font-size:1.05rem;font-weight:700;margin-top:.25rem}
+.btn{display:inline-block;padding:.7rem 1.3rem;border-radius:10px;text-decoration:none;font-weight:700;font-size:.92rem;margin:.2rem .4rem .2rem 0;border:0;cursor:pointer;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:linear-gradient(92deg,#1f6feb,#38e1c6);color:#04121f}
+.btn-ghost{background:rgba(255,255,255,.06);color:var(--ink);border:1px solid var(--line)}
+h2{font-size:1.1rem;margin:1.6rem 0 .7rem}
+.files{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.6rem}
+.file{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem;display:flex;justify-content:space-between;align-items:center;gap:.6rem;font-size:.83rem}
+.file code{word-break:break-all;color:var(--ink)}
+.file .sz{color:var(--muted);white-space:nowrap}
+.console{background:#050d18;color:#9fe8b0;border-radius:14px;padding:1rem;font-family:'Cascadia Mono',Consolas,monospace;font-size:.78rem;line-height:1.5;overflow:auto;max-height:460px;white-space:pre-wrap;word-break:break-word;border:1px solid var(--line)}
+a{color:#8ec7ff;text-decoration:none}
+a:hover{text-decoration:underline}
+.warn{background:rgba(242,193,78,.08);border:1px solid rgba(242,193,78,.35);color:#f2c14e;border-radius:12px;padding:.8rem 1rem;font-size:.9rem;margin:.8rem 0}
+.chip{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .8rem;border-radius:99px;font-size:.8rem;font-weight:600;color:#fff;margin:.15rem .25rem .15rem 0}
+.chip small{opacity:.9;font-weight:400}
+.aicard{background:linear-gradient(120deg,rgba(56,225,198,.06),rgba(77,163,255,.06));border:1px solid rgba(56,225,198,.25);border-radius:14px;padding:1.1rem 1.2rem;margin:1rem 0}
+.aicard h3{margin:0 0 .5rem;font-size:.95rem;display:flex;align-items:center;gap:.5rem}
+.aicard pre{white-space:pre-wrap;font-family:inherit;margin:0;line-height:1.6;font-size:.92rem}
+.chat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.1rem;margin-top:1rem}
+.chat textarea{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:.6rem .8rem;font-family:inherit;font-size:.92rem;min-height:60px;resize:vertical;background:rgba(0,0,0,.3);color:var(--ink)}
+.chat .ans{margin-top:.8rem;background:rgba(77,163,255,.07);border-radius:9px;padding:.8rem 1rem;font-size:.92rem;line-height:1.6;display:none}
+.chat .ans.show{display:block}
+#agentFab{position:fixed;right:1.2rem;bottom:1.2rem;z-index:60;background:linear-gradient(92deg,#1f6feb,#38e1c6);color:#04121f;border:0;border-radius:99px;padding:.8rem 1.2rem;font-weight:800;font-size:.92rem;cursor:pointer;box-shadow:0 8px 26px rgba(56,225,198,.35);display:flex;align-items:center;gap:.5rem}
+#agentFab:hover{transform:translateY(-2px)}
+#agentPanel{position:fixed;top:0;right:0;bottom:0;width:min(430px,94vw);z-index:70;background:#0b1526;border-left:1px solid var(--line);box-shadow:-12px 0 40px rgba(0,0,0,.5);transform:translateX(105%);transition:transform .28s ease;display:flex;flex-direction:column}
+#agentPanel.open{transform:translateX(0)}
+#agentPanel .head{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem;border-bottom:1px solid var(--line);background:rgba(8,16,30,.72);backdrop-filter:blur(10px)}
+#agentPanel .head .av{width:42px;height:42px;border-radius:50%;overflow:hidden;border:1px solid rgba(56,225,198,.5);box-shadow:0 0 18px rgba(56,225,198,.4);animation:hflick 4.2s infinite;flex:none}
+#agentPanel .head .av img{width:100%;height:100%;object-fit:cover}
+@keyframes hflick{0%,100%{opacity:1}46%{opacity:1}47%{opacity:.5}48%{opacity:.95}51%{opacity:.7}52%{opacity:1}}
+#agentPanel .head .t{display:flex;align-items:center;gap:.6rem}
+#agentPanel .head b{font-size:1rem}
+#agentPanel .head .st{font-size:.62rem;letter-spacing:.14em;color:var(--teal);text-transform:uppercase}
+#agentPanel .close{background:none;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:.25rem .6rem;cursor:pointer;font-size:1rem}
+#agentMsgs{flex:1;overflow-y:auto;padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.7rem;background:rgba(7,15,28,.45)}
+.amsg{max-width:86%;padding:.65rem .9rem;border-radius:16px;font-size:.88rem;line-height:1.55;white-space:pre-wrap;position:relative}
+.amsg.ai{display:flex;gap:.5rem;align-items:flex-start}
+.amsg.ai .bub{flex:1;background:rgba(13,28,48,.85);border:1px solid rgba(56,225,198,.35);box-shadow:0 0 14px rgba(56,225,198,.12)}
+.amsg.ai .mini{width:30px;height:30px;border-radius:50%;overflow:hidden;flex:none;border:1px solid rgba(56,225,198,.5);box-shadow:0 0 10px rgba(56,225,198,.35)}
+.amsg.ai .mini img{width:100%;height:100%;object-fit:cover}
+.amsg.user{align-self:flex-end;background:linear-gradient(92deg,#1f6feb,#38e1c6);color:#04121f;border:0;box-shadow:0 6px 18px rgba(56,225,198,.28)}
+.amsg.ai{align-self:flex-start;background:var(--card);border:1px solid var(--line)}
+.amsg .step{display:block;margin-top:.35rem;font-size:.74rem;color:var(--teal);font-family:'Cascadia Mono',Consolas,monospace;background:rgba(3,10,20,.5);border:1px solid rgba(56,225,198,.18);border-radius:6px;padding:.3rem .5rem}
+#agentPanel .foot{border-top:1px solid var(--line);padding:.8rem 1rem;background:rgba(8,16,30,.72);backdrop-filter:blur(10px)}
+#agentPanel .foot textarea{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:.55rem .8rem;font-family:inherit;font-size:.88rem;min-height:44px;resize:none;background:rgba(0,0,0,.3);color:var(--ink)}
+#agentPanel .foot .row{display:flex;gap:.5rem;margin-top:.5rem}
+#agentPanel .foot .row button{flex:1}
+.confirmbar{background:rgba(242,193,78,.1);border:1px solid rgba(242,193,78,.4);border-radius:10px;padding:.6rem .8rem;margin-top:.5rem;font-size:.85rem}
+.confirmbar .btns{display:flex;gap:.5rem;margin-top:.5rem}
+.typing{color:var(--teal);font-size:.8rem;padding:.2rem 0}
+/* typography pass */
+body{line-height:1.65}
+h1,h2{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;letter-spacing:-.01em}
+
+</style></head><body>
+<div class="wrap">
+<div class="top">
+ <div>
+  <a href="{{ url_for('index') }}">← home</a> · <a href="{{ url_for('results') }}">results</a> · <a href="{{ url_for('logout') }}">logout</a><br>
+  <h1>Job <code>{{ job_id }}</code></h1>
+  <div class="sub">{{ state.mode or 'avail' }} mode{% if state.created %} · uploaded {{ state.created }}{% endif %}</div>
+ </div>
+ <span class="badge {{ state.status }}">{% if state.status == 'running' %}<span class="pulse"></span>{% endif %}{{ state.status }}{% if state.returncode %} (exit {{ state.returncode }}){% endif %}</span>
+</div>
+
+{% if state.error %}
+<div class="warn"><b>Error:</b> {{ state.error }}</div>
+{% endif %}
+
+{% if not state.demo %}
+<form method="post" action="{{ url_for('delete_job', job_id=job_id) }}"
+      onsubmit="return confirm('Delete this job and all uploaded data, logs, figures, reports and result files? This cannot be undone.')"
+      style="margin:.7rem 0">
+  <button class="btn btn-ghost" type="submit">Delete job &amp; data</button>
+</form>
+{% endif %}
+
+{% if summary %}
+<div class="grid">
+ <div class="card"><div class="k">Samples</div><div class="v">{{ summary.n }}</div></div>
+ <div class="card"><div class="k">Classes</div><div class="v">{% for c, n in summary.classes.items() %}{{ c }}={{ n }}{% if not loop.last %} · {% endif %}{% endfor %}</div></div>
+ <div class="card"><div class="k">Mode</div><div class="v">{{ summary.mode }}</div></div>
+ <div class="card"><div class="k">Modalities</div><div class="v">{{ summary.modalities|length }}</div></div>
+</div>
+{% if summary.modalities %}
+<div>
+{% for m in summary.modalities %}
+<span class="chip" style="background:{{ m.color }}">{{ m.name }} <small>{{ m.n_samples }} samp · {{ m.n_features }} feat · {{ m.coverage }}%</small></span>
+{% endfor %}
+</div>
+{% endif %}
+{% if summary.warnings %}
+<div class="warn"><b>Validation warnings:</b>
+<ul style="margin:.4rem 0 0;padding-left:1.2rem">{% for w in summary.warnings %}<li>{{ w }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+{% if feedback %}
+<div class="aicard"><h3>{{ icon('brain','ic') }} AI data-quality feedback</h3><pre>{{ feedback|plain }}</pre></div>
+{% endif %}
+{% if state.status == 'validated' %}
+<div style="margin:.6rem 0">
+{% if server_run %}
+<form method="post" action="{{ url_for('run_job', job_id=job_id) }}" style="display:inline">
+<button class="btn btn-primary" type="submit">{{ icon('zap','ic') }} Run now (server GPU, recommended)</button>
+</form>
+{% elif cloud_enabled %}
+<form method="post" action="{{ url_for('run_cloud', job_id=job_id) }}" style="display:inline">
+<button class="btn btn-primary" type="submit">{{ icon('cloud','ic') }} Run now (free cloud, recommended)</button>
+</form>
+{% endif %}
+</div>
+<details style="background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:12px;padding:.6rem 1rem;margin:.4rem 0">
+<summary style="cursor:pointer;font-weight:700;font-size:.92rem;padding:.4rem 0">Advanced options &amp; comparisons</summary>
+<div style="margin-top:.4rem">
+{% if cloud_enabled %}
+<form method="post" action="{{ url_for('run_cloud', job_id=job_id) }}" style="display:inline">
+<button class="btn btn-ghost" type="submit">{{ icon('cloud','ic') }} Free cloud  -  fast (4 models)</button>
+</form>
+<form method="post" action="{{ url_for('run_cloud', job_id=job_id) }}?full=1" style="display:inline">
+<button class="btn btn-ghost" type="submit">{{ icon('cloud','ic') }} Free cloud  -  all 11 models (slow)</button>
+</form>
+{% endif %}
+{% if server_run %}
+<form method="post" action="{{ url_for('run_job', job_id=job_id) }}" id="srform" style="display:inline">
+<button class="btn btn-ghost" type="submit" style="margin-top:.6rem">{{ icon('chart','ic') }} Run server GPU + selected comparisons</button>
+</form>
+<label style="display:block;margin-top:.6rem;font-size:.88rem">
+<input type="checkbox" name="robustness" value="1" form="srform">
+ 14 missing-data strategies (leak-free imputation comparison)
+</label>
+<label style="display:block;margin-top:.35rem;font-size:.88rem">
+<input type="checkbox" name="ci" value="1" form="srform">
+ Bootstrap CIs + pairwise model comparison
+</label>
+<label style="display:block;margin-top:.35rem;font-size:.88rem">
+<input type="checkbox" name="missingness" value="1" form="srform">
+ Missingness-recovery benchmark
+</label>
+<label style="display:block;margin-top:.35rem;font-size:.88rem">
+<input type="checkbox" name="tuning" value="1" form="srform">
+ Automatic hyperparameter tuning (optuna)
+</label>
+<label style="display:block;margin-top:.35rem;font-size:.88rem">
+<input type="checkbox" name="calibration" value="1" form="srform">
+ Calibrated fusion (isotonic base learners)
+</label>
+<label style="display:block;margin-top:.35rem;font-size:.88rem">
+<input type="checkbox" name="ordinal" value="1" form="srform">
+ Ordinal-aware fusion (HC &lt; MCI &lt; PDD ordering)
+</label>
+<label style="display:block;margin-top:.35rem;font-size:.88rem">
+<input type="checkbox" name="conformal" value="1" form="srform">
+  Availability-aware prediction sets (Mondrian conformal)
+</label>
+<label style="display:block;margin-top:.35rem;font-size:.88rem">
+<input type="checkbox" name="hybrid" value="1" form="srform">
+  Hybrid strategy (leak-free): imputed signal + real availability flags
+</label>
+<label style="display:block;margin-top:.35rem;font-size:.88rem">
+<input type="checkbox" name="decision" value="1" form="srform">
+ Decision curves (net benefit, per-class thresholds)
+</label>
+{% endif %}
+
+</div>
+</details>
+<div class="aicard" style="margin-top:.8rem">
+<h3>{{ icon('monitor','ic') }} Or run on your own computer</h3>
+<ol style="margin:.4rem 0;padding-left:1.2rem;line-height:1.7">
+<li>Download the runner: <a href="{{ url_for('runner_zip') }}">avail_local_runner.zip</a></li>
+<li>Extract, then: <code>python run_me.py mydata.zip --out results</code> (add <code>--extra</code> for GPU models)</li>
+<li>Zip your <code>results/</code> folder and upload it back here for the advisor report.</li>
+</ol>
+<p style="font-size:.88rem;color:var(--muted);margin:.4rem 0">Prefer a scripted install? The same pipeline, validation protocol and comparison suite ship as a Python package: <code>pip install avail-omics</code> · <a href="https://pypi.org/project/avail-omics/" target="_blank" style="color:var(--blue)">PyPI</a></p>
+<p style="font-size:.88rem;color:var(--muted);margin:.4rem 0">Bringing your own GPU server? Read the <a href="/docs/byo" style="color:var(--blue)">deployment tiers &amp; security guide</a> (outbound-only, scoped tokens, sandboxed workers).</p>
+<form method="post" action="{{ url_for('upload_results', job_id=job_id) }}" enctype="multipart/form-data">
+<input type="file" name="file" accept=".zip" required style="display:inline">
+<button class="btn btn-ghost" type="submit" style="margin-left:.4rem">Upload results for AI report</button>
+</form>
+</div>
+{% endif %}
+{% endif %}
+
+{% if state.status == 'done' %}
+{% if decision and top_models %}
+<div class="aicard">
+<h3>{{ icon('brain','ic') }} AI decision  -  model selection</h3>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem;margin:.6rem 0">
+{% for tm in top_models %}
+<div style="background:rgba(0,0,0,.25);border:1px solid {{ 'rgba(56,225,198,.6)' if loop.first else 'var(--line)' }};border-radius:10px;padding:.6rem .9rem;text-align:center">
+<div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">{{ 'AI choice' if loop.first else 'rank ' ~ loop.index }}</div>
+<div style="font-weight:700;font-size:1.05rem">{{ tm.model }}</div>
+<div style="color:var(--teal);font-weight:700">AUC {{ tm.auc }}</div>
+</div>
+{% endfor %}
+</div>
+{% set rec = decision.get('recommend_all') or {} %}
+{% if rec and rec.recommended_model %}
+<div style="font-size:.95rem;line-height:1.6">
+<b>{{ rec.recommended_model }}</b> is the AI's recommendation{% if rec.runner_up %} (runner-up: {{ rec.runner_up }}){% endif %}.
+{% if rec.rationale %}<br><span style="color:var(--muted)">{{ rec.rationale|plain }}</span>{% endif %}
+{% if rec.caveat %}<br><span style="color:var(--gold)">{{ icon('shield','ic') }} {{ rec.caveat|plain }}</span>{% endif %}
+</div>
+{% endif %}
+<p style="margin:.6rem 0 0"><a href="{{ url_for('report', job_id=job_id) }}">Open the full AI report →</a></p>
+</div>
+{% endif %}
+<div>
+<a class="btn btn-primary" href="{{ url_for('download_results', job_id=job_id) }}">{{ icon('download','ic') }} Download all results (ZIP)</a>
+<a class="btn btn-ghost" href="{{ url_for('report', job_id=job_id) }}">AI advisor report</a>
+</div>
+{% if cmp_files %}
+<h2>Comparison outputs ({{ cmp_files|length }})</h2>
+<div class="files">
+{% for f in cmp_files %}
+<div class="file"><code>{{ f.name }}</code><span class="sz">{{ f.size }}</span>
+<a href="{{ url_for('comparison_file', job_id=job_id, name=f.name) }}">{{ icon('download','ic') }}</a></div>
+{% endfor %}
+</div>
+{% endif %}
+{% if figs %}
+<h2>Figures ({{ figs|length }})</h2>
+{% set caps = {
+ 'fig1_model_performance.png': 'Model performance: macro-AUC per meta-learner (leave-one-out); group sizes in the title. Source: meta_benchmark_results.tsv',
+ 'fig2_modality_coverage.png': 'Modality coverage by group (HC / MCI / PDD). Source: base_predictions_generic.tsv + subject_classes.tsv',
+ 'fig3_top_biomarkers.png': 'Top features per modality by attribution; color shows the sign of the Spearman correlation. Source: biomarkers_top20_per_modality.tsv',
+ 'fig4_subgroup_comparison.png': 'Does performance survive missing modalities? Macro-AUC by availability stratum. Source: meta_benchmark_results.tsv',
+ 'fig5_availability_pattern.png': 'One row per subject, with a class stripe (HC / MCI / PDD) on the left. Source: base_predictions_generic.tsv + subject_classes.tsv',
+ 'fig6_diff_abundance.png': 'Differential abundance per comparison (HC vs PDD, MCI vs PDD, HC vs MCI); BH-FDR line at 0.05. Source: diff_abundance_all.tsv',
+ 'fig7_per_class_auc.png': 'Per-class one-vs-rest AUC (models x HC/MCI/PDD); 0.5 = chance. Source: per_class_auc.tsv',
+ 'fig8_group_profiles.png': 'Top differential features by group: medians, IQR and every subject (real feature names). Source: top_features_long.tsv',
+ 'fig9_effect_sizes.png': 'Signed effect sizes (log2 fold-change) of the top differential features per comparison, with BH-FDR values. Source: diff_abundance_all.tsv'
+} %}
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1rem;margin:.4rem 0 1.4rem">
+{% for f in figs %}
+ <figure style="margin:0;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;overflow:hidden">
+  <img src="/job/{{ job_id }}/file/{{ f.name }}" alt="{{ caps.get(f.name, f.name) }}" style="width:100%;display:block;background:#fff">
+  <figcaption style="padding:.5rem .8rem;font-size:.8rem;color:var(--muted)">{{ caps.get(f.name, f.name) }}</figcaption>
+ </figure>
+{% endfor %}
+</div>
+{% endif %}
+
+<div style="margin-top:1rem;padding-top:.8rem;border-top:1px dashed var(--line)">
+ <b style="font-size:.92rem">{{ icon('monitor','ic') }} Run on my own server</b>
+ <p style="color:var(--muted);font-size:.85rem;margin:.25rem 0 .4rem">
+  Connect a machine you control. Either install the worker once
+  (<code>pip install avail-omics</code> + <code>avail-omics worker</code>) or
+  simply use the downloaded local runner: <code>python run_me.py --serve</code>
+  (thin launcher: installs the public package into a private venv on first
+  run, then prints a token and binds to 127.0.0.1).
+  The data ZIP is sent <b>directly from this UI to your machine</b>; the token authorizes it.
+ </p>
+ <form method="post" action="{{ url_for('run_worker', job_id=job_id) }}"
+       style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+  <input name="worker_url" aria-label="Worker URL" placeholder="http://my-gpu:8787 (or https://… via your tunnel)"
+         style="min-width:280px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:9px;padding:.5rem .7rem;color:var(--ink)">
+  <input name="worker_token" aria-label="Worker token" placeholder="worker token (avail-omics worker-token)"
+         style="min-width:220px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:9px;padding:.5rem .7rem;color:var(--ink)">
+  <button class="btn btn-ghost" type="submit">Run on my server</button>
+ </form>
+ <p style="color:var(--muted);font-size:.78rem;margin:.3rem 0 0">
+  Sensitive data? Use your own local copy of this interface (or the CLI) instead of the hosted one,
+  so nothing transits maintainer infrastructure.
+ </p>
+</div>
+
+<h2>Result files ({{ files|length }})</h2>
+<p style="color:var(--muted);font-size:.85rem;margin:.2rem 0 .5rem">These are the exact tables behind the figures and reported numbers; open any table to inspect it in the browser.</p>
+<div class="files">
+{% for f in files %}
+<div class="file"><code>{{ f.name }}</code><span class="sz">{{ f.size }}</span>
+{% if f.name.lower().endswith(('.tsv', '.csv')) %}<a href="{{ url_for('table_view', job_id=job_id, name=f.name) }}" style="margin-right:.45rem">view</a>{% endif %}
+<a href="{{ url_for('result_file', job_id=job_id, name=f.name) }}">{{ icon('download','ic') }}</a></div>
+{% endfor %}
+</div>
+
+<div class="chat">
+<p style="color:var(--muted);font-size:.8rem;margin:.8rem 0 .2rem">
+Methods &amp; data: scikit-learn · SHAP · PubMed E-utilities ·
+Nilearn / AFNI / PyRadiomics for imaging · <a href="/#refs" style="color:var(--teal)">full citations &amp; data sources &rarr;</a></p>
+
+<h2>{{ icon('brain','ic') }} Ask the AI about these results</h2>
+<textarea id="q" aria-label="Ask the AI about these results" placeholder="e.g. Which model should I use for a small cohort? What is the main finding?"></textarea>
+<button class="btn btn-primary" id="askBtn" style="margin-top:.6rem">Ask</button>
+<div class="ans" id="ans"></div>
+<div class="srcs" id="srcs" style="display:none"></div>
+<p style="color:var(--muted);font-size:.78rem;margin-top:.7rem">Privacy: only aggregate results are sent to the language-model provider - never raw patient data. Answers are grounded in the retrieved evidence; verify citations before reuse.</p>
+</div>
+{% endif %}
+
+<h2>Live log</h2>
+<div class="console" id="log">{{ log }}</div>
+</div>
+
+<button id="agentFab" type="button">Dr. Avail agent</button>
+<div id="agentPanel" aria-hidden="true">
+ <div class="head">
+  <div class="t">
+   <span class="av"><img src="/static/dr_avail_head.png" alt="Dr. Avail agent"></span>
+   <div><b>Dr. Avail agent</b><div class="st">AI research assistant · online</div></div>
+  </div>
+  <button class="close" type="button" id="agentClose">×</button>
+ </div>
+ <div id="agentMsgs"></div>
+ <div class="foot">
+  <div id="agentConfirm"></div>
+  <textarea id="agentInp" aria-label="Message Dr. Avail agent" placeholder="e.g. Check the job, then run it with the robustness comparison"></textarea>
+  <div class="row">
+   <button class="btn btn-ghost" type="button" id="agentSuggest">Status</button>
+   <button class="btn btn-primary" type="button" id="agentSend">Send</button>
+  </div>
+  <p style="color:var(--muted);font-size:.72rem;margin:.5rem 0 0">The agent can inspect, run and explain your job. Heavy runs ask for your confirmation first.</p>
+ </div>
+</div>
+<script>
+var u = "{{ url_for('api_job', job_id=job_id) }}";
+var askUrl = "{{ url_for('api_ask') }}";
+var askBtn = document.getElementById('askBtn');
+if(askBtn){
+ askBtn.addEventListener('click', async function(){
+  var q = document.getElementById('q').value.trim();
+  var ans = document.getElementById('ans');
+  if(!q) return;
+  askBtn.disabled = true; askBtn.textContent = 'Thinking…';
+  ans.classList.remove('show');
+  try{
+   var r = await fetch(askUrl, {method:'POST', headers:{'Content-Type':'application/json'},
+     body: JSON.stringify({job_id: "{{ job_id }}", question: q})});
+   var j = await r.json();
+   ans.textContent = j.answer; ans.classList.add('show');
+   var srcs = document.getElementById('srcs');
+   if(j.sources && j.sources.length){
+    srcs.innerHTML = '<b style="color:var(--teal)">Sources used:</b> ' + j.sources.join(' · ');
+    srcs.style.display = 'block';
+   }
+  }catch(e){ ans.textContent = 'Request failed: ' + e; ans.classList.add('show'); }
+  askBtn.disabled = false; askBtn.textContent = 'Ask';
+ });
+}
+async function tick(){
+  try{
+    var r = await fetch(u); var j = await r.json();
+    var logEl = document.getElementById('log');
+    logEl.textContent = j.log;
+    logEl.scrollTop = logEl.scrollHeight;
+    if(j.status === 'queued' || j.status === 'running' || j.status === 'cloud'){ setTimeout(tick, 5000); return; }
+    if(j.status === 'done' || j.status === 'error'){
+      if(!sessionStorage.getItem('avail_reloaded_' + "{{ job_id }}")){
+        sessionStorage.setItem('avail_reloaded_' + "{{ job_id }}", '1');
+        location.reload();
+      }
+    }
+  }catch(e){ setTimeout(tick, 10000); }
+}
+tick();
+
+// ---------------- Dr. Avail agent panel ----------------
+(function(){
+ var panel = document.getElementById('agentPanel');
+ var fab = document.getElementById('agentFab');
+ var close = document.getElementById('agentClose');
+ var msgs = document.getElementById('agentMsgs');
+ var inp = document.getElementById('agentInp');
+ var send = document.getElementById('agentSend');
+ var sugg = document.getElementById('agentSuggest');
+ var conf = document.getElementById('agentConfirm');
+ var busy = false;
+ var agentUrl = "{{ url_for('api_agent') }}";
+ var jobId = "{{ job_id }}";
+ function open(){
+  panel.classList.add('open'); panel.setAttribute('aria-hidden','false');
+  if(msgs.children.length === 0){
+   add('ai', 'Hi! I\'m Dr. Avail — your AI research assistant.<br><br>I can check this job\'s status, run the pipeline and comparisons, generate publication figures, and answer questions grounded in the results. Where shall we start?<br><br>Try: <b>\"Check the job and run the hybrid comparison\"</b>');
+  }
+ }
+ function shut(){ panel.classList.remove('open'); panel.setAttribute('aria-hidden','true'); }
+ fab.addEventListener('click', open);
+ close.addEventListener('click', shut);
+ function add(cls, html){
+  var d = document.createElement('div'); d.className = 'amsg ' + cls;
+  if(cls === 'ai'){
+   d.innerHTML = '<span class="mini"><img src="/static/dr_avail_head.png" alt="Dr. Avail agent"></span><span class="bub">' + html + '</span>';
+  } else {
+   d.innerHTML = html;
+  }
+  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight; return d;
+ }
+ function md(t){
+  t = t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  t = t.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+  t = t.replace(/`([^`]+)`/g,'<code>$1</code>');
+  t = t.replace(/\n/g,'<br>');
+  return t;
+ }
+ function showSteps(steps, el){
+  if(!steps || !steps.length) return;
+  var s = steps.map(function(st){
+   var ok = st.result && st.result.error ? 'failed' : (st.result && st.result.needs_confirmation ? 'confirm' : (st.result && st.result.pending ? 'confirm' : 'ok'));
+   return '<span class="step">▸ ' + st.label + (ok==='failed'?'  [err]':(ok==='confirm'?'  [confirm]':'  [ok]')) + '</span>';
+  }).join('');
+  el.innerHTML += s;
+ }
+ function showConfirm(pend){
+  if(pend){
+   conf.innerHTML = '<div class="confirmbar"><b>Confirmation needed</b><div style="color:var(--muted);font-size:.8rem">' + md(pend.label) + '</div>' +
+    '<div class="btns"><button class="btn btn-primary" type="button" id="agentYes">Confirm</button>' +
+    '<button class="btn btn-ghost" type="button" id="agentNo">Cancel</button></div></div>';
+   document.getElementById('agentYes').onclick = function(){ conf.innerHTML=''; sendMsg('confirm'); };
+   document.getElementById('agentNo').onclick = function(){
+    conf.innerHTML='';
+    sendMsg('cancel - do not run it');
+   };
+  } else conf.innerHTML = '';
+ }
+ function sendMsg(text){
+  if(busy || !text.trim()) return;
+  busy = true; send.disabled = true;
+  add('user', md(text));
+  var ty = document.createElement('div'); ty.className = 'typing'; ty.textContent = 'Dr. Avail is working…';
+  msgs.appendChild(ty); msgs.scrollTop = msgs.scrollHeight;
+  fetch(agentUrl, {method:'POST', headers:{'Content-Type':'application/json'},
+   body: JSON.stringify({job_id: jobId, message: text})})
+  .then(function(r){ return r.json(); })
+  .then(function(j){
+   ty.remove();
+   var el = add('ai', md(j.reply || '(no reply)'));
+   showSteps(j.steps, el);
+   showConfirm(j.pending);
+  })
+  .catch(function(e){
+   ty.remove(); add('ai', 'Request failed: ' + e);
+  })
+  .finally(function(){ busy = false; send.disabled = false; });
+ }
+ send.addEventListener('click', function(){ sendMsg(inp.value); inp.value=''; });
+ inp.addEventListener('keydown', function(e){
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendMsg(inp.value); inp.value=''; }
+ });
+ sugg.addEventListener('click', function(){ sendMsg('Check the job status and summarize what is next.'); });
+})();
+</script>
+</body></html>
