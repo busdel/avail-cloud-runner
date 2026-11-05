@@ -11,6 +11,8 @@ RUN pip install --no-cache-dir \
         openpyxl networkx xgboost flask waitress jinja2 markdown
 
 COPY app/ /app/
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 ENV AVAIL_WEB_ROOT=/app \
     AVAIL_WEB_PORT=8090 \
