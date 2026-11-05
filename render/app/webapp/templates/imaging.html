@@ -66,6 +66,13 @@ avail-omics run-generic --data-root mydata --out results</pre>
  <p>Upload a ZIP with <code>metadata.tsv</code> (SampleID + Group) plus, per subject, a 4D BOLD NIfTI
  named after the SampleID (e.g. <code>sub-001_task-rest_bold.nii.gz</code>) or a DICOM folder named
  <code>sub-001</code>. Set <code>radiomics</code> below to also extract PyRadiomics features from T1 volumes.</p>
+ {% if demo_only %}
+ <div class="card" style="border-color:rgba(240,179,91,.45);background:rgba(240,179,91,.1);color:#ffd89b;margin-top:.6rem;padding:.8rem 1rem">
+  <b>Public host is demo-only.</b> Imaging/radiomics uploads are disabled here.
+  Run them on your own machine: <code>pip install "avail-omics[radiomics,deep]"</code>,
+  use the local runner, or the BYO-worker path. GPU deep models require your own CUDA setup.
+ </div>
+ {% else %}
  <form method="post" action="{{ url_for('upload') }}" enctype="multipart/form-data"
        style="display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;margin-top:.6rem">
   <input type="file" name="file" accept=".zip" required
@@ -76,6 +83,7 @@ avail-omics run-generic --data-root mydata --out results</pre>
  <p style="margin-top:.5rem">After validation you choose where it runs: <b>on your own computer</b> (local runner, no upload limits)
  or the free cloud. Template-space (MNI) BOLD is extracted automatically; native-space runs need the documented
  AFNI registration step first. Uploads through the tunnel are capped near 100&nbsp;MB — large cohorts: use the local runner.</p>
+ {% endif %}
 </div>
 
 <h2>Ask Dr. Avail about imaging</h2>

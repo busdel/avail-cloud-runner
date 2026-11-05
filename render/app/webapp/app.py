@@ -496,7 +496,7 @@ def imaging_page():
         previews.append(_preview(ftsv, "ds004392 fc_features.tsv"))
     if rtsv.exists():
         previews.append(_preview(rtsv, "ds004392 radiomics.tsv"))
-    return _render("imaging.html", datasets=datasets, previews=previews)
+    return _render("imaging.html", datasets=datasets, previews=previews, demo_only=DEMO_ONLY)
 
 
 IMG_DATA_ALLOW = {"radiomics_ds004392.zip", "ds004392_excerpt.zip",

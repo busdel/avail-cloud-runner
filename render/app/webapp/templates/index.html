@@ -178,7 +178,7 @@ h2.sec{font-size:1.55rem;margin:2.6rem 0 1.1rem}
    <img class="logo" src="/static/logo.png" alt="AVAIL-AI">
  <div class="brand">AVAIL-AI<small>Multimodal clinical analysis</small></div>
  <div class="navlinks" id="navlinks">
-  <a href="#upload">Demo</a><a href="{{ url_for('byo') }}">Bring your GPU</a><a href="{{ url_for('imaging_page') }}">Imaging &amp; radiomics</a><a href="{{ url_for('results') }}">Comparisons</a><a href="#how">How it works</a><a href="#jobs">Jobs</a><a href="#refs">Citations</a>
+  <a href="#upload">Demo</a><a href="{{ url_for('byo') }}">Bring your GPU</a>{% if not demo_only %}<a href="{{ url_for('imaging_page') }}">Imaging &amp; radiomics</a>{% endif %}<a href="{{ url_for('results') }}">Comparisons</a><a href="#how">How it works</a><a href="#jobs">Jobs</a><a href="#refs">Citations</a>
   <a class="logout" href="{{ url_for('logout') }}">logout</a>
  </div>
  <button class="burger" onclick="document.getElementById('navlinks').classList.toggle('open')"><span></span><span></span><span></span></button>
@@ -217,7 +217,7 @@ h2.sec{font-size:1.55rem;margin:2.6rem 0 1.1rem}
   </div>
   <div class="quick" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.9rem;margin-top:2rem">
    <a class="qcard" href="#upload">{{ icon('zap','ic') }}<b>Demo</b><small>fixed de-identified cohort</small></a>
-   <a class="qcard" href="{{ url_for('imaging_page') }}">{{ icon('brain','ic') }}<b>Imaging</b><small>T1 / rs-fMRI → features</small></a>
+   {% if not demo_only %}<a class="qcard" href="{{ url_for('imaging_page') }}">{{ icon('brain','ic') }}<b>Imaging</b><small>T1 / rs-fMRI → features</small></a>{% endif %}
    <a class="qcard" href="{{ url_for('results') }}">{{ icon('chart','ic') }}<b>Comparisons</b><small>benchmark on your data</small></a>
    <button class="qcard" type="button" style="width:100%"
            onclick="document.querySelector('#upload h3').scrollIntoView({behavior:'smooth'});">{{ icon('zap','ic') }}<b>Demo</b><small>fixed de-identified cohort</small></button>
@@ -468,6 +468,8 @@ S003        0.15           0.002</pre>
   <a href="https://pypi.org/project/avail-omics/" style="color:#4da3ff">pip install avail-omics</a> ·
   <a href="{{ url_for('runner_zip') }}" style="color:#4da3ff">local runner</a> ·
   <a href="{{ url_for('byo') }}" style="color:#4da3ff">bring your own GPU</a>.
+  <div style="margin-top:.5rem;font-size:.8rem;color:#b7c7d9">PyRadiomics and GPU deep models are self-hosted extras:
+  <code>pip install "avail-omics[radiomics,deep]"</code>; they are not available on the public demo host.</div>
 </div>
 {% endif %}
 <div class="dz" id="dz"{% if demo_only and not public_uploads %} style="display:none"{% endif %}>
