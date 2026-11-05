@@ -3,53 +3,95 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title>AVAIL-AI · reviewer access</title>
+<meta name="robots" content="index, follow">
+<title>AVAIL-AI · availability-aware multi-omics</title>
 <style>
-:root{--bg:#0a1626;--card:#10213a;--line:rgba(120,160,200,.22);--ink:#e8f0f8;
-      --muted:#9fb3c8;--teal:#38e1c6;--blue:#4da3ff}
+:root{--bg:#081220;--card:#0e1c2e;--line:rgba(120,160,200,.22);--ink:#e8f0f8;
+      --muted:#9fb3c8;--teal:#38e1c6;--blue:#4da3ff;--gold:#ffd89b}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
-     background:radial-gradient(1200px 600px at 50% -10%,#12305a 0%,var(--bg) 60%);
-     color:var(--ink);font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
-.wrap{max-width:720px;padding:2.4rem 1.4rem;text-align:center}
-img.logo{width:120px;filter:drop-shadow(0 0 24px rgba(56,225,198,.35))}
-h1{margin:.6rem 0 .2rem;font-size:2rem;letter-spacing:-.01em}
-h1 span{background:linear-gradient(90deg,var(--blue),var(--teal));
-        -webkit-background-clip:text;background-clip:text;color:transparent}
-p.sub{color:var(--muted);margin:.2rem 0 1.4rem;font-size:1.02rem}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
-      padding:1.2rem 1.3rem;text-align:left;margin:1rem 0}
-.card b{display:block;margin-bottom:.3rem}
-.card p{color:var(--muted);font-size:.9rem;margin:.3rem 0 0;line-height:1.55}
-.card a{color:var(--blue);text-decoration:none;font-size:.9rem}
-.foot{color:var(--muted);font-size:.78rem;margin-top:1.6rem;line-height:1.6}
+body{margin:0;background:radial-gradient(1100px 600px at 50% -10%,#12305a 0%,var(--bg) 60%);
+     color:var(--ink);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.65}
+.wrap{max-width:1040px;margin:0 auto;padding:2.2rem 1.2rem 3rem}
+header{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+img.logo{width:84px;border-radius:18px;filter:drop-shadow(0 0 18px rgba(56,225,198,.35))}
+h1{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:2rem;margin:0;letter-spacing:-.01em}
+h1 span{background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--muted);margin:.2rem 0 1.2rem}
+.cta{display:flex;gap:.7rem;flex-wrap:wrap;margin:1.2rem 0 1.6rem}
+.btn{display:inline-block;text-decoration:none;border-radius:11px;padding:.75rem 1.15rem;font-weight:800;font-size:.95rem}
+.primary{background:linear-gradient(90deg,#2a9fd8,#38e1c6);color:#04121f}
+.ghost{border:1px solid var(--line);color:var(--ink);background:var(--card)}
+.ghost:hover{border-color:var(--teal)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin:1.2rem 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.15rem}
+.card b{display:block;margin-bottom:.25rem}
+.card p{color:var(--muted);font-size:.9rem;margin:.25rem 0 0}
+.card a{color:var(--blue);text-decoration:none}
+.note{border:1px solid rgba(240,179,91,.45);background:rgba(240,179,91,.1);color:var(--gold);
+      border-radius:12px;padding:.8rem 1rem;font-size:.9rem;margin:1rem 0}
+pre{background:#0b1726;border:1px solid var(--line);border-radius:10px;padding:.8rem 1rem;
+    overflow:auto;font-size:.84rem;color:#cfe0f2}
+code{background:#0b1726;padding:.1rem .3rem;border-radius:4px}
+h2{font-size:1.15rem;margin:1.8rem 0 .5rem;color:var(--teal)}
+.foot{color:var(--muted);font-size:.8rem;margin-top:2rem;border-top:1px solid var(--line);padding-top:1rem}
 </style>
 </head>
-<body>
-<div class="wrap">
+<body><div class="wrap">
+<header>
   <img class="logo" src="logo.png" alt="AVAIL-AI">
-  <h1><span>AVAIL-AI</span></h1>
-  <p class="sub">Availability-aware multimodal integration &amp; learning —
-     every subject counts, regardless of which modalities they have.</p>
+  <div>
+    <h1><span>AVAIL-AI</span></h1>
+    <div class="sub">Availability-aware multimodal integration &amp; learning — every subject counts, regardless of which modalities they have.</div>
+  </div>
+</header>
 
-  <div class="card"><b>Reviewer access</b>
-    <p>The live web interface is invite-only while the manuscript is under
-       review. The link and session password are provided in the cover letter.
-       They are intentionally not published on this page.</p></div>
-
-  <div class="card"><b>Python package</b>
-    <a href="https://pypi.org/project/avail-omics/">pypi.org/project/avail-omics</a>
-    <p>Same pipeline, validation protocol and comparison suite:
-       <code>pip install avail-omics</code>.</p></div>
-
-  <div class="card"><b>Code &amp; deployment guide</b>
-    <a href="https://github.com/busdel/avail-cloud-runner">github.com/busdel/avail-cloud-runner</a>
-    <p>Local runner, self-hosting, own cloud runner and worker agent
-       instructions (outbound-only, scoped tokens).</p></div>
-
-  <p class="foot">MIT license · manuscript under review · access details are
-     not public yet.</p>
+<div class="cta">
+  <a class="btn primary" href="https://pypi.org/project/avail-omics/">pip install avail-omics</a>
+  <a class="btn ghost" href="https://github.com/busdel/avail-cloud-runner">GitHub</a>
+  <a class="btn ghost" href="https://avail-ai.onrender.com">Live demo (demo-only)</a>
+  <a class="btn ghost" href="https://github.com/busdel/avail-cloud-runner/blob/main/REVIEWER_GUIDE.md">Reviewer guide</a>
 </div>
-</body>
-</html>
+
+<div class="note"><b>Public demo is demo-only.</b> The live Render instance serves the fixed,
+de-identified cohort and does <b>not</b> accept uploads or user jobs. For your own data
+use the Python package, the local runner, or your own worker. The free demo may take
+~30–60 s to wake.</div>
+
+<h2>What it does</h2>
+<div class="grid">
+  <div class="card"><b>Missingness as data</b><p>One base learner per modality; base probabilities plus true availability flags are fused for every subject. No complete-case discard, no fabricated measurements.</p></div>
+  <div class="card"><b>11 meta-learners</b><p>SimpleMean, WSimpleMean, ElasticNetLR, MLP, MoE, GNN, Transformer, XGBoost, TabNet, TabPFN, TabICL — with leak-free leave-one-out evaluation.</p></div>
+  <div class="card"><b>Validation toolkit</b><p>14 missing-data strategies + hybrid, permutation nulls, dropout/MCAR/MAR/MNAR simulation, calibration, conformal sets, decision curves, external cohorts.</p></div>
+  <div class="card"><b>AI advisor</b><p>Model recommendation, biomarker plausibility with PubMed/EuropePMC/OpenAlex/Semantic Scholar evidence, and a manuscript-ready interpretation.</p></div>
+</div>
+
+<h2>Install and run your data</h2>
+<pre>pip install -U avail-omics
+avail-omics run-generic --data-root mydata --out results
+avail-omics figures     --out results
+avail-omics report      --out results   # AI advisor report (your LLM key)
+avail-omics chat        --out results   # results-grounded Dr. AVAIL agent</pre>
+<p class="sub">Data layout: <code>metadata.tsv</code> (SampleID, Group; optional Age/Sex/Education) plus <code>features/*.tsv</code> (one file per modality).</p>
+
+<h2>Bring your own LLM key</h2>
+<pre>avail-omics set-key                  # or export AVAIL_LLM_API_KEY=...
+avail-omics report --out results
+avail-omics chat   --out results</pre>
+<p class="sub">Keys are never bundled. Raw data stay on your machine; only derived summaries and prompts go to the chosen OpenAI-compatible provider. Without a key the core pipeline still runs and the AI sections are skipped.</p>
+
+<h2>Imaging and GPU extras</h2>
+<div class="grid">
+  <div class="card"><b>PyRadiomics</b><p><code>pip install "avail-omics[radiomics]"</code>; T1 whole-brain and Schaefer-network features, ALFF/fALFF/ReHo texture. Runs on your machine.</p></div>
+  <div class="card"><b>Deep / GPU</b><p><code>pip install "avail-omics[deep]"</code> for torch, TabNet, TabPFN, TabICL. GPU is used only if your CUDA setup provides it; the public demo is CPU and four models.</p></div>
+  <div class="card"><b>Bring your own compute</b><p>Run the worker on your own server and connect it from the interface, or use the local runner. See <a href="https://github.com/busdel/avail-cloud-runner/blob/main/WORKER.md">WORKER.md</a> and <a href="https://github.com/busdel/avail-cloud-runner/blob/main/BYO_COMPUTE.md">BYO_COMPUTE.md</a>.</p></div>
+</div>
+
+<h2>Repository and package</h2>
+<div class="grid">
+  <div class="card"><b>PyPI</b><a href="https://pypi.org/project/avail-omics/">avail-omics</a><p>MIT · core CPU tier, optional imaging/radiomics/deep extras.</p></div>
+  <div class="card"><b>GitHub</b><a href="https://github.com/busdel/avail-cloud-runner">busdel/avail-cloud-runner</a><p>Code, docs, reviewer guide, deployment tiers, changelog.</p></div>
+  <div class="card"><b>Manuscript</b><p>Under review. Reviewer package and access details are provided in the cover letter; the public demo is demo-only.</p></div>
+</div>
+
+<p class="foot">AVAIL-AI · MIT license · research software; not a medical device. Public demo: fixed de-identified cohort, no uploads. Own data: package/local runner/BYO.</p>
+</div></body></html>

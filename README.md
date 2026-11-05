@@ -81,7 +81,7 @@ missingness handled as data instead of discarded or fabricated.
 
 ## Install the Python package
 
-**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.0.17**, MIT, Python 3.10&ndash;3.13) &mdash; `pip install avail-omics`
+**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.0.19**, MIT, Python 3.10&ndash;3.13) &mdash; `pip install avail-omics`
 
 ```bash
 pip install avail-omics            # core (CPU is fine)
@@ -91,6 +91,8 @@ avail-omics run-generic --data-root mydata --out results
 avail-omics robustness  --data-root mydata --out results   # leak-free permutation
 avail-omics sensitivity --data-root mydata --out results   # modality ablation
 avail-omics figures     --out results
+avail-omics report      --out results   # AI advisor report (own LLM key)
+avail-omics chat        --out results   # results-grounded Dr. AVAIL agent
 ```
 
 Generic data layout (any omics layers):
@@ -108,21 +110,17 @@ Outputs: `meta_benchmark_results.tsv`, `per_class_auc.tsv`, `loo_predictions.tsv
 `biomarkers_top20_per_modality.tsv`, `diff_abundance_*.tsv`, publication figures,
 and the AI advisor report (with PubMed literature).
 
-## Live web tool
+## Live demo and own-data analysis
 
-> **Reviewers:** start with [REVIEWER_GUIDE.md](REVIEWER_GUIDE.md) for a short path through the demo, package, audit evidence and known limitations.
-
-**Stable link: https://busdel.github.io/avail-cloud-runner/** (redirects to the current
-session; access password shared on request while the manuscript is under review).
-
-Upload a ZIP &rarr; automatic validation + AI data-quality feedback &rarr; run on the
-**free cloud (GitHub Actions)** or **on your own computer** &rarr; AI decision report +
-publication figures. The hosted interface **never executes user-uploaded jobs
-on maintainer infrastructure**; only the fixed, de-identified demo runs
-server-side: see [BYO_COMPUTE.md](BYO_COMPUTE.md) for the four deployment tiers
-(local runner &middot; self-hosted &middot; your own cloud runner &middot; worker agent for
-your own server), [DATA_SECURITY.md](DATA_SECURITY.md) for the outbound-call inventory
-and offline mode, and [WORKER.md](WORKER.md) to attach your own server.
+- **Public demo (demo-only):** https://avail-ai.onrender.com &mdash; fixed,
+  de-identified cohort; **no uploads**, no server-side user jobs. The free
+  instance may take ~30&ndash;60 s to wake.
+- **Canonical project page:** https://busdel.github.io/avail-cloud-runner/
+- **Own data:** install the package, use the local runner, or attach your own
+  worker. See [BYO_COMPUTE.md](BYO_COMPUTE.md) (four deployment tiers),
+  [DATA_SECURITY.md](DATA_SECURITY.md) and [WORKER.md](WORKER.md).
+- **Reviewers:** start with [REVIEWER_GUIDE.md](REVIEWER_GUIDE.md); the
+  manuscript package and cover letter carry the access details.
 
 Imaging is first-class: raw rs-fMRI and T1 volumes are processed end-to-end
 (Schaefer-100 connectivity + optional radiomics) on **your** machine &mdash; see
@@ -137,6 +135,8 @@ outages.
 
 ```bash
 avail-omics set-key            # saves to ~/.config/avail/llm_key (0600)
+avail-omics report --out results   # llm_advisor.json + llm_advisor_report.md
+avail-omics chat --out results     # results-grounded Dr. AVAIL agent
 avail-omics figures --out results
 avail-omics advise  --out results
 ```

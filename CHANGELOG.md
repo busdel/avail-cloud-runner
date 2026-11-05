@@ -1,3 +1,12 @@
+## 1.0.19
+- Package-level AI features: `avail-omics report` writes `llm_advisor.json` /
+  `llm_advisor_report.md`; `avail-omics chat` (alias `agent`) is a
+  results-grounded Dr. AVAIL assistant. Users supply their own LLM key
+  (`avail-omics set-key` or `AVAIL_LLM_API_KEY`); no key is bundled and raw
+  data stay local.
+- Public Render instance is demo-only; uploads/server jobs are disabled.
+- 4x4x4 and 8x8x8 factorial results added to the manuscript package.
+
 # Changelog
 
 ## 1.0.18
