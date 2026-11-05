@@ -113,8 +113,9 @@ and the AI advisor report (with PubMed literature).
 ## Live demo and own-data analysis
 
 - **Public demo (demo-only):** https://avail-ai.onrender.com &mdash; fixed,
-  de-identified cohort; **no uploads**, no server-side user jobs. The free
-  instance may take ~30&ndash;60 s to wake.
+  de-identified cohort; **no uploads**, no server-side user jobs; four
+  meta-learners on the free CPU tier. The full **11-model zoo** is available
+  in the package/full run. The free instance may take ~30&ndash;60 s to wake.
 - **Canonical project page:** https://busdel.github.io/avail-cloud-runner/
 - **Own data:** install the package, use the local runner, or attach your own
   worker. See [BYO_COMPUTE.md](BYO_COMPUTE.md) (four deployment tiers),

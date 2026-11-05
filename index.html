@@ -53,14 +53,15 @@ h2{font-size:1.15rem;margin:1.8rem 0 .5rem;color:var(--teal)}
 </div>
 
 <div class="note"><b>Public demo is demo-only.</b> The live Render instance serves the fixed,
-de-identified cohort and does <b>not</b> accept uploads or user jobs. For your own data
-use the Python package, the local runner, or your own worker. The free demo may take
-~30–60 s to wake.</div>
+de-identified cohort and does <b>not</b> accept uploads or user jobs. It runs
+<b>four meta-learners</b> on the free CPU tier; the full <b>11-model zoo</b> is available
+in the package and on the full run. For your own data use the Python package, the local
+runner, or your own worker. The free demo may take ~30–60 s to wake.</div>
 
 <h2>What it does</h2>
 <div class="grid">
   <div class="card"><b>Missingness as data</b><p>One base learner per modality; base probabilities plus true availability flags are fused for every subject. No complete-case discard, no fabricated measurements.</p></div>
-  <div class="card"><b>11 meta-learners</b><p>SimpleMean, WSimpleMean, ElasticNetLR, MLP, MoE, GNN, Transformer, XGBoost, TabNet, TabPFN, TabICL — with leak-free leave-one-out evaluation.</p></div>
+  <div class="card"><b>11 meta-learners (package / full run)</b><p>SimpleMean, WSimpleMean, ElasticNetLR, MLP, MoE, GNN, Transformer, XGBoost, TabNet, TabPFN, TabICL — with leak-free leave-one-out evaluation. The public demo runs four on the free CPU tier.</p></div>
   <div class="card"><b>Validation toolkit</b><p>14 missing-data strategies + hybrid, permutation nulls, dropout/MCAR/MAR/MNAR simulation, calibration, conformal sets, decision curves, external cohorts.</p></div>
   <div class="card"><b>AI advisor</b><p>Model recommendation, biomarker plausibility with PubMed/EuropePMC/OpenAlex/Semantic Scholar evidence, and a manuscript-ready interpretation.</p></div>
 </div>
