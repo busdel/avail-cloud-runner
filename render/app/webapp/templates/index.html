@@ -178,7 +178,7 @@ h2.sec{font-size:1.55rem;margin:2.6rem 0 1.1rem}
    <img class="logo" src="/static/logo.png" alt="AVAIL-AI">
  <div class="brand">AVAIL-AI<small>Multimodal clinical analysis</small></div>
  <div class="navlinks" id="navlinks">
-  <a href="#upload">Upload</a><a href="{{ url_for('byo') }}">Bring your GPU</a><a href="{{ url_for('imaging_page') }}">Imaging &amp; radiomics</a><a href="{{ url_for('results') }}">Comparisons</a><a href="#how">How it works</a><a href="#jobs">Jobs</a><a href="#refs">Citations</a>
+  <a href="#upload">Demo</a><a href="{{ url_for('byo') }}">Bring your GPU</a><a href="{{ url_for('imaging_page') }}">Imaging &amp; radiomics</a><a href="{{ url_for('results') }}">Comparisons</a><a href="#how">How it works</a><a href="#jobs">Jobs</a><a href="#refs">Citations</a>
   <a class="logout" href="{{ url_for('logout') }}">logout</a>
  </div>
  <button class="burger" onclick="document.getElementById('navlinks').classList.toggle('open')"><span></span><span></span><span></span></button>
@@ -208,7 +208,7 @@ h2.sec{font-size:1.55rem;margin:2.6rem 0 1.1rem}
   Eleven meta-learners, SHAP biomarkers, PubMed-backed AI reports  -  fully automated.</p>
   <div class="term" id="term"></div>
   <div class="cta">
-   <a class="btn btn-primary" href="#upload">Upload data</a>
+   <a class="btn btn-primary" href="#upload">Run the demo</a>
    <a class="btn btn-ghost" href="{{ url_for('template_zip') }}">Example dataset</a>
    <a class="btn btn-ghost" href="/video" target="_blank">{{ icon('film','ic') }} Watch the video</a>
    {% if public_url %}
@@ -216,7 +216,7 @@ h2.sec{font-size:1.55rem;margin:2.6rem 0 1.1rem}
    {% endif %}
   </div>
   <div class="quick" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.9rem;margin-top:2rem">
-   <a class="qcard" href="#upload">{{ icon('upload','ic') }}<b>Upload data</b><small>metadata + feature tables</small></a>
+   <a class="qcard" href="#upload">{{ icon('zap','ic') }}<b>Demo</b><small>fixed de-identified cohort</small></a>
    <a class="qcard" href="{{ url_for('imaging_page') }}">{{ icon('brain','ic') }}<b>Imaging</b><small>T1 / rs-fMRI → features</small></a>
    <a class="qcard" href="{{ url_for('results') }}">{{ icon('chart','ic') }}<b>Comparisons</b><small>benchmark on your data</small></a>
    <button class="qcard" type="button" style="width:100%"
@@ -398,7 +398,8 @@ input layout identical to this platform (metadata.tsv + features/*.tsv) ·
 
 <div class="section" id="upload">
 <div class="eyebrow">Get started</div>
-<h2 class="sec">Upload &amp; validate</h2>
+<h2 class="sec">{% if demo_only and not public_uploads %}Run the demo{% else %}Upload &amp; validate{% endif %}</h2>
+{% if not (demo_only and not public_uploads) %}
 <details style="background:rgba(77,163,255,.07);border:1px solid rgba(77,163,255,.3);border-radius:14px;padding:.6rem 1.1rem;margin-bottom:.8rem;max-width:820px">
  <summary style="cursor:pointer;font-weight:800;font-size:.92rem;padding:.4rem 0">{{ icon('file','ic') }} Data format  -  information notes</summary>
  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1rem;margin:.6rem 0">
@@ -426,7 +427,7 @@ S003        0.15           0.002</pre>
 <div class="card" style="max-width:820px;margin:.9rem 0 1.2rem;border-color:rgba(56,225,198,.45);background:linear-gradient(120deg,rgba(56,225,198,.08),rgba(77,163,255,.06))">
  <div class="eyebrow" style="margin:0 0 .25rem">Demo</div>
 <b style="font-size:1.05rem">{{ icon('zap','ic') }} Try it with our de-identified cohort — no upload needed</b>
-<p style="color:var(--muted);font-size:.9rem;margin:.2rem 0 .6rem">One click runs validation → short benchmark (4 models) → clear figures → advisor report on our fixed, de-identified cohort excerpt (87 subjects; real feature names and values). This fixed demo runs server-side; your own uploads run on the compute you choose. No file or folder selection is required.</p>
+<p style="color:var(--muted);font-size:.9rem;margin:.2rem 0 .6rem">One click runs validation → short benchmark (4 models) → clear figures → advisor report on our fixed, de-identified cohort excerpt (87 subjects; real feature names and values). This fixed demo runs server-side. For your own data, use the package, local runner or BYO worker; no file selection is required.</p>
 <button class="btn btn-primary" type="submit" form="demoform" style="margin:0 0 .6rem 0">{{ icon('zap','ic') }} Run the demo</button>
 <details id="demoopts" style="background:#0f1a29;border:1px solid #223349;border-radius:8px;padding:.7rem 1.1rem;margin-top:.2rem;max-width:820px">
  <summary style="cursor:pointer;font-weight:800;font-size:.92rem;padding:.4rem 0">Advanced (optional): extra comparisons &amp; real cohort</summary>
@@ -456,7 +457,10 @@ S003        0.15           0.002</pre>
 </details>
 </div>
 
+{% endif %}
+{% if not (demo_only and not public_uploads) %}
 <h3 style="margin:1.2rem 0 .4rem;font-size:1rem">{{ icon('upload','ic') }} Or upload your own data</h3>
+{% endif %}
 {% if demo_only and not public_uploads %}
 <div class="card" style="margin-top:1rem;border:1px solid rgba(240,179,91,.45);background:rgba(240,179,91,.1);color:#ffd89b;padding:1rem 1.2rem">
   <b>This public instance is demo-only.</b> Uploads and server-side runs are disabled.
