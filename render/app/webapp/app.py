@@ -101,9 +101,13 @@ def _security_headers(resp):
 
 PASSWORD = os.environ.get("AVAIL_WEB_PASSWORD", "")
 CONTACT_EMAIL = os.environ.get("AVAIL_CONTACT_EMAIL", "")
+PUBLIC_DEMO = os.environ.get("AVAIL_PUBLIC_DEMO", "0") == "1"
+PUBLIC_UPLOADS = os.environ.get("AVAIL_PUBLIC_UPLOADS", "0") == "1"
 DEMO_ONLY = not SERVER_RUN and not (GH_TOKEN and GH_REPO)
-app.secret_key = hashlib.sha256(("avail:" + PASSWORD).encode()).digest() \
-    if PASSWORD else "avail-insecure-dev-key"
+if PASSWORD:
+    app.secret_key = hashlib.sha256(("avail:" + PASSWORD).encode()).digest()
+else:
+    app.secret_key = hashlib.sha256(os.urandom(32)).digest()
 
 job_queue = queue.Queue()
 _ask_times = {}
@@ -126,7 +130,7 @@ def _rate_limit_exceeded(key, limit=30):
 # ---------------------------------------------------------------- helpers
 @app.before_request
 def _gate():
-    if not PASSWORD:
+    if not PASSWORD or PUBLIC_DEMO:
         return
     if session.get("auth"):
         return
@@ -1470,6 +1474,11 @@ def demo():
     _safe_extract(zip_path, data_dir)
     zip_path.unlink(missing_ok=True)
     data_root = _data_root_for(data_dir)
+    if PUBLIC_UPLOADS:
+        issues = _public_upload_issues(data_root)
+        if issues:
+            shutil.rmtree(jd, ignore_errors=True)
+            abort(400, "Public-upload check failed: " + "; ".join(issues))
     mode = _detect_mode(data_root)
     summary = _summarize(data_root, mode)
     feedback = _ai_feedback(summary)
@@ -1516,14 +1525,87 @@ def demo():
     return redirect(url_for("job_page", job_id=job_id))
 
 
+def _public_upload_issues(data_root):
+    """Rule-based guard for public uploads: strict metadata schema plus
+    identifier patterns. It reduces risk but is not a legal anonymisation
+    guarantee."""
+    issues = []
+    meta = data_root / "metadata.tsv"
+    if not meta.exists():
+        return ["metadata.tsv is required"]
+    try:
+        df = pd.read_csv(meta, sep="\t", dtype=str)
+    except Exception as e:
+        return [f"metadata.tsv could not be read: {type(e).__name__}"]
+    allowed = {"sampleid", "group", "age", "sex", "education"}
+    bad_words = {"name", "patient", "mrn", "identity", "address", "phone",
+                 "email", "birth", "dob", "tckn", "tc_kimlik"}
+
+    def looks_like_identifier(col):
+        s = re.sub(r"([a-z])([A-Z])", r"\1 \2", str(col)).lower()
+        return any(w in bad_words for w in re.findall(r"[a-z]+", s))
+
+    for c in df.columns:
+        lc = str(c).strip().lower()
+        if lc not in allowed:
+            issues.append(f"metadata column '{c}' is not allowed on the public "
+                          "instance; use SampleID/Group/Age/Sex/Education only")
+        if looks_like_identifier(c):
+            issues.append(f"metadata column '{c}' looks like an identifier")
+    for c in df.columns:
+        for v in df[c].dropna().astype(str).head(5000):
+            s = v.strip()
+            if str(c).strip().lower() == "sampleid" and re.search(r"\s", s):
+                issues.append("SampleID values must not contain spaces "
+                              "(possible names)")
+                break
+            if re.search(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}", s):
+                issues.append(f"email-like value in column '{c}'")
+                break
+            if re.fullmatch(r"\d{11}", s):
+                issues.append(f"11-digit identifier-like value in column '{c}'")
+                break
+            if re.fullmatch(r"\d{4}-\d{2}-\d{2}", s):
+                issues.append(f"exact date-like value in column '{c}'")
+                break
+    feats = data_root / "features"
+    if not feats.exists():
+        issues.append("features/ directory is required")
+    else:
+        for p in feats.glob("*"):
+            if p.suffix.lower() not in (".tsv",):
+                issues.append(f"feature file '{p.name}' must be .tsv")
+                continue
+            try:
+                cols = pd.read_csv(p, sep="\t", nrows=0).columns
+            except Exception:
+                issues.append(f"feature file '{p.name}' could not be read")
+                continue
+            for c in cols:
+                if looks_like_identifier(c):
+                    issues.append(f"feature header '{c}' looks like an identifier")
+    return issues[:20]
+
+
 @app.route("/upload", methods=["POST"])
 def upload():
-    if DEMO_ONLY:
+    if DEMO_ONLY and not PUBLIC_UPLOADS:
         return _render("error.html", code=403, title="Uploads disabled",
                        message="This public instance is a research demo. "
                                "Do not upload personal or health data. "
                                "Use the local runner or pip install avail-omics "
                                "to analyse your own data."), 403
+    if PUBLIC_UPLOADS:
+        fwd = request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+        ip = fwd or request.remote_addr or "unknown"
+        if _rate_limit_exceeded("upload:" + ip, limit=5):
+            return _render("error.html", code=429, title="Upload limit reached",
+                           message="Too many uploads from this network. "
+                                   "Please try again later."), 429
+        if request.form.get("deid_confirm") != "1":
+            abort(400, "Please confirm that the data are de-identified/derived "
+                       "and contain no names, identifiers, or personal health "
+                       "information.")
     f = request.files.get("file")
     if not f or not f.filename.lower().endswith(".zip"):
         abort(400, "please upload a .zip file")
@@ -1544,6 +1626,11 @@ def upload():
     if not ok:
         shutil.rmtree(jd, ignore_errors=True)
         abort(400, msg)
+    if PUBLIC_UPLOADS:
+        issues = _public_upload_issues(data_root)
+        if issues:
+            shutil.rmtree(jd, ignore_errors=True)
+            abort(400, "Public-upload check failed: " + "; ".join(issues))
     mode = _detect_mode(data_root)
     summary = _summarize(data_root, mode)
     feedback = _ai_feedback(summary)
@@ -2114,6 +2201,24 @@ def _requeue_interrupted():
         _time.sleep(120)
 
 
+def _cleanup_old_jobs():
+    hours = float(os.environ.get("AVAIL_JOB_RETENTION_HOURS", "24"))
+    while True:
+        now = time.time()
+        try:
+            for d in UPLOADS.iterdir():
+                if not d.is_dir():
+                    continue
+                st = _read_state(d.name)
+                if st.get("demo"):
+                    continue
+                if now - d.stat().st_mtime > hours * 3600:
+                    shutil.rmtree(d, ignore_errors=True)
+        except Exception:
+            pass
+        time.sleep(3600)
+
+
 def create_app():
     """App factory: performs startup (dirs, threads) and returns the Flask app.
 
@@ -2124,6 +2229,7 @@ def create_app():
         raise RuntimeError(f"runner not found under {BASE}")
     threading.Thread(target=_worker, daemon=True).start()
     threading.Thread(target=_requeue_interrupted, daemon=True).start()
+    threading.Thread(target=_cleanup_old_jobs, daemon=True).start()
     if GH_TOKEN and GH_REPO:
         threading.Thread(target=_gh_poller, daemon=True).start()
     return app

@@ -6,18 +6,22 @@ services:
     region: frankfurt
     dockerfilePath: ./render/Dockerfile
     dockerContext: ./render
-    healthCheckPath: /login
+    healthCheckPath: /
     autoDeploy: true
     envVars:
       - key: AVAIL_WEB_ROOT
         value: /app
       - key: AVAIL_ALLOW_SERVER_RUN
-        value: "0"
+        value: "1"
+      - key: AVAIL_PUBLIC_UPLOADS
+        value: "1"
+      - key: AVAIL_PUBLIC_DEMO
+        value: "1"
       - key: AVAIL_ALLOW_DEMO_RUN
         value: "1"
       - key: AVAIL_MAX_UPLOAD_MB
-        value: "512"
+        value: "256"
+      - key: AVAIL_JOB_RETENTION_HOURS
+        value: "24"
       - key: AVAIL_COOKIE_SECURE
         value: "1"
-      - key: AVAIL_WEB_PASSWORD
-        sync: false

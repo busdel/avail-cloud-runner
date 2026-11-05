@@ -2,7 +2,7 @@
 # AVAIL-AI web interface entrypoint (Hugging Face Space / any Docker host).
 set -eu
 
-if [ -z "${AVAIL_WEB_PASSWORD:-}" ]; then
+if [ -z "${AVAIL_WEB_PASSWORD:-}" ] && [ "${AVAIL_PUBLIC_DEMO:-0}" != "1" ]; then
     AVAIL_WEB_PASSWORD="tmp-$(head -c6 /dev/urandom | od -An -tx1 | tr -d ' \n')"
     echo "WARNING: AVAIL_WEB_PASSWORD secret not set; temporary password: ${AVAIL_WEB_PASSWORD}" >&2
     export AVAIL_WEB_PASSWORD

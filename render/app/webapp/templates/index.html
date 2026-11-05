@@ -185,7 +185,11 @@ h2.sec{font-size:1.55rem;margin:2.6rem 0 1.1rem}
 </div></nav>
 
 <div class="wrap">
-{% if demo_only %}
+{% if server_run %}
+<div style="margin:1rem auto 0;max-width:1120px;padding:.8rem 1rem;border:1px solid rgba(240,179,91,.45);background:rgba(240,179,91,.1);color:#ffd89b;border-radius:10px;font-size:.88rem;line-height:1.5">
+  <b>Public research instance.</b> Upload only de-identified or derived omics data. Do not upload names, identifiers, dates of birth, MRN/TCKN, contact details, or free-text patient notes. Uploads are processed transiently and deleted within 24 hours. Not a medical device.
+</div>
+{% elif demo_only %}
 <div style="margin:1rem auto 0;max-width:1120px;padding:.8rem 1rem;border:1px solid rgba(240,179,91,.45);background:rgba(240,179,91,.1);color:#ffd89b;border-radius:10px;font-size:.88rem;line-height:1.5">
   <b>Public research demo.</b> Do not enter personal or health data. Uploads are disabled on this instance; use the local runner or <code>pip install avail-omics</code> for your own data. Not a medical device.
 </div>
@@ -465,6 +469,10 @@ S003        0.15           0.002</pre>
 <form method="post" action="{{ url_for('upload') }}" enctype="multipart/form-data" id="upform">
  <input type="file" id="file" name="file" accept=".zip" required style="display:none">
  <div id="chosen" style="margin-top:.7rem"></div>
+ <label style="display:flex;gap:.5rem;align-items:flex-start;font-size:.8rem;color:#ffd89b;margin:.8rem 0 0;line-height:1.5">
+  <input type="checkbox" name="deid_confirm" value="1" form="upform" required style="margin-top:.2rem">
+  <span>I confirm these data are de-identified or derived, contain no names, identifiers, MRN/TCKN, dates of birth, contact details, or personal health information, and that I am authorised to upload them.</span>
+ </label>
  <button class="btn btn-primary" type="submit" id="upbtn" disabled style="margin-top:.7rem">Upload &amp; validate</button>
 </form>
 <details style="background:#0f1a29;border:1px solid #223349;border-radius:8px;padding:.6rem 1.1rem;margin-top:.8rem;max-width:760px">

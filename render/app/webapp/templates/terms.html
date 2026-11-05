@@ -25,11 +25,14 @@ integration. It is provided for scientific and educational evaluation only.
 It is not intended for clinical use, triage, diagnosis, treatment or
 patient management.</p>
 
-<h2>2. No personal or health data</h2>
-<p>This public instance is demo-only and does not accept data uploads. Do not
-attempt to submit personal data, patient identifiers, or health information.
-Use the local runner or the <code>avail-omics</code> package on your own
-infrastructure for your own data.</p>
+<h2>2. De-identified or derived data only</h2>
+<p>The public instance accepts de-identified or derived omics data for
+analysis. Do not submit names, patient identifiers, MRN/TCKN, dates of birth,
+contact details, free-text patient notes, or other personal health
+information. By uploading you confirm that the data meet these conditions and
+that you are authorised to submit them. Data are processed transiently and
+deleted within 24 hours. For identifiable or clinical data, use the local
+runner or the <code>avail-omics</code> package on your own infrastructure.</p>
 
 <h2>3. No warranty</h2>
 <p>The service is provided “as is” and “as available”, without warranties of
@@ -41,17 +44,22 @@ uninterrupted availability. Results are illustrative and may change.</p>
 scale, upload malicious content, or use the service unlawfully. Access may be
 limited or revoked to protect the service.</p>
 
-<h2>5. Intellectual property</h2>
+<h2>5. Uploaded content</h2>
+<p>You retain responsibility for uploaded data and for ensuring that no
+personal or health information is included. You grant the service permission
+to process the upload solely to produce the requested results.</p>
+
+<h2>6. Intellectual property</h2>
 <p>The software is released under the MIT licence. The demo cohort is
 de-identified and provided for demonstration only. Names and marks remain the
 property of their respective owners.</p>
 
-<h2>6. Liability</h2>
+<h2>7. Liability</h2>
 <p>To the extent permitted by law, the authors and their institutions are not
 liable for any loss or damage arising from use of, or reliance on, this
 research prototype.</p>
 
-<h2>7. Changes and contact</h2>
+<h2>8. Changes and contact</h2>
 <p>These terms may be updated as the service evolves. Questions:
 {% if contact %}<a href="mailto:{{ contact }}">{{ contact }}</a>{% else %}the corresponding author (details in the manuscript cover letter){% endif %}.</p>
 
