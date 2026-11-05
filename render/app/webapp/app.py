@@ -815,6 +815,9 @@ def _worker():
                         "SimpleMean,WSimpleMean,ElasticNetLR,XGBoost")
                     lf.write("[demo] fast mode: 4 meta-learners "
                              "(advanced comparisons still available)\n")
+                elif PUBLIC_UPLOADS:
+                    lf.write("[public] CPU tier: four meta-learners; use the "
+                             "BYO-worker path for the full 11-model suite\n")
                 proc = subprocess.run(cmd, cwd=str(BASE), env=env,
                                       stdout=lf, stderr=subprocess.STDOUT)
                 if proc.returncode == 0 and mode == "imaging" and \
@@ -1299,7 +1302,8 @@ def index():
     return _render("index.html", jobs=_list_jobs(), max_mb=MAX_MB,
                    public_url=_public_url(), demo_bundle=demo_bundle,
                    demo_own=demo_own, server_run=SERVER_RUN,
-                   demo_only=DEMO_ONLY, contact=CONTACT_EMAIL)
+                   demo_only=DEMO_ONLY, contact=CONTACT_EMAIL,
+                   public_uploads=PUBLIC_UPLOADS)
 
 
 @app.route("/template.zip")

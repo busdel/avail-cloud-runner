@@ -434,8 +434,8 @@ S003        0.15           0.002</pre>
  The example dataset is exactly the file behind the <a href="{{ url_for('template_zip') }}" style="color:var(--blue)">Example dataset</a> download.
  {% if server_run %}Pre-selected: leak-free strategy benchmark + bootstrap CIs (recommended first look).{% else %}Comparisons execute on self-hosted deployments; this hosted demo runs the core pipeline on the free cloud.{% endif %}</p>
  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:.3rem .9rem;margin:.4rem 0">
-    <label style="font-size:.88rem"><input type="checkbox" name="robustness" value="1" form="demoform"{% if server_run %} checked{% endif %}> 14 missing-data strategies + hybrid (leak-free)</label>
-    <label style="font-size:.88rem"><input type="checkbox" name="ci" value="1" form="demoform"{% if server_run %} checked{% endif %}> Bootstrap CIs + pairwise tests</label>
+    <label style="font-size:.88rem"><input type="checkbox" name="robustness" value="1" form="demoform"{% if server_run and not public_uploads %} checked{% endif %}> 14 missing-data strategies + hybrid (leak-free)</label>
+    <label style="font-size:.88rem"><input type="checkbox" name="ci" value="1" form="demoform"{% if server_run and not public_uploads %} checked{% endif %}> Bootstrap CIs + pairwise tests</label>
     <label style="font-size:.88rem"><input type="checkbox" name="missingness" value="1" form="demoform"> Missingness-recovery benchmark</label>
     <label style="font-size:.88rem"><input type="checkbox" name="tuning" value="1" form="demoform"> Automatic tuning (optuna)</label>
     <label style="font-size:.88rem"><input type="checkbox" name="calibration" value="1" form="demoform"> Calibrated fusion (isotonic)</label>
@@ -477,10 +477,10 @@ S003        0.15           0.002</pre>
 </form>
 <details style="background:#0f1a29;border:1px solid #223349;border-radius:8px;padding:.6rem 1.1rem;margin-top:.8rem;max-width:760px">
  <summary style="cursor:pointer;font-weight:800;font-size:.92rem;padding:.4rem 0">{{ icon('spark','ic') }} Comparisons for your data <span style="background:rgba(56,225,198,.18);border:1px solid rgba(56,225,198,.5);border-radius:99px;padding:.15rem .7rem;font-size:.72rem;letter-spacing:.08em;margin-left:.4rem">10 OPTIONAL</span></summary>
- <p style="color:var(--muted);font-size:.85rem;margin:.4rem 0">Selected analyses run automatically after the main pipeline - results land in your job folder.</p>
+ <p style="color:var(--muted);font-size:.85rem;margin:.4rem 0">Selected analyses run automatically after the main pipeline - results land in your job folder.{% if public_uploads %} On this public CPU tier the core benchmark uses four meta-learners; use the <a href="{{ url_for('byo') }}" style="color:var(--blue)">BYO-worker page</a> for the full 11-model suite.{% endif %}</p>
  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:.3rem .9rem;margin:.4rem 0">
-  <label style="font-size:.88rem"><input type="checkbox" name="robustness" value="1" form="upform"{% if server_run %} checked{% endif %}> 14 missing-data strategies + hybrid (leak-free)</label>
-  <label style="font-size:.88rem"><input type="checkbox" name="ci" value="1" form="upform"{% if server_run %} checked{% endif %}> Bootstrap CIs + pairwise tests</label>
+  <label style="font-size:.88rem"><input type="checkbox" name="robustness" value="1" form="upform"{% if server_run and not public_uploads %} checked{% endif %}> 14 missing-data strategies + hybrid (leak-free)</label>
+  <label style="font-size:.88rem"><input type="checkbox" name="ci" value="1" form="upform"{% if server_run and not public_uploads %} checked{% endif %}> Bootstrap CIs + pairwise tests</label>
   <label style="font-size:.88rem"><input type="checkbox" name="missingness" value="1" form="upform"> Missingness-recovery benchmark</label>
   <label style="font-size:.88rem"><input type="checkbox" name="tuning" value="1" form="upform"> Automatic tuning (optuna)</label>
   <label style="font-size:.88rem"><input type="checkbox" name="calibration" value="1" form="upform"> Calibrated fusion (isotonic)</label>
