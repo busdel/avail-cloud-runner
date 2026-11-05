@@ -1,27 +1,37 @@
 # -*- coding: utf-8 -*-
-"""Backward-compatibility alias for the renamed ``avail_omics`` package.
+"""AVAIL-omics: Availability-Aware Multimodal Integration & Learning.
 
-Code written against the earlier ``avail_ai`` import name keeps working:
-``import avail_ai`` and ``from avail_ai.generic import ...`` resolve to
-``avail_omics``.
+A framework for multimodal clinical cohorts with missing modalities:
+each modality trains its own base learner on ALL available subjects,
+a fixed-length meta-feature vector (base probabilities + availability flags)
+is assembled per subject, and a meta-learner makes the joint decision — with
+zero sample loss (no subject is dropped for missing modalities).
+
+Install:
+    pip install avail-omics          # core (CPU-only)
+    pip install "avail-omics[deep]"  # + neural/foundation meta-learners
 """
-import sys
+from .preprocess import (CLRTransformer, NetworkFeatureExtractor, ANOVAFDRSelector,
+                         RFImportanceCounter, LassoFeatureSelector,
+                         ConfounderResidualizer, preproc, apply_preproc)
+from .data import load_labels, load_confounders, load_modalities, load_named_features
+from .learners import (macro_auc, base_predictions_loo, build_meta_features,
+                       simple_mean_probs, weighted_simple_mean, elasticnet_loo,
+                       run_meta_benchmark)
+from .pipeline import run_pipeline
+from . import figures
+from .networks import NETWORK_FAMILIES, abbrev_network, abbrev_brain_label
+from .llm import LLMClient, PROVIDERS
+from .advisor import Advisor
 
-import avail_omics as _core
-from avail_omics import *  # noqa: F401,F403
-from avail_omics import __version__, __all__  # noqa: F401
-
-sys.modules[__name__] = _core
-
-_SUBMODULES = [
-    "preprocess", "data", "learners", "pipeline", "figures",
-    "figures_publication", "networks", "llm", "advisor", "generic", "radiomics", "worker",
-    "cli", "imaging", "biomarkers", "vmr", "rag", "pubmed", "meta_learners",
-    "robustness",
+__version__ = "1.0.19"
+__all__ = [
+    "run_pipeline", "figures", "LLMClient", "Advisor", "PROVIDERS",
+    "NETWORK_FAMILIES", "abbrev_network", "abbrev_brain_label",
+    "load_labels", "load_confounders", "load_modalities", "load_named_features",
+    "CLRTransformer", "NetworkFeatureExtractor", "ANOVAFDRSelector",
+    "RFImportanceCounter", "LassoFeatureSelector", "ConfounderResidualizer",
+    "preproc", "apply_preproc", "macro_auc", "base_predictions_loo",
+    "build_meta_features", "simple_mean_probs", "weighted_simple_mean",
+    "elasticnet_loo", "run_meta_benchmark",
 ]
-for _sub in _SUBMODULES:
-    try:
-        _mod = __import__(f"avail_omics.{_sub}", fromlist=["*"])
-        sys.modules[f"{__name__}.{_sub}"] = _mod
-    except Exception:  # optional dependencies may be missing
-        pass

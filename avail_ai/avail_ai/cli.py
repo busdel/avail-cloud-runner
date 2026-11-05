@@ -84,6 +84,21 @@ def _cmd_robustness(args):
     return 0
 
 
+def _cmd_worker(args):
+    from .worker import DEFAULT_TOKEN_FILE, DEFAULT_WORKDIR, serve
+    serve(Path(args.workdir or DEFAULT_WORKDIR), args.host, args.port,
+          Path(args.token_file or DEFAULT_TOKEN_FILE), name=args.name,
+          max_parallel=args.max_parallel, mem_gb=args.mem_gb, nice=args.nice)
+    return 0
+
+
+def _cmd_worker_token(args):
+    from .worker import DEFAULT_TOKEN_FILE, load_token
+    tok = load_token(Path(args.token_file or DEFAULT_TOKEN_FILE))
+    print(tok)
+    return 0
+
+
 def _cmd_radiomics(args):
     from . import radiomics as R
     summary = R.extract_dataset(args.data_root, args.out, mode=args.mode,
@@ -132,6 +147,16 @@ def _cmd_status(args):
     else:
         print('API key: NOT configured. Run: avail set-key')
     return 0
+
+
+def _cmd_report(args):
+    from .advisor_report import run as report_run
+    return report_run(args.out, args.context)
+
+
+def _cmd_chat(args):
+    from .chat import run as chat_run
+    return chat_run(args.out, args.question)
 
 
 def main(argv=None):
@@ -208,6 +233,26 @@ def main(argv=None):
     rd.add_argument('--afni-bin', default=os.environ.get('AFNI_BIN', ''))
     rd.set_defaults(func=_cmd_radiomics)
 
+    w = sub.add_parser(
+        'worker',
+        help='run a secure job server on YOUR machine (bearer token, '
+             '127.0.0.1 by default; see WORKER.md)')
+    w.add_argument('--workdir', default=None,
+                   help='job sandbox root (default: ~/.local/share/avail-worker)')
+    w.add_argument('--host', default='127.0.0.1')
+    w.add_argument('--port', type=int, default=8787)
+    w.add_argument('--token-file', default=None)
+    w.add_argument('--name', default='my-gpu')
+    w.add_argument('--max-parallel', type=int, default=1)
+    w.add_argument('--mem-gb', type=float, default=None)
+    w.add_argument('--nice', type=int, default=10)
+    w.set_defaults(func=_cmd_worker)
+
+    wt = sub.add_parser('worker-token',
+                        help='print (creating if needed) the worker bearer token')
+    wt.add_argument('--token-file', default=None)
+    wt.set_defaults(func=_cmd_worker_token)
+
     a = sub.add_parser('advise', help='LLM-driven model recommendation')
     _add_common(a)
     a.add_argument('--metric', default='macro_auc')
@@ -227,6 +272,22 @@ def main(argv=None):
     h.add_argument('--base-url', default=None)
     h.add_argument('--model', default=None)
     h.set_defaults(func=_cmd_hyper)
+
+    rp = sub.add_parser('report',
+                        help='AI advisor report (llm_advisor.md/json) for an '
+                             'existing results directory; needs an LLM key')
+    rp.add_argument('--out', required=True, help='results directory')
+    rp.add_argument('--context', default='Parkinson disease',
+                    help='disease/context for literature queries')
+    rp.set_defaults(func=_cmd_report)
+
+    ch = sub.add_parser('chat', aliases=['agent'],
+                        help='results-grounded Dr. AVAIL chat agent '
+                             '(needs an LLM key)')
+    ch.add_argument('--out', required=True, help='results directory')
+    ch.add_argument('--question', default=None,
+                    help='ask one question and exit')
+    ch.set_defaults(func=_cmd_chat)
 
     args = p.parse_args(argv)
     if not args.command:
