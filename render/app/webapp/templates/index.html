@@ -457,7 +457,16 @@ S003        0.15           0.002</pre>
 </div>
 
 <h3 style="margin:1.2rem 0 .4rem;font-size:1rem">{{ icon('upload','ic') }} Or upload your own data</h3>
-<div class="dz" id="dz">
+{% if demo_only and not public_uploads %}
+<div class="card" style="margin-top:1rem;border:1px solid rgba(240,179,91,.45);background:rgba(240,179,91,.1);color:#ffd89b;padding:1rem 1.2rem">
+  <b>This public instance is demo-only.</b> Uploads and server-side runs are disabled.
+  For your own data use the package, the local runner, or your own worker:
+  <a href="https://pypi.org/project/avail-omics/" style="color:#4da3ff">pip install avail-omics</a> ·
+  <a href="{{ url_for('runner_zip') }}" style="color:#4da3ff">local runner</a> ·
+  <a href="{{ url_for('byo') }}" style="color:#4da3ff">bring your own GPU</a>.
+</div>
+{% endif %}
+<div class="dz" id="dz"{% if demo_only and not public_uploads %} style="display:none"{% endif %}>
  <div class="big">{{ icon('upload','ic-big') }}</div>
  <p><b>Drag &amp; drop your ZIP here</b> or click to browse</p>
  <p class="foot-note">Max {{ max_mb }} MB · validated first · you confirm before any run</p>
@@ -466,7 +475,7 @@ S003        0.15           0.002</pre>
 
 
 </div>
-<form method="post" action="{{ url_for('upload') }}" enctype="multipart/form-data" id="upform">
+<form method="post" action="{{ url_for('upload') }}" enctype="multipart/form-data" id="upform"{% if demo_only and not public_uploads %} style="display:none"{% endif %}>
  <input type="file" id="file" name="file" accept=".zip" required style="display:none">
  <div id="chosen" style="margin-top:.7rem"></div>
  <label style="display:flex;gap:.5rem;align-items:flex-start;font-size:.8rem;color:#ffd89b;margin:.8rem 0 0;line-height:1.5">
@@ -475,7 +484,7 @@ S003        0.15           0.002</pre>
  </label>
  <button class="btn btn-primary" type="submit" id="upbtn" disabled style="margin-top:.7rem">Upload &amp; validate</button>
 </form>
-<details style="background:#0f1a29;border:1px solid #223349;border-radius:8px;padding:.6rem 1.1rem;margin-top:.8rem;max-width:760px">
+<details style="background:#0f1a29;border:1px solid #223349;border-radius:8px;padding:.6rem 1.1rem;margin-top:.8rem;max-width:760px"{% if demo_only and not public_uploads %} hidden{% endif %}>
  <summary style="cursor:pointer;font-weight:800;font-size:.92rem;padding:.4rem 0">{{ icon('spark','ic') }} Comparisons for your data <span style="background:rgba(56,225,198,.18);border:1px solid rgba(56,225,198,.5);border-radius:99px;padding:.15rem .7rem;font-size:.72rem;letter-spacing:.08em;margin-left:.4rem">10 OPTIONAL</span></summary>
  <p style="color:var(--muted);font-size:.85rem;margin:.4rem 0">Selected analyses run automatically after the main pipeline - results land in your job folder.{% if public_uploads %} On this public CPU tier the core benchmark uses four meta-learners; use the <a href="{{ url_for('byo') }}" style="color:var(--blue)">BYO-worker page</a> for the full 11-model suite.{% endif %}</p>
  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:.3rem .9rem;margin:.4rem 0">
