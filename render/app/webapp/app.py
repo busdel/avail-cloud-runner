@@ -142,6 +142,8 @@ def _gate():
         return
     if request.path in ("/privacy", "/terms", "/byo"):
         return
+    if request.path.startswith("/s/"):
+        return
     return redirect(url_for("login"))
 
 
@@ -178,6 +180,25 @@ def terms():
 @app.route("/byo")
 def byo():
     return _render("byo.html")
+
+
+@app.route("/s/<token>")
+def private_job(token):
+    """Secret capability link for one uploaded job (128-bit token)."""
+    if UPLOADS.exists():
+        for d in sorted(UPLOADS.iterdir(), reverse=True):
+            if not d.is_dir():
+                continue
+            st = _read_state(d.name)
+            tok = st.get("access_token")
+            if tok and secrets.compare_digest(str(tok), token):
+                owner = st.get("owner") or uuid.uuid4().hex
+                session["_id"] = owner
+                session["auth"] = True
+                if not st.get("owner"):
+                    _write_state(d.name, owner=owner)
+                return redirect(url_for("job_page", job_id=d.name))
+    abort(404)
 
 
 @app.route("/comparisons")
@@ -1484,8 +1505,11 @@ def demo():
     feedback = _ai_feedback(summary)
     (jd / "validation.json").write_text(json.dumps(summary, indent=2))
     (jd / "ai_feedback.txt").write_text(feedback or "")
+    if not session.get("_id"):
+        session["_id"] = uuid.uuid4().hex
     _write_state(job_id, status="validated", created=job_id.replace("_", " "),
                  owner=session.get("_id"),
+                 access_token=secrets.token_urlsafe(32),
                  layout_msg=("real public cohort (OpenNeuro ds004392, CC0)"
                              if demo_set == "ds004392" else
                              ("our own cohort (de-identified excerpt)"
@@ -1568,6 +1592,31 @@ def _public_upload_issues(data_root):
             if re.fullmatch(r"\d{4}-\d{2}-\d{2}", s):
                 issues.append(f"exact date-like value in column '{c}'")
                 break
+    clinical = data_root / "clinical.tsv"
+    if clinical.exists():
+        try:
+            cdf = pd.read_csv(clinical, sep="\t", dtype=str)
+        except Exception:
+            issues.append("clinical.tsv could not be read")
+            cdf = None
+        if cdf is not None:
+            if "SampleID" not in cdf.columns:
+                issues.append("clinical.tsv must have a SampleID column")
+            for c in cdf.columns:
+                if looks_like_identifier(c):
+                    issues.append(f"clinical.tsv column '{c}' looks like an identifier")
+                if c != "SampleID":
+                    bad = pd.to_numeric(cdf[c], errors="coerce").isna().sum()
+                    if bad:
+                        issues.append(f"clinical.tsv column '{c}' must be numeric")
+            for c in cdf.columns:
+                for v in cdf[c].dropna().astype(str).head(5000):
+                    s = v.strip()
+                    if re.search(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}", s) or \
+                       re.fullmatch(r"\d{11}", s) or \
+                       re.fullmatch(r"\d{4}-\d{2}-\d{2}", s):
+                        issues.append(f"identifier-like value in clinical.tsv column '{c}'")
+                        break
     feats = data_root / "features"
     if not feats.exists():
         issues.append("features/ directory is required")
@@ -1636,8 +1685,11 @@ def upload():
     feedback = _ai_feedback(summary)
     (jd / "validation.json").write_text(json.dumps(summary, indent=2))
     (jd / "ai_feedback.txt").write_text(feedback or "")
+    if not session.get("_id"):
+        session["_id"] = uuid.uuid4().hex
     _write_state(job_id, status="validated", created=job_id.replace("_", " "),
                  owner=session.get("_id"),
+                 access_token=secrets.token_urlsafe(32),
                  layout_msg=msg, mode=mode,
                  robustness=request.form.get("robustness") == "1",
                  ci=request.form.get("ci") == "1",
