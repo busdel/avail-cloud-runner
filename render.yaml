@@ -6,7 +6,7 @@ services:
     region: frankfurt
     dockerfilePath: ./render/Dockerfile
     dockerContext: ./render
-    healthCheckPath: /
+    healthCheckPath: /login
     autoDeploy: true
     envVars:
       - key: AVAIL_WEB_ROOT
@@ -24,4 +24,10 @@ services:
       - key: AVAIL_JOB_RETENTION_HOURS
         value: "24"
       - key: AVAIL_COOKIE_SECURE
+        value: "1"
+      - key: MALLOC_ARENA_MAX
+        value: "2"
+      - key: OPENBLAS_NUM_THREADS
+        value: "1"
+      - key: OMP_NUM_THREADS
         value: "1"
