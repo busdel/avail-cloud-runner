@@ -184,7 +184,8 @@ avail-omics compare \
   --out comparison
 ```
 
-Outputs: `cohort_comparison.tsv`, `cohort_comparison.pdf/.png/.tiff`.
+Outputs: `cohort_comparison.tsv`, `cohort_comparison.pdf/.png/.tiff`; example table:
+[`cohort_comparison.tsv`](https://raw.githubusercontent.com/busdel/avail-cloud-runner/main/viz/cohort_comparison.tsv).
 GNN learners are excluded by default; use `--include-gnn` to retain them.
 
 Figure: [example cross-cohort comparison](https://raw.githubusercontent.com/busdel/avail-cloud-runner/main/viz/cohort_comparison.png).
