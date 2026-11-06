@@ -119,6 +119,18 @@ OpenRouter (OpenAI-compatible endpoints).
   HMP2 IBD multi-omics with genuine per-sample missingness (macro-AUC 0.771),
   preclinical AD (0.542), label-free reconstruction (Vascellari 2020)
 
+## R interoperability
+
+```bash
+avail-omics export-r --out results --data-root mydata \
+  --dest r_export --taxonomy taxonomy.tsv
+```
+
+Writes `otu_table.tsv` (features × samples), `sample_data.tsv`,
+`tax_table.tsv`, `feature_table.tsv`, results tables, GraphML/edge tables and
+an `README_R.md` with phyloseq, vegan, igraph, SpiecEasi, NetCoMi and
+mixOmics/PMA snippets. No R packages are bundled.
+
 ## Web platform
 
 A self-hostable web interface accompanies this package. The public reviewer

@@ -32,26 +32,55 @@ INK = "#2F3A44"
 MUTED = "#6B7A88"
 
 
-def set_soft_style():
-    mpl.rcParams.update({
-        "figure.dpi": 150, "savefig.dpi": 400,
+def set_style(preset="nature"):
+    """Journal-oriented typography; ``nature`` is the default.
+
+    Nature-style: 7–8 pt sans-serif, thin rules, no top/right spines,
+    vector PDF with 600 dpi raster companions.
+    """
+    base = {
+        "figure.dpi": 300, "savefig.dpi": 600,
         "figure.facecolor": "white", "axes.facecolor": "white",
         "font.family": "sans-serif",
         "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],
-        "font.size": 11, "axes.labelsize": 11, "axes.titlesize": 12,
-        "axes.edgecolor": "#B9C4CE", "axes.linewidth": 1.0,
-        "axes.spines.top": False, "axes.spines.right": False,
-        "xtick.color": MUTED, "ytick.color": MUTED,
-        "legend.fontsize": 9, "legend.frameon": False,
-        "pdf.fonttype": 42, "ps.fonttype": 42,
-    })
+        "font.size": 7.5, "axes.labelsize": 8, "axes.titlesize": 9,
+        "axes.titleweight": "bold", "axes.edgecolor": "#AEB9C2",
+        "axes.linewidth": 0.7, "axes.spines.top": False,
+        "axes.spines.right": False,
+        "xtick.color": INK, "ytick.color": INK,
+        "xtick.labelsize": 7, "ytick.labelsize": 7,
+        "xtick.major.width": 0.7, "ytick.major.width": 0.7,
+        "xtick.major.size": 3, "ytick.major.size": 3,
+        "legend.fontsize": 6.5, "legend.frameon": False,
+        "lines.linewidth": 0.9, "pdf.fonttype": 42, "ps.fonttype": 42,
+    }
+    if preset != "nature":
+        base.update({"font.size": 10, "axes.labelsize": 10,
+                     "axes.titlesize": 11, "xtick.labelsize": 9,
+                     "ytick.labelsize": 9, "legend.fontsize": 8})
+    mpl.rcParams.update(base)
+
+
+def set_soft_style():
+    """Backward-compatible alias for the journal style."""
+    set_style("nature")
+
+
+def _panel(ax, letter, x=-0.09, y=1.05):
+    ax.text(x, y, letter, transform=ax.transAxes, fontsize=9,
+            fontweight="bold", va="bottom", ha="left", color=INK)
 
 
 def _save(fig, out_path):
     p = Path(out_path)
     p.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(p.with_suffix(".pdf"), bbox_inches="tight")
-    fig.savefig(p.with_suffix(".png"), bbox_inches="tight", dpi=400)
+    fig.savefig(p.with_suffix(".png"), bbox_inches="tight", dpi=600)
+    try:
+        fig.savefig(p.with_suffix(".tiff"), bbox_inches="tight", dpi=600,
+                    pil_kwargs={"compression": "tiff_lzw"})
+    except Exception:
+        pass
     plt.close(fig)
     print(f"  + {p}.pdf / {p}.png", flush=True)
 
@@ -297,6 +326,8 @@ def plot_roc_calibration(out, out_path=None, model=None, n_bins=8):
             pass
         ax = axes[0]
     axes[0].plot([0, 1], [0, 1], ls="--", color="#AEB9C2", lw=1)
+    _panel(axes[0], "a")
+    _panel(axes[1], "b")
     axes[0].set_xlabel("False positive rate")
     axes[0].set_ylabel("True positive rate")
     axes[0].set_title(f"ROC — {model}", loc="left")
@@ -359,6 +390,7 @@ def plot_availability(data_root, out_path=None, group_col=None):
                 va="center", ha="right", fontsize=8, color=MUTED)
         start = end
     ax.set_title("Modality availability per subject  (filled = available)", loc="left")
+    _panel(ax, "a")
     ax2 = fig.add_subplot(gs[0, 1])
     gser = pd.Series(groups).value_counts()
     x = np.arange(len(gser))
@@ -373,6 +405,7 @@ def plot_availability(data_root, out_path=None, group_col=None):
     ax2.set_xticklabels(gser.index, rotation=0, fontsize=8)
     ax2.set_ylabel("fraction available")
     ax2.set_title("Coverage by group", loc="left")
+    _panel(ax2, "b")
     ax2.set_ylim(0, 1.05)
     ax2.legend(fontsize=6, ncol=2, loc="upper left", frameon=False)
     ax3 = fig.add_subplot(gs[1, 1])
@@ -382,6 +415,7 @@ def plot_availability(data_root, out_path=None, group_col=None):
     ax3.set_yticklabels(pat.index, fontsize=7)
     ax3.set_xlabel("subjects")
     ax3.set_title("Top availability patterns", loc="left")
+    _panel(ax3, "c")
     for ax in (ax2, ax3):
         ax.grid(axis="x", color=GRID, lw=0.6)
         ax.set_axisbelow(True)

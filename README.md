@@ -81,7 +81,7 @@ missingness handled as data instead of discarded or fabricated.
 
 ## Install the Python package
 
-**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.4.0**, MIT, Python 3.10&ndash;3.13) &mdash; `pip install avail-omics`
+**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.5.0**, MIT, Python 3.10&ndash;3.13) &mdash; `pip install avail-omics`
 
 ```bash
 pip install avail-omics            # core (CPU is fine)
@@ -112,7 +112,7 @@ Outputs: `meta_benchmark_results.tsv`, `per_class_auc.tsv`, `loo_predictions.tsv
 `biomarkers_top20_per_modality.tsv`, `diff_abundance_*.tsv`, publication figures,
 and the AI advisor report (with PubMed literature).
 
-## Visualization toolkit (v1.4.0)
+## Visualization toolkit (v1.5.0)
 
 Soft-palette, publication-ready figures from the package:
 
@@ -129,6 +129,9 @@ avail-omics plot --out results --data-root mydata --modality taxa \
   --type network_modules --method sparcc --combined --taxonomy taxonomy.tsv
 ```
 
+Figures use the manuscript CPAL palette and a journal-style preset (Arial,
+7–8 pt, 600 dpi PDF/PNG/TIFF, panel letters).
+
 Also included: UMAP/PCA, volcano and forest plots. Correlations: `sparcc`
 (CLR approximation), `spearman` or `pearson`. Full gallery:
 https://busdel.github.io/avail-cloud-runner/viz/
@@ -138,6 +141,19 @@ or `--combined` single view with cross-module edges, hub highlighting,
 taxonomy colouring and a `cross_module_edges.tsv` export.
 
 <p align="center"><img src="docs/assets/viz/network_modules.png" width="880" alt="Module-aware correlation network"></p>
+
+## R interoperability
+
+```bash
+avail-omics export-r --out results --data-root mydata \
+  --dest r_export --taxonomy taxonomy.tsv
+```
+
+Writes phyloseq-ready `otu_table.tsv`, `sample_data.tsv`, `tax_table.tsv`,
+`feature_table.tsv`, result/network tables and an R guide covering
+**phyloseq**, **vegan**, **igraph**, **SpiecEasi**, **NetCoMi** and
+**mixOmics/PMA**. No R packages are bundled. Full guide:
+[docs/R_INTEROP.md](docs/R_INTEROP.md).
 
 ## Live demo and own-data analysis
 

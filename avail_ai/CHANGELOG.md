@@ -1,3 +1,11 @@
+## 1.5.0
+- `avail-omics export-r`: phyloseq-ready `otu_table.tsv`, `sample_data.tsv`,
+  `tax_table.tsv`, feature table, results and network GraphML/edge tables,
+  plus an R interoperability guide.
+- Journal-style visualization preset (Nature-like 7–8 pt typography,
+  600 dpi PDF/PNG/TIFF companions, panel labels).
+- No analysis or reported result changes.
+
 ## 1.4.0
 - Visualization palette now matches the manuscript figures (CPAL).
 - Network correlations accept `sparcc` (CLR-based SparCC approximation),

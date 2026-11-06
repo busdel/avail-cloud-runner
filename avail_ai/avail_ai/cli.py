@@ -159,6 +159,13 @@ def _cmd_chat(args):
     return chat_run(args.out, args.question)
 
 
+def _cmd_export_r(args):
+    from .export import export_r
+    export_r(args.out, data_root=args.data_root, dest=args.dest,
+             taxonomy=args.taxonomy)
+    return 0
+
+
 def _cmd_plot(args):
     from . import viz
     import sys as _sys
@@ -373,6 +380,15 @@ def main(argv=None):
     pl.add_argument('--combined', action='store_true',
                     help='network_modules: single combined network with cross-module edges')
     pl.set_defaults(func=_cmd_plot)
+
+    ex = sub.add_parser('export-r',
+                        help='export results + feature tables for R '
+                             '(phyloseq/vegan/SpiecEasi/NetCoMi/igraph)')
+    ex.add_argument('--out', required=True, help='results directory')
+    ex.add_argument('--data-root', default=None, help='generic data root')
+    ex.add_argument('--dest', default=None, help='output folder (default: <out>/r_export)')
+    ex.add_argument('--taxonomy', default=None, help='optional feature -> taxon TSV')
+    ex.set_defaults(func=_cmd_export_r)
 
     args = p.parse_args(argv)
     if not args.command:
