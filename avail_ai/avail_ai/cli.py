@@ -108,6 +108,28 @@ def _cmd_radiomics(args):
     return 0
 
 
+def _cmd_compare(args):
+    from .compare import compare_results
+    entries = []
+    for item in args.entry:
+        if "=" in item:
+            label, path = item.split("=", 1)
+        else:
+            label, path = Path(item).name, item
+        complete = None
+        if "::" in path:
+            path, complete = path.split("::", 1)
+        entry = {"label": label, "results": path}
+        if complete:
+            entry["complete_results"] = complete
+        entries.append(entry)
+    df = compare_results(entries, args.out, exclude_gnn=not args.include_gnn)
+    print(df[["cohort", "n_all", "n_complete", "mean_all", "mean_complete"]]
+          .round(3).to_string(index=False))
+    print(f"Done. Comparison written to {args.out}")
+    return 0
+
+
 def _cmd_sensitivity(args):
     from .robustness import sensitivity_subsets
     sensitivity_subsets(args.data_root, args.out,
@@ -367,6 +389,15 @@ def main(argv=None):
     ch.add_argument('--question', default=None,
                     help='ask one question and exit')
     ch.set_defaults(func=_cmd_chat)
+
+    cp = sub.add_parser('compare',
+                        help='compare meta-benchmark results across cohorts')
+    cp.add_argument('--entry', action='append', required=True,
+                    help='LABEL=ALL_DIR[::COMPLETE_DIR] (repeatable)')
+    cp.add_argument('--out', required=True, help='output directory')
+    cp.add_argument('--include-gnn', action='store_true',
+                    help='include GNN in model summaries (default: exclude)')
+    cp.set_defaults(func=_cmd_compare)
 
     pl = sub.add_parser('plot', help='soft-palette figures: network, '
                                     'ROC/calibration, availability')
