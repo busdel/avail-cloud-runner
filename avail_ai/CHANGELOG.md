@@ -2,6 +2,9 @@
 - Documentation: role-separated validation suite, companion-application
   framing and a ds004856 coverage audit. Corrected the quick-start CLI to
   `run-generic`.
+- `avail-omics compare`: generic cross-cohort comparison of meta-benchmark
+  results (complete-case coverage + macro-AUC with model-ensemble range),
+  accepting `LABEL=RESULTS_DIR` and optional separate complete-case runs.
 - Validation-suite figures: complete-case coverage and AVAIL-versus-complete
   macro-AUC across MetaCardis, HMP2, ds004392, the companion cohort and the
   ds004856 audit. No analysis or reported result changes.

@@ -149,12 +149,34 @@ as biological estimates. The cohort is retained only to show that
 complete-case analysis can be structurally non-estimable. It is not used to
 claim diagnostic accuracy.
 
-Figure: [validation story](https://raw.githubusercontent.com/busdel/avail-cloud-runner/main/viz/figM2_3_validation_story.png).
+Figure: [cross-cohort comparison](https://raw.githubusercontent.com/busdel/avail-cloud-runner/main/viz/cohort_comparison.png).
 
 The companion AVAIL cohort (n=150) is an application/regression check:
 biological interpretation belongs to the companion paper; this package uses
 the same verified cohort to exercise the command line, figures, report and R
 export end to end.
+
+## Cross-cohort comparison
+
+`avail-omics compare` reads one or more results directories and writes a
+machine-readable cohort table plus a two-panel scientific figure (complete-case
+coverage and macro-AUC with the range across meta-learners). It is generic:
+labels and cohorts come from the command line.
+
+```bash
+avail-omics compare   --entry "Cohort A=results/a"   --entry "Cohort B=results/b"   --out comparison
+```
+
+If the complete-case arm was run as a separate directory:
+
+```bash
+avail-omics compare   --entry "Cohort A=results/a_all::results/a_complete"   --entry "Cohort B=results/b"   --out comparison
+```
+
+Outputs: `cohort_comparison.tsv`, `cohort_comparison.pdf/.png/.tiff`.
+GNN learners are excluded by default; use `--include-gnn` to retain them.
+
+Figure: [example cross-cohort comparison](https://raw.githubusercontent.com/busdel/avail-cloud-runner/main/viz/cohort_comparison.png).
 
 ## R interoperability
 
