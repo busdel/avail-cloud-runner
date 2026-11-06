@@ -1,0 +1,108 @@
+source	source_module	target	target_module	weight	sign
+full_within_Dorsal Attention B	Module C	full_between_Dorsal Attention B__Somatomotor A	Module B	0.7956	1
+full_within_Dorsal Attention B	Module C	full_between_Dorsal Attention B__Frontoparietal Control A	Module A	0.7913	1
+full_between_Dorsal Attention B__Frontoparietal Control A	Module A	full_between_Dorsal Attention A__Dorsal Attention B	Module C	0.7845	1
+full_between_Dorsal Attention B__Somatomotor A	Module B	full_between_Dorsal Attention B__Frontoparietal Control A	Module A	0.7213	1
+full_between_Dorsal Attention A__Frontoparietal Control A	Module A	full_between_Dorsal Attention A__Dorsal Attention B	Module C	0.7126	1
+full_between_Dorsal Attention B__Somatomotor A	Module B	full_between_Frontoparietal Control A__Somatomotor A	Module A	0.7117	1
+full_within_Dorsal Attention B	Module C	full_between_Dorsal Attention B__Frontoparietal Control C	Module B	0.7061	1
+full_between_Frontoparietal Control A__Somatomotor B	Module A	full_between_Salience Ventral Attention A__Somatomotor B	Module B	0.7046	1
+full_within_Somatomotor A	Module B	full_between_Frontoparietal Control A__Somatomotor A	Module A	0.7043	1
+full_between_Dorsal Attention B__Frontoparietal Control A	Module A	full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	0.6879	1
+full_between_Dorsal Attention B__Somatomotor A	Module B	full_between_Dorsal Attention A__Dorsal Attention B	Module C	0.6828	1
+full_between_Frontoparietal Control A__Somatomotor B Auditory	Module B	full_between_Frontoparietal Control A__Somatomotor B	Module A	0.6577	1
+full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	full_between_Frontoparietal Control A__Salience Ventral Attention A	Module A	0.647	1
+full_within_Dorsal Attention B	Module C	full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	0.6454	1
+full_between_Dorsal Attention B__Frontoparietal Control A	Module A	full_between_Dorsal Attention B__Frontoparietal Control C	Module B	0.6276	1
+full_between_Dorsal Attention A__Dorsal Attention B	Module C	full_between_Dorsal Attention B__Frontoparietal Control C	Module B	0.6067	1
+full_between_Somatomotor B Auditory__Temporoparietal	Module B	full_within_Dorsal Attention B	Module C	0.589	-1
+full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	full_between_Frontoparietal Control A__Somatomotor A	Module A	0.5752	1
+full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	full_between_Default A__Frontoparietal Control A	Module A	0.5719	1
+full_between_Dorsal Attention A__Dorsal Attention B	Module C	full_between_Frontoparietal Control A__Somatomotor A	Module A	0.5596	1
+full_within_Dorsal Attention B	Module C	full_between_Frontoparietal Control A__Salience Ventral Attention A	Module A	0.5434	1
+full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	full_between_Dorsal Attention A__Dorsal Attention B	Module C	0.5424	1
+full_between_Dorsal Attention B__Somatomotor A	Module B	full_between_Frontoparietal Control A__Salience Ventral Attention A	Module A	0.5402	1
+full_between_Dorsal Attention A__Visual Central	Module A	full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	0.5336	-1
+full_within_Dorsal Attention B	Module C	full_within_Default C	Module A	0.5298	-1
+full_between_Frontoparietal Control C__Visual Peripheral	Module A	full_between_Dorsal Attention A__Frontoparietal Control C	Module B	0.5267	1
+full_between_Dorsal Attention A__Dorsal Attention B	Module C	full_between_Default A__Frontoparietal Control A	Module A	0.5259	1
+full_between_Dorsal Attention B__Somatomotor A	Module B	full_between_Default C__Visual Peripheral	Module A	0.515	-1
+full_between_Dorsal Attention B__Frontoparietal Control C	Module B	full_between_Frontoparietal Control A__Somatomotor A	Module A	0.5044	1
+full_between_Somatomotor B__Somatomotor B Auditory	Module B	full_between_Frontoparietal Control A__Somatomotor A	Module A	0.5025	-1
+full_within_Dorsal Attention B	Module C	full_between_Default C__Visual Peripheral	Module A	0.5013	-1
+full_within_Default C	Module A	full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	0.4923	-1
+full_within_Somatomotor B	Module B	full_between_Frontoparietal Control A__Somatomotor B	Module A	0.4914	1
+full_between_Somatomotor B Auditory__Temporoparietal	Module B	full_between_Dorsal Attention B__Frontoparietal Control A	Module A	0.4889	-1
+full_between_Frontoparietal Control A__Salience Ventral Attention B	Module A	full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	0.4883	1
+full_within_Dorsal Attention B	Module C	full_between_Salience Ventral Attention A__Temporoparietal	Module B	0.4878	-1
+full_between_Dorsal Attention A__Dorsal Attention B	Module C	full_between_Frontoparietal Control A__Salience Ventral Attention A	Module A	0.4838	1
+full_within_Frontoparietal Control A	Module A	full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	0.4815	1
+full_within_Dorsal Attention B	Module C	full_between_Dorsal Attention A__Frontoparietal Control A	Module A	0.4789	1
+full_within_Salience Ventral Attention B	Module A	full_between_Dorsal Attention A__Somatomotor B Auditory	Module B	0.4748	-1
+full_between_Dorsal Attention B__Somatomotor A	Module B	full_between_Default A__Frontoparietal Control A	Module A	0.4746	1
+full_within_Dorsal Attention B	Module C	full_within_Temporoparietal	Module B	0.4717	-1
+full_between_Default C__Visual Peripheral	Module A	full_between_Dorsal Attention A__Dorsal Attention B	Module C	0.47	-1
+full_within_Dorsal Attention B	Module C	full_between_Default A__Frontoparietal Control A	Module A	0.4678	1
+full_within_Limbic Orbitofrontal	Module C	full_between_Dorsal Attention B__Frontoparietal Control A	Module A	0.4648	-1
+full_within_Default C	Module A	full_between_Dorsal Attention A__Dorsal Attention B	Module C	0.4611	-1
+full_within_Somatomotor B Auditory	Module C	full_between_Salience Ventral Attention A__Somatomotor B Auditory	Module B	0.4595	1
+full_between_Dorsal Attention B__Somatomotor A	Module B	full_within_Default C	Module A	0.4524	-1
+full_within_Limbic Orbitofrontal	Module C	full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	0.4472	-1
+full_within_Visual Central	Module A	full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	0.4392	-1
+full_between_Somatomotor B__Somatomotor B Auditory	Module B	full_within_Salience Ventral Attention B	Module A	0.438	-1
+full_within_Dorsal Attention B	Module C	full_between_Somatomotor B__Temporoparietal	Module B	0.4374	-1
+full_within_Dorsal Attention B	Module C	full_between_Frontoparietal Control A__Somatomotor A	Module A	0.4326	1
+full_between_Somatomotor B__Somatomotor B Auditory	Module B	full_between_Default A__Frontoparietal Control A	Module A	0.4326	-1
+full_between_Dorsal Attention B__Frontoparietal Control C	Module B	full_between_Frontoparietal Control A__Salience Ventral Attention A	Module A	0.4307	1
+full_between_Somatomotor B Auditory__Temporoparietal	Module B	full_between_Dorsal Attention A__Dorsal Attention B	Module C	0.4301	-1
+full_between_Dorsal Attention B__Somatomotor A	Module B	full_between_Frontoparietal Control A__Salience Ventral Attention B	Module A	0.4282	1
+full_between_Somatomotor B__Somatomotor B Auditory	Module B	full_between_Frontoparietal Control A__Salience Ventral Attention B	Module A	0.4272	-1
+full_within_Dorsal Attention B	Module C	full_within_Frontoparietal Control A	Module A	0.4265	1
+full_within_Visual Peripheral	Module A	full_between_Somatomotor B__Temporoparietal	Module B	0.4234	-1
+full_within_Frontoparietal Control A	Module A	full_between_Frontoparietal Control A__Somatomotor B Auditory	Module B	0.4186	1
+full_within_Frontoparietal Control A	Module A	full_between_Dorsal Attention A__Frontoparietal Control C	Module B	0.4177	-1
+full_within_Visual Peripheral	Module A	full_between_Salience Ventral Attention A__Temporoparietal	Module B	0.4175	-1
+full_between_Frontoparietal Control A__Salience Ventral Attention B	Module A	full_between_Dorsal Attention A__Somatomotor B Auditory	Module B	0.4172	-1
+full_between_Visual Central__Visual Peripheral	Module A	full_between_Salience Ventral Attention A__Temporoparietal	Module B	0.4169	-1
+full_between_Frontoparietal Control C__Visual Peripheral	Module A	full_between_Frontoparietal Control A__Somatomotor B Auditory	Module B	0.4163	-1
+full_within_Dorsal Attention A	Module A	full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	0.4125	-1
+full_within_Salience Ventral Attention B	Module A	full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	0.4083	1
+full_within_Dorsal Attention A	Module A	full_between_Dorsal Attention B__Frontoparietal Control C	Module B	0.4051	-1
+full_within_Visual Central	Module A	full_between_Dorsal Attention B__Somatomotor A	Module B	0.4049	-1
+full_within_Visual Central	Module A	full_between_Dorsal Attention A__Dorsal Attention B	Module C	0.4049	-1
+full_between_Default C__Visual Peripheral	Module A	full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	0.3999	-1
+full_between_Dorsal Attention B__Somatomotor A	Module B	full_between_Dorsal Attention A__Visual Central	Module A	0.3998	-1
+full_within_Somatomotor B Auditory	Module C	full_within_Salience Ventral Attention B	Module A	0.398	-1
+full_between_Dorsal Attention A__Frontoparietal Control A	Module A	full_between_Frontoparietal Control A__Somatomotor B Auditory	Module B	0.3952	1
+full_between_Salience Ventral Attention A__Somatomotor B	Module B	full_between_Frontoparietal Control A__Salience Ventral Attention A	Module A	0.3939	1
+full_within_Dorsal Attention B	Module C	full_between_Frontoparietal Control A__Salience Ventral Attention B	Module A	0.3938	1
+full_between_Somatomotor B Auditory__Temporoparietal	Module B	full_between_Frontoparietal Control A__Salience Ventral Attention A	Module A	0.3936	-1
+full_within_Default C	Module A	full_between_Frontoparietal Control C__Somatomotor B Auditory	Module B	0.3928	1
+full_between_Dorsal Attention A__Frontoparietal Control C	Module B	full_between_Frontoparietal Control A__Somatomotor B	Module A	0.3922	-1
+full_within_Somatomotor A	Module B	full_between_Dorsal Attention B__Frontoparietal Control A	Module A	0.3913	1
+full_between_Default C__Visual Peripheral	Module A	full_between_Dorsal Attention A__Somatomotor B Auditory	Module B	0.389	1
+full_between_Dorsal Attention A__Visual Peripheral	Module A	full_between_Frontoparietal Control A__Frontoparietal Control C	Module B	0.3888	-1
+full_between_Dorsal Attention B__Frontoparietal Control C	Module B	full_between_Default A__Frontoparietal Control A	Module A	0.3872	1
+full_within_Frontoparietal Control C	Module B	full_between_Frontoparietal Control C__Visual Peripheral	Module A	0.3853	1
+full_between_Frontoparietal Control A__Somatomotor B Auditory	Module B	full_between_Frontoparietal Control A__Salience Ventral Attention A	Module A	0.3829	1
+full_within_Visual Central	Module A	full_between_Frontoparietal Control A__Somatomotor B Auditory	Module B	0.3828	-1
+full_within_Frontoparietal Control A	Module A	full_between_Dorsal Attention A__Dorsal Attention B	Module C	0.3775	1
+full_between_Dorsal Attention A__Visual Peripheral	Module A	full_between_Dorsal Attention A__Frontoparietal Control C	Module B	0.377	1
+full_within_Dorsal Attention B	Module C	full_between_Dorsal Attention A__Somatomotor B Auditory	Module B	0.3724	-1
+full_within_Limbic Orbitofrontal	Module C	full_between_Dorsal Attention A__Frontoparietal Control A	Module A	0.3722	-1
+full_between_Visual Central__Visual Peripheral	Module A	full_between_Dorsal Attention A__Frontoparietal Control C	Module B	0.3721	1
+full_within_Somatomotor B Auditory	Module C	full_within_Dorsal Attention A	Module A	0.3715	1
+full_between_Frontoparietal Control A__Salience Ventral Attention B	Module A	full_between_Dorsal Attention A__Dorsal Attention B	Module C	0.3708	1
+full_between_Dorsal Attention B__Frontoparietal Control A	Module A	full_between_Frontoparietal Control C__Somatomotor B Auditory	Module B	0.3706	-1
+full_within_Dorsal Attention B	Module C	full_between_Frontoparietal Control C__Somatomotor B Auditory	Module B	0.3697	-1
+full_within_Default C	Module A	full_between_Dorsal Attention B__Frontoparietal Control C	Module B	0.3656	-1
+full_between_Somatomotor B__Somatomotor B Auditory	Module B	full_between_Dorsal Attention B__Frontoparietal Control A	Module A	0.3649	-1
+full_within_Visual Peripheral	Module A	full_within_Temporoparietal	Module B	0.3598	-1
+full_within_Frontoparietal Control C	Module B	full_between_Frontoparietal Control A__Somatomotor B	Module A	0.3597	-1
+full_between_Somatomotor B Auditory__Temporoparietal	Module B	full_between_Frontoparietal Control A__Somatomotor A	Module A	0.3596	-1
+full_between_Visual Central__Visual Peripheral	Module A	full_between_Somatomotor B__Temporoparietal	Module B	0.3588	-1
+full_within_Limbic Orbitofrontal	Module C	full_between_Dorsal Attention B__Somatomotor A	Module B	0.3561	-1
+full_between_Dorsal Attention B__Somatomotor A	Module B	full_within_Limbic Temporopolar	Module C	0.355	-1
+full_within_Temporoparietal	Module B	full_between_Dorsal Attention B__Frontoparietal Control A	Module A	0.3548	-1
+full_within_Somatomotor A	Module B	full_between_Frontoparietal Control A__Salience Ventral Attention A	Module A	0.3514	1
+full_between_Dorsal Attention B__Somatomotor A	Module B	full_between_Dorsal Attention A__Visual Peripheral	Module A	0.3508	-1
