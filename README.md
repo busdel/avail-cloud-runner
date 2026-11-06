@@ -89,13 +89,9 @@ as biological estimates. The cohort is retained only to show that
 complete-case analysis can be structurally non-estimable; it is not used to
 claim diagnostic accuracy.
 
-| Complete-case coverage | Performance vs complete-case |
-|---|---|
-| <img src="docs/assets/viz/figM2_4_validation_coverage.png" width="430"> | <img src="docs/assets/viz/figM2_5_validation_performance.png" width="430"> |
+<p align="center"><img src="docs/assets/viz/figM2_3_validation_story.png" width="900" alt="Validation suite: complete-case retention and performance"></p>
 
-Figures: `docs/assets/viz/figM2_4_validation_coverage.*` and
-`docs/assets/viz/figM2_5_validation_performance.*`; source table
-[`validation_suite.tsv`](docs/assets/viz/validation_suite.tsv).
+Source table: [`validation_suite.tsv`](docs/assets/viz/validation_suite.tsv).
 
 The companion AVAIL cohort (n=150) is an application/regression check:
 biological interpretation belongs to the companion paper; this repository
