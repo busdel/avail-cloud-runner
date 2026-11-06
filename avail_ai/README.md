@@ -47,6 +47,8 @@ avail-omics run-generic --data-root mydata --out results
 avail-omics robustness --data-root mydata --out robustness \
     --permutations 25 --jobs 4          # full-pipeline label-permutation test
 avail-omics sensitivity --data-root mydata --out sensitivity
+avail-omics compare --entry "Cohort A=results/a" \
+  --entry "Cohort B=results/b" --out comparison
 ```
 
 ## Soft-palette visualization toolkit
@@ -164,13 +166,19 @@ coverage and macro-AUC with the range across meta-learners). It is generic:
 labels and cohorts come from the command line.
 
 ```bash
-avail-omics compare   --entry "Cohort A=results/a"   --entry "Cohort B=results/b"   --out comparison
+avail-omics compare \
+  --entry "Cohort A=results/a" \
+  --entry "Cohort B=results/b" \
+  --out comparison
 ```
 
 If the complete-case arm was run as a separate directory:
 
 ```bash
-avail-omics compare   --entry "Cohort A=results/a_all::results/a_complete"   --entry "Cohort B=results/b"   --out comparison
+avail-omics compare \
+  --entry "Cohort A=results/a_all::results/a_complete" \
+  --entry "Cohort B=results/b" \
+  --out comparison
 ```
 
 Outputs: `cohort_comparison.tsv`, `cohort_comparison.pdf/.png/.tiff`.
