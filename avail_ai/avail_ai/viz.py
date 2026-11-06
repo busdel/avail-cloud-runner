@@ -22,10 +22,11 @@ import matplotlib as mpl
 import numpy as np
 import pandas as pd
 
-SOFT = ["#7A9EAF", "#A8C0B0", "#D7A9B1", "#B7ACD6", "#C9B99B",
-        "#8FB6B0", "#D6C2A8", "#9AA9B8", "#B7C9A8", "#C4A8B8"]
-POS = "#6F9BAE"
-NEG = "#C98F9B"
+# Same core palette as the manuscript figures (figures_publication.py / CPAL).
+SOFT = ["#2E5A87", "#5B9279", "#C77D9D", "#B0A7C9", "#3D2E5F",
+        "#4393C3", "#4DAC26", "#D6604D", "#8C6D31", "#666666", "#762A83"]
+POS = "#2E5A87"
+NEG = "#B4525C"
 GRID = "#DDE5EC"
 INK = "#2F3A44"
 MUTED = "#6B7A88"
@@ -114,8 +115,22 @@ def _pack_layout(G, seed=7):
     return pos
 
 
+def _corr_matrix(X, method="spearman"):
+    """Correlation matrix; ``sparcc`` is a CLR-based SparCC approximation
+    suitable for compositional (relative-abundance/count) tables."""
+    X = X.apply(pd.to_numeric, errors="coerce").fillna(0.0).clip(lower=0.0)
+    if method == "sparcc":
+        # SparCC-like: CLR transform (pseudocount 0.5) then Pearson.
+        Z = np.log(X + 0.5)
+        Z = Z.sub(Z.mean(axis=1), axis=0)
+        return Z.corr(method="pearson")
+    if method == "pearson":
+        return X.corr(method="pearson")
+    return X.corr(method="spearman")
+
+
 def plot_network(out, data_root=None, out_path=None, top_n=24,
-                 threshold=0.30, largest_component=False):
+                 threshold=0.30, largest_component=False, method="spearman"):
     """Feature network from the top biomarkers.
 
     With ``data_root``: Spearman correlation between the selected features,
@@ -154,7 +169,7 @@ def plot_network(out, data_root=None, out_path=None, top_n=24,
                     break
         if len(rows) >= 2:
             X = pd.concat(rows, axis=1)
-            corr = X.corr(method="spearman")
+            corr = _corr_matrix(X, method)
             for i, a in enumerate(corr.columns):
                 for b in corr.columns[i + 1:]:
                     r = corr.loc[a, b]
@@ -170,7 +185,8 @@ def plot_network(out, data_root=None, out_path=None, top_n=24,
                        sign=1.0)
         title = "Top biomarkers by modality (feature values unavailable)"
     else:
-        title = f"Top biomarker network (Spearman |r| >= {threshold:g})"
+        label = "SparCC-like (CLR)" if method == "sparcc" else method.capitalize()
+        title = f"Top biomarker network ({label} |r| >= {threshold:g})"
     if largest_component and G.number_of_edges():
         comp = max(nx.connected_components(G), key=len)
         G = G.subgraph(comp).copy()
@@ -574,7 +590,7 @@ __all__ = ["SOFT", "set_soft_style", "plot_network",
 def plot_network_modules(data_root, out_path=None, modality=None,
                          top_n=60, threshold=0.30, max_modules=6,
                          taxonomy=None, hub_top=2, label_top=6,
-                         min_module_size=3):
+                         min_module_size=3, method="sparcc", combined=False):
     """Module-aware correlation network, inspired by multi-module microbiome
     figures: communities are detected automatically (greedy modularity),
     laid out in separate panels, hubs are highlighted, and nodes can be
@@ -600,7 +616,7 @@ def plot_network_modules(data_root, out_path=None, modality=None,
         modality = next(k for k, v in feats.items() if v is table)
     X = table.apply(pd.to_numeric, errors="coerce").fillna(0.0)
     X = X.loc[:, X.var().sort_values(ascending=False).head(int(top_n)).index]
-    corr = X.corr(method="spearman")
+    corr = _corr_matrix(X, method)
     G = nx.Graph()
     for f in corr.columns:
         G.add_node(str(f))
@@ -629,6 +645,62 @@ def plot_network_modules(data_root, out_path=None, modality=None,
                      if c in td.columns), None)
         if gcol:
             tax = dict(zip(td[fcol].astype(str), td[gcol].astype(str)))
+    node_mod = {n: k for k, comp in enumerate(comms) for n in comp}
+    selected = set(node_mod)
+    G = G.subgraph(selected).copy()
+    cross = []
+    for a, b, d in G.edges(data=True):
+        ma, mb = node_mod.get(a), node_mod.get(b)
+        if ma != mb:
+            cross.append({"source": a, "source_module": f"Module {chr(65 + ma)}",
+                          "target": b, "target_module": f"Module {chr(65 + mb)}",
+                          "weight": round(float(d.get("weight", 0)), 4),
+                          "sign": int(np.sign(d.get("sign", 1)))})
+    dest = Path(out_path) if out_path else root / "viz" / "network_modules"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if cross:
+        pd.DataFrame(cross).sort_values("weight", ascending=False).to_csv(
+            dest.parent / "cross_module_edges.tsv", sep="\t", index=False)
+    if combined:
+        pos = _pack_layout(G, seed=7)
+        fig, ax = plt.subplots(figsize=(10.5, 8.2))
+        deg = dict(G.degree(weight="weight"))
+        hubs = set(sorted(deg, key=deg.get, reverse=True)[:max(2, int(hub_top) * 2)])
+        for a, b, d in G.edges(data=True):
+            same = node_mod.get(a) == node_mod.get(b)
+            ax.plot([pos[a][0], pos[b][0]], [pos[a][1], pos[b][1]],
+                    color=POS if d.get("sign", 1) >= 0 else NEG,
+                    lw=(0.6 if same else 1.2) + 1.4 * min(1.0, d.get("weight", 0.2)),
+                    ls="-" if same and d.get("sign", 1) >= 0 else "--",
+                    alpha=0.22 if same else 0.55, zorder=1)
+        colors = [SOFT[node_mod.get(n, 0) % len(SOFT)] for n in G.nodes]
+        sizes = [40 + 34 * deg.get(n, 1) for n in G.nodes]
+        nx.draw_networkx_nodes(G, pos, ax=ax, node_size=sizes,
+                               node_color=colors, edgecolors="white",
+                               linewidths=0.7, alpha=0.95)
+        lab = sorted(G.nodes, key=lambda n: deg.get(n, 0), reverse=True)[:18]
+        nx.draw_networkx_labels(G, pos, labels={n: (n if len(str(n)) <= 24 else str(n)[:22] + "…") for n in lab},
+                                ax=ax, font_size=6, font_color=INK)
+        for n in hubs:
+            ax.scatter([pos[n][0]], [pos[n][1]], s=150, facecolors="none",
+                       edgecolors="#B4525C", linewidths=1.6, zorder=4)
+        handles = [Line2D([0], [0], marker="o", linestyle="", markersize=7,
+                          markerfacecolor=SOFT[k % len(SOFT)],
+                          markeredgecolor="white", label=f"Module {chr(65 + k)}")
+                   for k in range(len(comms))]
+        handles += [Line2D([0], [0], color=POS, lw=1.2, label="positive"),
+                    Line2D([0], [0], color=NEG, lw=1.2, ls="--", label="negative"),
+                    Line2D([0], [0], color=MUTED, lw=1.6, ls="--", label="cross-module"),
+                    Line2D([0], [0], marker="o", linestyle="", markersize=9,
+                           markerfacecolor="none", markeredgecolor="#B4525C",
+                           label="hub")]
+        ax.legend(handles=handles, loc="center left", bbox_to_anchor=(1.01, 0.5),
+                  fontsize=7, title="modules / edges", frameon=False)
+        ax.set_axis_off()
+        ax.set_title(f"Combined module network — {modality}  ({method} |r| ≥ {threshold:g})",
+                     loc="left")
+        _save(fig, dest)
+        return
     ncol = 2 if len(comms) > 1 else 1
     nrow = int(math.ceil(len(comms) / ncol))
     fig, axes = plt.subplots(nrow, ncol, figsize=(7.2 * ncol, 6.4 * nrow))
@@ -694,7 +766,7 @@ def plot_network_modules(data_root, out_path=None, modality=None,
                        label="hub")]
     fig.legend(handles=handles, loc="lower center", ncol=3,
                fontsize=7, frameon=False, bbox_to_anchor=(0.5, 0.0))
-    fig.suptitle(f"Correlation network — {modality}  (|r| ≥ {threshold:g})",
+    fig.suptitle(f"Correlation network — {modality}  ({method} |r| ≥ {threshold:g})",
                  x=0.01, ha="left", fontsize=12)
     fig.subplots_adjust(bottom=0.12, hspace=0.18, wspace=0.08)
     _save(fig, out_path or root / "viz" / "network_modules")

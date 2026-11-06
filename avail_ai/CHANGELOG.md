@@ -1,3 +1,10 @@
+## 1.4.0
+- Visualization palette now matches the manuscript figures (CPAL).
+- Network correlations accept `sparcc` (CLR-based SparCC approximation),
+  `spearman` and `pearson`; `network_modules` adds `combined=True` and a
+  `cross_module_edges.tsv` export for biomarker links across modules.
+- No analysis or reported result changes.
+
 ## 1.3.0
 - Module-aware network figure: automatic community detection, per-module
   panels, hub highlighting, positive/negative edges, and optional taxonomy

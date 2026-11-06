@@ -171,7 +171,8 @@ def _cmd_plot(args):
                 viz.plot_network(out, data_root=args.data_root,
                                  out_path=dest / 'network',
                                  top_n=args.top_n, threshold=args.threshold,
-                                 largest_component=args.largest_component)
+                                 largest_component=args.largest_component,
+                                 method=args.method)
             elif kind in ('roc', 'calibration', 'roc_calibration'):
                 viz.plot_roc_calibration(out, out_path=dest / 'roc_calibration',
                                          model=args.model)
@@ -203,7 +204,8 @@ def _cmd_plot(args):
                     modality=args.modality, top_n=args.top_n,
                     threshold=args.threshold, max_modules=args.max_modules,
                     taxonomy=args.taxonomy, hub_top=args.hub_top,
-                    label_top=args.label_top)
+                    label_top=args.label_top, method=args.method,
+                    combined=args.combined)
             else:
                 print(f'[viz] unknown type {kind!r}; skipped')
         except Exception as e:
@@ -365,6 +367,11 @@ def main(argv=None):
     pl.add_argument('--threshold', type=float, default=0.30)
     pl.add_argument('--largest-component', action='store_true',
                     help='network: draw only the largest connected component')
+    pl.add_argument('--method', default='sparcc',
+                    choices=['sparcc', 'spearman', 'pearson'],
+                    help='correlation method (sparcc = CLR approximation)')
+    pl.add_argument('--combined', action='store_true',
+                    help='network_modules: single combined network with cross-module edges')
     pl.set_defaults(func=_cmd_plot)
 
     args = p.parse_args(argv)
