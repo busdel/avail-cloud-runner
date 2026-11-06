@@ -149,6 +149,9 @@ as biological estimates. The cohort is retained only to show that
 complete-case analysis can be structurally non-estimable. It is not used to
 claim diagnostic accuracy.
 
+Figures: [complete-case coverage](https://busdel.github.io/avail-cloud-runner/viz/figM2_4_validation_coverage.png)
+and [performance comparison](https://busdel.github.io/avail-cloud-runner/viz/figM2_5_validation_performance.png).
+
 The companion AVAIL cohort (n=150) is an application/regression check:
 biological interpretation belongs to the companion paper; this package uses
 the same verified cohort to exercise the command line, figures, report and R

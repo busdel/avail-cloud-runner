@@ -1,0 +1,6 @@
+dataset	role	n_all	n_complete	mean_all	mean_complete	best_all	missing	note
+MetaCardis	anchor	1087	536	0.972429881946011	0.9684851016429965	0.9898864576283932	natural, informative	6 blocks
+HMP2 / IBD	replication	130	130	0.6385621364754371	0.6385621364754371	0.7713971659664223	complete-block subset	independent disease
+OpenNeuro ds004392	failure mode	53	53	0.3856918539773633	0.3856918539773633	0.4800441043626122	none (imaging-only)	no transfer
+AVAIL cohort	application	150	50	0.690128078166343	0.6394825240702342	0.7136836433610946	natural, five modules	end-to-end software
+OpenNeuro ds004856	coverage audit	295	60				label-confounded	0 positive complete cases
