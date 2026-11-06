@@ -1,3 +1,7 @@
+## 1.6.0
+- Clean three-panel module summary (module sizes, cross-module link heatmap,
+  strongest cross-module pairs) as an alternative to dense networks.
+
 ## 1.3.0
 - Module-aware correlation network (community detection, module panels,
   hubs, signed edges, optional taxonomy colours).

@@ -1,3 +1,8 @@
+## 1.6.0
+- `plot_module_summary`: clean three-panel alternative to a hairball network
+  (module sizes, cross-module link heatmap, strongest cross-module pairs).
+- No analysis or reported result changes.
+
 ## 1.5.0
 - `avail-omics export-r`: phyloseq-ready `otu_table.tsv`, `sample_data.tsv`,
   `tax_table.tsv`, feature table, results and network GraphML/edge tables,

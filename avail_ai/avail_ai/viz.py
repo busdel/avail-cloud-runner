@@ -807,3 +807,118 @@ def plot_network_modules(data_root, out_path=None, modality=None,
 
 
 __all__ += ["plot_network_modules"]
+
+
+def plot_module_summary(data_root, out_path=None, modality=None, top_n=70,
+                        threshold=0.25, max_modules=5, method="sparcc",
+                        min_module_size=3):
+    """Clean three-panel alternative to a hairball network.
+
+    A: module sizes; B: module–module cross-correlation heatmap;
+    C: strongest cross-module biomarker pairs. Exports
+    ``cross_module_edges.tsv`` and ``module_summary.tsv``.
+    """
+    import networkx as nx
+    set_soft_style()
+    root = Path(data_root)
+    feats = _feature_tables(root)
+    if not feats:
+        raise FileNotFoundError("features/*.tsv are required")
+    if modality:
+        table = feats[modality]
+    else:
+        table = max(feats.values(), key=lambda d: d.shape[1])
+        modality = next(k for k, v in feats.items() if v is table)
+    X = table.apply(pd.to_numeric, errors="coerce").fillna(0.0)
+    X = X.loc[:, X.var().sort_values(ascending=False).head(int(top_n)).index]
+    corr = _corr_matrix(X, method)
+    G = nx.Graph()
+    G.add_nodes_from(map(str, corr.columns))
+    for i, a in enumerate(corr.columns):
+        for b in corr.columns[i + 1:]:
+            r = corr.loc[a, b]
+            if np.isfinite(r) and abs(r) >= threshold:
+                G.add_edge(str(a), str(b), weight=float(abs(r)), sign=float(r))
+    if not G.number_of_edges():
+        raise ValueError("no edges survive the threshold")
+    comms = [set(c) for c in nx.community.greedy_modularity_communities(
+        G, weight="weight") if len(c) >= int(min_module_size)]
+    comms = sorted(comms, key=len, reverse=True)[:int(max_modules)]
+    node_mod = {n: k for k, c in enumerate(comms) for n in c}
+    G = G.subgraph(node_mod).copy()
+    cross = []
+    for a, b, d in G.edges(data=True):
+        if node_mod[a] != node_mod[b]:
+            cross.append({"source": a, "target": b,
+                          "source_module": f"Module {chr(65 + node_mod[a])}",
+                          "target_module": f"Module {chr(65 + node_mod[b])}",
+                          "weight": round(float(d["weight"]), 4),
+                          "sign": int(np.sign(d["sign"]))})
+    cross = pd.DataFrame(cross).sort_values("weight", ascending=False) if cross else pd.DataFrame()
+    dest = Path(out_path) if out_path else root / "viz" / "module_summary"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if len(cross):
+        cross.to_csv(dest.parent / "cross_module_edges.tsv", sep="\t", index=False)
+    summ = pd.DataFrame([
+        {"module": f"Module {chr(65 + k)}", "nodes": len(c),
+         "edges": G.subgraph(c).number_of_edges()}
+        for k, c in enumerate(comms)])
+    summ.to_csv(dest.parent / "module_summary.tsv", sep="\t", index=False)
+
+    fig = plt.figure(figsize=(12.5, 3.5))
+    gs = fig.add_gridspec(1, 3, width_ratios=[0.8, 0.9, 2.4], wspace=0.62)
+    # A — module sizes
+    ax = fig.add_subplot(gs[0, 0])
+    ax.bar(range(len(comms)), [len(c) for c in comms],
+           color=[SOFT[k % len(SOFT)] for k in range(len(comms))],
+           width=0.65, edgecolor="white", linewidth=0.5)
+    ax.set_xticks(range(len(comms)))
+    ax.set_xticklabels([f"Module {chr(65 + k)}" for k in range(len(comms))])
+    ax.set_ylabel("features")
+    ax.set_title("Module size", loc="left")
+    _panel(ax, "a")
+    # B — module cross-link heatmap
+    ax = fig.add_subplot(gs[0, 1])
+    n = len(comms)
+    M = np.zeros((n, n)); C = np.zeros((n, n), dtype=int)
+    for _, r in (cross.iterrows() if len(cross) else []):
+        i = ord(r["source_module"][-1]) - 65
+        j = ord(r["target_module"][-1]) - 65
+        M[i, j] += r["weight"]; C[i, j] += 1
+        M[j, i] += r["weight"]; C[j, i] += 1
+    ax.imshow(M, cmap="Blues", vmin=0, vmax=max(1e-9, M.max()))
+    for i in range(n):
+        for j in range(n):
+            if C[i, j]:
+                ax.text(j, i, str(C[i, j]), ha="center", va="center",
+                        fontsize=6.5, color=INK)
+    ax.set_xticks(range(n)); ax.set_yticks(range(n))
+    ax.set_xticklabels([chr(65 + k) for k in range(n)])
+    ax.set_yticklabels([chr(65 + k) for k in range(n)])
+    ax.set_title("Cross-module links\n(number; colour = mean |r|)", loc="left")
+    _panel(ax, "b")
+    # C — strongest cross-module pairs
+    ax = fig.add_subplot(gs[0, 2])
+    top = cross.head(12).iloc[::-1] if len(cross) else cross
+    if len(top):
+        y = np.arange(len(top))
+        labels = [f"{r.source[:18]} — {r.target[:18]}" for r in top.itertuples()]
+        ax.hlines(y, 0, top["weight"].values,
+                  color=[POS if s >= 0 else NEG for s in top["sign"]],
+                  lw=1.2)
+        ax.scatter(top["weight"].values, y,
+                   color=[POS if s >= 0 else NEG for s in top["sign"]], s=18,
+                   edgecolor="white", linewidth=0.4, zorder=3)
+        ax.set_yticks(y); ax.set_yticklabels(labels, fontsize=4.8)
+        ax.yaxis.tick_right()
+        ax.tick_params(axis="y", length=0, pad=2)
+        ax.set_xlabel("|correlation|")
+    ax.set_title("Top cross-module pairs", loc="left")
+    _panel(ax, "c")
+    fig.suptitle(f"Module summary — {modality}  ({method} |r| ≥ {threshold:g})",
+                 x=0.01, ha="left", fontsize=9, fontweight="bold")
+    fig.subplots_adjust(top=0.80, bottom=0.22)
+    _save(fig, dest)
+
+
+__all__ += ["plot_module_summary"]

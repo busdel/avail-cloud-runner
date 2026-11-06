@@ -202,6 +202,15 @@ def _cmd_plot(args):
                                  fc_thresh=args.fc_thresh)
             elif kind == 'forest':
                 viz.plot_forest(out, out_path=dest / 'forest', table=args.table)
+            elif kind in ('module_summary', 'modules_summary'):
+                if not args.data_root:
+                    print('[viz] module_summary needs --data-root; skipped')
+                    continue
+                viz.plot_module_summary(
+                    args.data_root, out_path=dest / 'module_summary',
+                    modality=args.modality, top_n=args.top_n,
+                    threshold=args.threshold, max_modules=args.max_modules,
+                    method=args.method)
             elif kind in ('network_modules', 'modules'):
                 if not args.data_root:
                     print('[viz] network_modules needs --data-root; skipped')
@@ -358,7 +367,7 @@ def main(argv=None):
     pl.add_argument('--out-dir', default=None,
                     help='output directory (default: <out>/viz)')
     pl.add_argument('--type', default='network,roc,availability,umap,volcano,forest',
-                    help='comma list: network,network_modules,roc,availability,umap,volcano,forest')
+                    help='comma list: network,network_modules,module_summary,roc,availability,umap,volcano,forest')
     pl.add_argument('--model', default=None, help='model for ROC/calibration')
     pl.add_argument('--group-col', default=None, help='metadata group column')
     pl.add_argument('--modality', default=None, help='restrict UMAP/volcano to one modality')

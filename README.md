@@ -81,7 +81,7 @@ missingness handled as data instead of discarded or fabricated.
 
 ## Install the Python package
 
-**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.5.0**, MIT, Python 3.10&ndash;3.13) &mdash; `pip install avail-omics`
+**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.6.0**, MIT, Python 3.10&ndash;3.13) &mdash; `pip install avail-omics`
 
 ```bash
 pip install avail-omics            # core (CPU is fine)
@@ -112,7 +112,7 @@ Outputs: `meta_benchmark_results.tsv`, `per_class_auc.tsv`, `loo_predictions.tsv
 `biomarkers_top20_per_modality.tsv`, `diff_abundance_*.tsv`, publication figures,
 and the AI advisor report (with PubMed literature).
 
-## Visualization toolkit (v1.5.0)
+## Visualization toolkit (v1.6.0)
 
 Soft-palette, publication-ready figures from the package:
 
@@ -130,7 +130,10 @@ avail-omics plot --out results --data-root mydata --modality taxa \
 ```
 
 Figures use the manuscript CPAL palette and a journal-style preset (Arial,
-7–8 pt, 600 dpi PDF/PNG/TIFF, panel letters).
+7–8 pt, 600 dpi PDF/PNG/TIFF, panel letters). For dense networks, use the
+clean `module_summary` view (module sizes, cross-module heatmap, strongest
+cross-module pairs) instead of a hairball; `--method sparcc|spearman|pearson`
+selects the correlation.
 
 Also included: UMAP/PCA, volcano and forest plots. Correlations: `sparcc`
 (CLR approximation), `spearman` or `pearson`. Full gallery:
