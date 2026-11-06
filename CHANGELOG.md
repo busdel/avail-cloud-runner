@@ -1,3 +1,7 @@
+## 1.3.0
+- Module-aware correlation network (community detection, module panels,
+  hubs, signed edges, optional taxonomy colours).
+
 ## 1.2.0
 - Visualization toolkit expanded: UMAP (PCA fallback), volcano, and forest.
 - `avail-omics plot` accepts network,roc,availability,umap,volcano,forest.

@@ -128,6 +128,12 @@ avail-omics plot --out results --data-root mydata \
 Also included: UMAP/PCA, volcano and forest plots. Full gallery:
 https://busdel.github.io/avail-cloud-runner/viz/
 
+**Module-aware network** — automatic community detection, per-module panels,
+hub highlighting, positive/negative edges, optional taxonomy colouring
+(`avail-omics plot --type network_modules`). Full gallery:
+https://busdel.github.io/avail-cloud-runner/viz/
+
+<p align="center"><img src="docs/assets/viz/network_modules.png" width="880" alt="Module-aware correlation network"></p>
 ## Live demo and own-data analysis
 
 - **Public demo (demo-only):** https://avail-ai.onrender.com &mdash; fixed,

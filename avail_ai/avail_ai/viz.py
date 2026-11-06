@@ -115,7 +115,7 @@ def _pack_layout(G, seed=7):
 
 
 def plot_network(out, data_root=None, out_path=None, top_n=24,
-                 threshold=0.30):
+                 threshold=0.30, largest_component=False):
     """Feature network from the top biomarkers.
 
     With ``data_root``: Spearman correlation between the selected features,
@@ -171,6 +171,9 @@ def plot_network(out, data_root=None, out_path=None, top_n=24,
         title = "Top biomarkers by modality (feature values unavailable)"
     else:
         title = f"Top biomarker network (Spearman |r| >= {threshold:g})"
+    if largest_component and G.number_of_edges():
+        comp = max(nx.connected_components(G), key=len)
+        G = G.subgraph(comp).copy()
     mods = sorted({d.get("modality", "?") for _, d in G.nodes(data=True)
                    if not d.get("modality_node")})
     cmap = {m: SOFT[i % len(SOFT)] for i, m in enumerate(mods)}
@@ -566,3 +569,135 @@ def plot_forest(out, out_path=None, table=None, label_col=None,
 __all__ = ["SOFT", "set_soft_style", "plot_network",
            "plot_roc_calibration", "plot_availability",
            "plot_umap", "plot_volcano", "plot_forest"]
+
+
+def plot_network_modules(data_root, out_path=None, modality=None,
+                         top_n=60, threshold=0.30, max_modules=6,
+                         taxonomy=None, hub_top=2, label_top=6,
+                         min_module_size=3):
+    """Module-aware correlation network, inspired by multi-module microbiome
+    figures: communities are detected automatically (greedy modularity),
+    laid out in separate panels, hubs are highlighted, and nodes can be
+    coloured by an optional taxonomy/group table.
+
+    taxonomy: path to a TSV with columns feature, group (or taxon/phylum).
+    If omitted, nodes are coloured by module and labelled by feature name.
+    """
+    import math
+    import networkx as nx
+    from matplotlib.lines import Line2D
+    set_soft_style()
+    root = Path(data_root)
+    feats = _feature_tables(root)
+    if not feats:
+        raise FileNotFoundError("features/*.tsv are required")
+    if modality:
+        if modality not in feats:
+            raise ValueError(f"modality {modality!r} not found")
+        table = feats[modality]
+    else:
+        table = max(feats.values(), key=lambda d: d.shape[1])
+        modality = next(k for k, v in feats.items() if v is table)
+    X = table.apply(pd.to_numeric, errors="coerce").fillna(0.0)
+    X = X.loc[:, X.var().sort_values(ascending=False).head(int(top_n)).index]
+    corr = X.corr(method="spearman")
+    G = nx.Graph()
+    for f in corr.columns:
+        G.add_node(str(f))
+    for i, a in enumerate(corr.columns):
+        for b in corr.columns[i + 1:]:
+            r = corr.loc[a, b]
+            if np.isfinite(r) and abs(r) >= threshold:
+                G.add_edge(str(a), str(b), weight=float(abs(r)), sign=float(r))
+    if G.number_of_edges() == 0:
+        raise ValueError("no edges survive the correlation threshold")
+    try:
+        comms = list(nx.algorithms.community.greedy_modularity_communities(
+            G, weight="weight"))
+    except Exception:
+        comms = list(nx.connected_components(G))
+    comms = [set(c) for c in comms if len(c) >= int(min_module_size)]
+    comms = sorted(comms, key=len, reverse=True)[:int(max_modules)]
+    if not comms:
+        comms = [set(max(nx.connected_components(G), key=len))]
+    # optional taxonomy colouring
+    tax = {}
+    if taxonomy:
+        td = pd.read_csv(taxonomy, sep="\t")
+        fcol = "feature" if "feature" in td.columns else td.columns[0]
+        gcol = next((c for c in ("group", "taxon", "phylum", "class", "family")
+                     if c in td.columns), None)
+        if gcol:
+            tax = dict(zip(td[fcol].astype(str), td[gcol].astype(str)))
+    ncol = 2 if len(comms) > 1 else 1
+    nrow = int(math.ceil(len(comms) / ncol))
+    fig, axes = plt.subplots(nrow, ncol, figsize=(7.2 * ncol, 6.4 * nrow))
+    axes = np.atleast_1d(axes).ravel()
+    all_groups = []
+    for k, comp in enumerate(comms):
+        ax = axes[k]
+        sub = G.subgraph(comp).copy()
+        pos = nx.spring_layout(sub, seed=11 + k, k=1.25 / math.sqrt(len(sub)),
+                               iterations=160, weight="weight")
+        deg = dict(sub.degree(weight="weight"))
+        hubs = set(sorted(deg, key=deg.get, reverse=True)[:int(hub_top)])
+        for a, b, d in sub.edges(data=True):
+            ax.plot([pos[a][0], pos[b][0]], [pos[a][1], pos[b][1]],
+                    color=POS if d.get("sign", 1) >= 0 else NEG,
+                    lw=0.5 + 2.0 * min(1.0, d.get("weight", 0.2)),
+                    ls="-" if d.get("sign", 1) >= 0 else "--",
+                    alpha=0.30 + 0.35 * min(1.0, d.get("weight", 0.2)),
+                    zorder=1)
+        if tax:
+            groups = [tax.get(n, "unassigned") for n in sub.nodes]
+            all_groups += groups
+            uniq = list(dict.fromkeys(groups))
+            cmap = {g: SOFT[i % len(SOFT)] for i, g in enumerate(uniq)}
+            colors = [cmap[g] for g in groups]
+        else:
+            colors = [SOFT[k % len(SOFT)]] * len(sub.nodes)
+        sizes = [40 + 38 * deg.get(n, 1) for n in sub.nodes]
+        nx.draw_networkx_nodes(sub, pos, ax=ax, node_size=sizes,
+                               node_color=colors, edgecolors="white",
+                               linewidths=0.7, alpha=0.95)
+        labels = {n: (n if len(str(n)) <= 24 else str(n)[:22] + "…")
+                  for n in sorted(sub.nodes, key=lambda n: deg.get(n, 0),
+                                  reverse=True)[:int(label_top)]}
+        nx.draw_networkx_labels(sub, pos, labels=labels, ax=ax, font_size=6,
+                                font_color=INK)
+        for n in hubs:
+            ax.scatter([pos[n][0]], [pos[n][1]], s=140, facecolors="none",
+                       edgecolors="#B4525C", linewidths=1.6, zorder=4)
+            if n in labels:
+                idx = [i for i, t in enumerate(ax.texts) if t.get_text() == labels[n]]
+                if idx:
+                    ax.texts[idx[0]].set_fontweight("bold")
+        ax.set_title(f"Module {chr(65 + k)}  ·  {len(sub)} nodes", loc="left")
+        ax.set_axis_off()
+    for ax in axes[len(comms):]:
+        ax.set_axis_off()
+    if tax:
+        uniq = list(dict.fromkeys(all_groups))
+        handles = [Line2D([0], [0], marker="o", linestyle="", markersize=7,
+                          markerfacecolor=SOFT[i % len(SOFT)],
+                          markeredgecolor="white", label=g)
+                   for i, g in enumerate(uniq[:16])]
+    else:
+        handles = [Line2D([0], [0], marker="o", linestyle="", markersize=7,
+                          markerfacecolor=SOFT[k % len(SOFT)],
+                          markeredgecolor="white", label=f"Module {chr(65 + k)}")
+                   for k in range(len(comms))]
+    handles += [Line2D([0], [0], color=MUTED, lw=1.2, label="positive"),
+                Line2D([0], [0], color=MUTED, lw=1.2, ls="--", label="negative"),
+                Line2D([0], [0], marker="o", linestyle="", markersize=9,
+                       markerfacecolor="none", markeredgecolor="#B4525C",
+                       label="hub")]
+    fig.legend(handles=handles, loc="lower center", ncol=3,
+               fontsize=7, frameon=False, bbox_to_anchor=(0.5, 0.0))
+    fig.suptitle(f"Correlation network — {modality}  (|r| ≥ {threshold:g})",
+                 x=0.01, ha="left", fontsize=12)
+    fig.subplots_adjust(bottom=0.12, hspace=0.18, wspace=0.08)
+    _save(fig, out_path or root / "viz" / "network_modules")
+
+
+__all__ += ["plot_network_modules"]

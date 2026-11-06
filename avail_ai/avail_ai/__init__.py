@@ -24,7 +24,7 @@ from .networks import NETWORK_FAMILIES, abbrev_network, abbrev_brain_label
 from .llm import LLMClient, PROVIDERS
 from .advisor import Advisor
 
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 __all__ = [
     "run_pipeline", "figures", "LLMClient", "Advisor", "PROVIDERS",
     "NETWORK_FAMILIES", "abbrev_network", "abbrev_brain_label",

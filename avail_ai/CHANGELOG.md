@@ -1,3 +1,9 @@
+## 1.3.0
+- Module-aware network figure: automatic community detection, per-module
+  panels, hub highlighting, positive/negative edges, and optional taxonomy
+  colouring (`plot_network_modules` / `avail-omics plot --type network_modules`).
+- No analysis or reported result changes.
+
 ## 1.2.0
 - Visualization toolkit expanded: `plot_umap` (PCA fallback), `plot_volcano`
   and `plot_forest`; `avail-omics plot` accepts

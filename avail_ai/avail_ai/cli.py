@@ -170,7 +170,8 @@ def _cmd_plot(args):
             if kind == 'network':
                 viz.plot_network(out, data_root=args.data_root,
                                  out_path=dest / 'network',
-                                 top_n=args.top_n, threshold=args.threshold)
+                                 top_n=args.top_n, threshold=args.threshold,
+                                 largest_component=args.largest_component)
             elif kind in ('roc', 'calibration', 'roc_calibration'):
                 viz.plot_roc_calibration(out, out_path=dest / 'roc_calibration',
                                          model=args.model)
@@ -193,6 +194,16 @@ def _cmd_plot(args):
                                  fc_thresh=args.fc_thresh)
             elif kind == 'forest':
                 viz.plot_forest(out, out_path=dest / 'forest', table=args.table)
+            elif kind in ('network_modules', 'modules'):
+                if not args.data_root:
+                    print('[viz] network_modules needs --data-root; skipped')
+                    continue
+                viz.plot_network_modules(
+                    args.data_root, out_path=dest / 'network_modules',
+                    modality=args.modality, top_n=args.top_n,
+                    threshold=args.threshold, max_modules=args.max_modules,
+                    taxonomy=args.taxonomy, hub_top=args.hub_top,
+                    label_top=args.label_top)
             else:
                 print(f'[viz] unknown type {kind!r}; skipped')
         except Exception as e:
@@ -338,7 +349,7 @@ def main(argv=None):
     pl.add_argument('--out-dir', default=None,
                     help='output directory (default: <out>/viz)')
     pl.add_argument('--type', default='network,roc,availability,umap,volcano,forest',
-                    help='comma list: network,roc,availability,umap,volcano,forest')
+                    help='comma list: network,network_modules,roc,availability,umap,volcano,forest')
     pl.add_argument('--model', default=None, help='model for ROC/calibration')
     pl.add_argument('--group-col', default=None, help='metadata group column')
     pl.add_argument('--modality', default=None, help='restrict UMAP/volcano to one modality')
@@ -346,8 +357,14 @@ def main(argv=None):
     pl.add_argument('--q-thresh', type=float, default=0.05)
     pl.add_argument('--fc-thresh', type=float, default=1.0)
     pl.add_argument('--table', default=None, help='forest table (effect + CI)')
+    pl.add_argument('--max-modules', type=int, default=6)
+    pl.add_argument('--taxonomy', default=None, help='TSV mapping feature -> group/taxon')
+    pl.add_argument('--hub-top', type=int, default=2)
+    pl.add_argument('--label-top', type=int, default=6)
     pl.add_argument('--top-n', type=int, default=24)
     pl.add_argument('--threshold', type=float, default=0.30)
+    pl.add_argument('--largest-component', action='store_true',
+                    help='network: draw only the largest connected component')
     pl.set_defaults(func=_cmd_plot)
 
     args = p.parse_args(argv)
