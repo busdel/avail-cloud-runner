@@ -43,7 +43,7 @@ mydata/
 Or use the CLI:
 
 ```bash
-avail-omics run --data-root mydata --out results
+avail-omics run-generic --data-root mydata --out results
 avail-omics robustness --data-root mydata --out robustness \
     --permutations 25 --jobs 4          # full-pipeline label-permutation test
 avail-omics sensitivity --data-root mydata --out sensitivity
@@ -119,9 +119,40 @@ OpenRouter (OpenAI-compatible endpoints).
 - Label-permutation test of the full pipeline: permuted macro-AUC ≈ 0.50
   (p = 0.039), ruling out leakage as the source of the separation
 - Sustains prediction where complete-case collapses (25-55% dropout)
-- External validation on public cohorts: Wallen 2022 PD shotgun (AUC 0.642),
-  HMP2 IBD multi-omics with genuine per-sample missingness (macro-AUC 0.771),
-  preclinical AD (0.542), label-free reconstruction (Vascellari 2020)
+- Role-separated public evidence: MetaCardis anchor (n=1087; reproduction +
+  coverage), HMP2/IBD independent replication (n=130; XGBoost macro-AUC 0.771;
+  complete-block subset), and OpenNeuro ds004392 imaging failure-mode (n=53;
+  no detectable transfer). Wallen 2022, preclinical AD and the label-free
+  reconstruction are reported in the companion application paper.
+
+## Validation suite and coverage audit
+
+Full notes: [VALIDATION.md](VALIDATION.md).
+
+The software paper uses role-separated evidence rather than a leaderboard:
+
+| Role | Dataset | n | What it tests |
+|---|---|---:|---|
+| Anchor | MetaCardis | 1087 (CC 536) | natural, informative missingness |
+| Independent replication | HMP2 / IBD | 130 | different disease; complete-block subset |
+| Imaging failure mode | OpenNeuro ds004392 | 53 | imaging-only transfer; failure handling |
+| Companion application | AVAIL cohort | 150 | end-to-end software use; no new biology |
+| Coverage audit | OpenNeuro ds004856 | 295 labeled | complete-case bias only |
+
+The ds004856 audit is intentionally **not** a performance result. Its
+processed OpenNeuro tables contain 295 amyloid-labeled subjects, but the
+complete-case intersection (MRI + tau + cognition) has **60 subjects and zero
+amyloid-positive subjects**; all 73 MRI-absent subjects are positive and the
+60 tau-available subjects are negative. A single availability indicator
+reaches AUC 0.82, so complete-case and all-subject AUCs are not interpretable
+as biological estimates. The cohort is retained only to show that
+complete-case analysis can be structurally non-estimable. It is not used to
+claim diagnostic accuracy.
+
+The companion AVAIL cohort (n=150) is an application/regression check:
+biological interpretation belongs to the companion paper; this package uses
+the same verified cohort to exercise the command line, figures, report and R
+export end to end.
 
 ## R interoperability
 
@@ -144,7 +175,7 @@ the project repository.
 ## Citing
 
 Manuscript in preparation. Until the paper is out, please cite the
-repository and package: `avail-omics` v1.0.19.
+repository and package: `avail-omics` v1.7.0.
 
 ## License
 

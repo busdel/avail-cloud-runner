@@ -1,3 +1,8 @@
+## Unreleased
+- Documentation: role-separated validation suite, companion-application
+  framing and a ds004856 coverage audit. Corrected the quick-start CLI to
+  `run-generic`. No analysis or reported result changes.
+
 ## 1.7.0
 - `plot_module_panels`: selected-module networks (small, fully labelled
   per-module panels) plus a compact cross-module link heatmap; avoids the
