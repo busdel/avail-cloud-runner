@@ -120,8 +120,8 @@ OpenRouter (OpenAI-compatible endpoints).
   (p = 0.039), ruling out leakage as the source of the separation
 - Sustains prediction where complete-case collapses (25-55% dropout)
 - Role-separated public evidence: MetaCardis anchor (n=1087; reproduction +
-  coverage), HMP2/IBD independent replication (n=130; XGBoost macro-AUC 0.771;
-  complete-block subset), and OpenNeuro ds004392 imaging failure-mode (n=53;
+  coverage), HMP2/IBD independent replication (n=130; non-GNN mean 0.639,
+  best XGBoost 0.771; complete-block subset), and OpenNeuro ds004392 imaging failure-mode (n=53;
   no detectable transfer). Wallen 2022, preclinical AD and the label-free
   reconstruction are reported in the companion application paper.
 
