@@ -81,7 +81,7 @@ missingness handled as data instead of discarded or fabricated.
 
 ## Install the Python package
 
-**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.0.19**, MIT, Python 3.10&ndash;3.13) &mdash; `pip install avail-omics`
+**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.4.0**, MIT, Python 3.10&ndash;3.13) &mdash; `pip install avail-omics`
 
 ```bash
 pip install avail-omics            # core (CPU is fine)
@@ -112,7 +112,7 @@ Outputs: `meta_benchmark_results.tsv`, `per_class_auc.tsv`, `loo_predictions.tsv
 `biomarkers_top20_per_modality.tsv`, `diff_abundance_*.tsv`, publication figures,
 and the AI advisor report (with PubMed literature).
 
-## Visualization toolkit (v1.2.0)
+## Visualization toolkit (v1.4.0)
 
 Soft-palette, publication-ready figures from the package:
 
@@ -123,17 +123,22 @@ Soft-palette, publication-ready figures from the package:
 ```bash
 avail-omics plot --out results --data-root mydata \
   --type network,roc,availability,umap,volcano,forest
+
+# module-aware network, SparCC-like correlations, cross-module edges
+avail-omics plot --out results --data-root mydata --modality taxa \
+  --type network_modules --method sparcc --combined --taxonomy taxonomy.tsv
 ```
 
-Also included: UMAP/PCA, volcano and forest plots. Full gallery:
+Also included: UMAP/PCA, volcano and forest plots. Correlations: `sparcc`
+(CLR approximation), `spearman` or `pearson`. Full gallery:
 https://busdel.github.io/avail-cloud-runner/viz/
 
-**Module-aware network** — automatic community detection, per-module panels,
-hub highlighting, positive/negative edges, optional taxonomy colouring
-(`avail-omics plot --type network_modules`). Full gallery:
-https://busdel.github.io/avail-cloud-runner/viz/
+**Module-aware network** — automatic community detection, per-module panels
+or `--combined` single view with cross-module edges, hub highlighting,
+taxonomy colouring and a `cross_module_edges.tsv` export.
 
 <p align="center"><img src="docs/assets/viz/network_modules.png" width="880" alt="Module-aware correlation network"></p>
+
 ## Live demo and own-data analysis
 
 - **Public demo (demo-only):** https://avail-ai.onrender.com &mdash; fixed,
