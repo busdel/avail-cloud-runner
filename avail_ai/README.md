@@ -160,6 +160,9 @@ export end to end.
 
 ## Cross-cohort comparison
 
+> `compare` is included in the source tree for the next release; the
+> PyPI 1.7.0 wheel predates it.
+
 `avail-omics compare` reads one or more results directories and writes a
 machine-readable cohort table plus a two-panel scientific figure (complete-case
 coverage and macro-AUC with the range across meta-learners). It is generic:
