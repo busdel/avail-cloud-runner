@@ -51,9 +51,13 @@ missingness handled as data instead of discarded or fabricated.
   leave-one-out, permutation nulls at chance.
 - **Benchmarked, not just built** &mdash; every design choice quantified against
   14 missing-data strategies and 11 meta-learners.
-- **Validated outside the lab** &mdash; Wallen 2022 (PD, n=724), preclinical AD
-  (n=164), HMP2 IBD, MetaCardis (n=1087), and independent rs-fMRI cohorts
-  (OpenNeuro ds004392, ds005892) processed end-to-end with the same pipeline.
+- **Role-separated public evidence** &mdash; MetaCardis anchor (n=1087;
+  reproduction + coverage), HMP2/IBD independent replication (n=130;
+  complete-block subset), and OpenNeuro ds004392 imaging failure-mode (n=53;
+  no detectable transfer). The companion cohort (n=150) is an end-to-end
+  application check; Wallen 2022, preclinical AD and the label-free
+  reconstruction belong to the companion paper. A public coverage audit
+  (ds004856) is reported separately (see below), not as a performance claim.
 - **Group-aware readouts** &mdash; every run reports HC / MCI / PDD breakdowns:
   coverage by group, per-class one-vs-rest AUC, and group profiles of the top
   differential features (with individual subjects shown).
@@ -62,6 +66,33 @@ missingness handled as data instead of discarded or fabricated.
   user jobs run on the compute you choose. The local-runner
   bundle can also act as a worker (`python run_me.py --serve`) so the web page
   dispatches jobs straight to your machine, no pip install needed.
+
+## Validation suite and coverage audit
+
+The software paper uses role-separated evidence rather than a leaderboard:
+
+| Role | Dataset | n | What it tests |
+|---|---|---:|---|
+| Anchor | MetaCardis | 1087 (CC 536) | natural, informative missingness |
+| Independent replication | HMP2 / IBD | 130 | different disease; complete-block subset |
+| Imaging failure mode | OpenNeuro ds004392 | 53 | imaging-only transfer; failure handling |
+| Companion application | AVAIL cohort | 150 | end-to-end software use; no new biology |
+| Coverage audit | OpenNeuro ds004856 | 295 labeled | complete-case bias only |
+
+The **ds004856 coverage audit** is intentionally not a performance result.
+Its processed OpenNeuro tables contain 295 amyloid-labeled subjects, but the
+complete-case intersection (MRI + tau + cognition) has **60 subjects and zero
+amyloid-positive subjects**; all 73 MRI-absent subjects are positive and the
+60 tau-available subjects are negative. A single availability indicator
+reaches AUC 0.82, so complete-case and all-subject AUCs are not interpretable
+as biological estimates. The cohort is retained only to show that
+complete-case analysis can be structurally non-estimable; it is not used to
+claim diagnostic accuracy.
+
+The companion AVAIL cohort (n=150) is an application/regression check:
+biological interpretation belongs to the companion paper; this repository
+uses the same verified cohort to exercise the command line, figures, report
+and R export end to end.
 
 ## Gallery
 
