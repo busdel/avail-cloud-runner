@@ -1,7 +1,10 @@
 ## Unreleased
 - Documentation: role-separated validation suite, companion-application
   framing and a ds004856 coverage audit. Corrected the quick-start CLI to
-  `run-generic`. No analysis or reported result changes.
+  `run-generic`.
+- Validation-suite figures: complete-case coverage and AVAIL-versus-complete
+  macro-AUC across MetaCardis, HMP2, ds004392, the companion cohort and the
+  ds004856 audit. No analysis or reported result changes.
 
 ## 1.7.0
 - `plot_module_panels`: selected-module networks (small, fully labelled
