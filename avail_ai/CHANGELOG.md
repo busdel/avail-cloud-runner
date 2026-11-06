@@ -1,4 +1,4 @@
-## Unreleased
+## 1.8.0
 - Documentation: role-separated validation suite, companion-application
   framing and a ds004856 coverage audit. Corrected the quick-start CLI to
   `run-generic`.
