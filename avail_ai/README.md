@@ -49,6 +49,23 @@ avail-omics robustness --data-root mydata --out robustness \
 avail-omics sensitivity --data-root mydata --out sensitivity
 ```
 
+## Soft-palette visualization toolkit
+
+```bash
+avail-omics plot --out results --data-root mydata \
+    --type network,roc,availability
+```
+
+- `network` — top-biomarker Spearman network (needs `data_root` for feature values;
+  otherwise a modality–feature bipartite graph).
+- `roc` — one-vs-rest ROC and reliability/calibration curves from
+  `loo_predictions.tsv`.
+- `availability` — subject × modality availability heatmap, group coverage and
+  top availability patterns from `metadata.tsv` + `features/*.tsv`.
+
+Outputs are PDF + 400 dpi PNG in `results/viz/` by default, using a muted,
+colour-vision-friendly palette. Missing inputs are reported explicitly.
+
 ## AI advisor report and results agent (bring your own key)
 
 The package ships the same LLM layer used by the web interface. Keys are

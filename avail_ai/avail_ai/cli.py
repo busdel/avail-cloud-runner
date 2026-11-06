@@ -159,6 +159,33 @@ def _cmd_chat(args):
     return chat_run(args.out, args.question)
 
 
+def _cmd_plot(args):
+    from . import viz
+    import sys as _sys
+    out = Path(args.out)
+    dest = Path(args.out_dir) if args.out_dir else out / 'viz'
+    kinds = [k.strip().lower() for k in args.type.split(',') if k.strip()]
+    for kind in kinds:
+        try:
+            if kind == 'network':
+                viz.plot_network(out, data_root=args.data_root,
+                                 out_path=dest / 'network',
+                                 top_n=args.top_n, threshold=args.threshold)
+            elif kind in ('roc', 'calibration', 'roc_calibration'):
+                viz.plot_roc_calibration(out, out_path=dest / 'roc_calibration',
+                                         model=args.model)
+            elif kind in ('availability', 'coverage'):
+                if not args.data_root:
+                    print('[viz] availability needs --data-root; skipped')
+                    continue
+                viz.plot_availability(args.data_root, out_path=dest / 'availability')
+            else:
+                print(f'[viz] unknown type {kind!r}; skipped')
+        except Exception as e:
+            print(f'[viz] {kind}: {type(e).__name__}: {str(e)[:250]}')
+    return 0
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(
         prog="avail-omics",
@@ -288,6 +315,20 @@ def main(argv=None):
     ch.add_argument('--question', default=None,
                     help='ask one question and exit')
     ch.set_defaults(func=_cmd_chat)
+
+    pl = sub.add_parser('plot', help='soft-palette figures: network, '
+                                    'ROC/calibration, availability')
+    pl.add_argument('--out', required=True, help='results directory')
+    pl.add_argument('--data-root', default=None,
+                    help='generic data root (metadata + features/) for network/availability')
+    pl.add_argument('--out-dir', default=None,
+                    help='output directory (default: <out>/viz)')
+    pl.add_argument('--type', default='network,roc,availability',
+                    help='comma list: network,roc,availability')
+    pl.add_argument('--model', default=None, help='model for ROC/calibration')
+    pl.add_argument('--top-n', type=int, default=24)
+    pl.add_argument('--threshold', type=float, default=0.30)
+    pl.set_defaults(func=_cmd_plot)
 
     args = p.parse_args(argv)
     if not args.command:

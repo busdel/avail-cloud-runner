@@ -1,3 +1,10 @@
+## 1.1.0
+- New `avail_omics.viz` soft-palette visualization toolkit and
+  `avail-omics plot` command: biomarker network, one-vs-rest ROC +
+  reliability/calibration, and availability/coverage/pattern panels.
+- Optional inputs are explicit; missing files fail with a clear message.
+- No analysis or reported result changes.
+
 ## 1.0.19
 - Package-level AI features: `avail-omics report` writes the LLM advisor
   report (`llm_advisor.md/json`) and `avail-omics chat` / `agent` is a
