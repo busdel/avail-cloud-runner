@@ -63,6 +63,8 @@ avail-omics plot --out results --data-root mydata \
   edges, hubs, optional taxonomy colouring (`--taxonomy`), and a
   `cross_module_edges.tsv` export. Correlations: `--method sparcc` (CLR
   approximation), `spearman` or `pearson`.
+- `module_panels` — selected-module networks: a small, fully labelled network
+  per module plus a compact cross-module heatmap (recommended for figures).
 - `module_summary` — clean three-panel summary for dense networks: module
   sizes, cross-module link heatmap, and the strongest cross-module pairs.
 - `roc` — one-vs-rest ROC and reliability/calibration curves from

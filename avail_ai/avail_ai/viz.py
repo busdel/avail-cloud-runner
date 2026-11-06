@@ -14,6 +14,7 @@ reads the documented TSV outputs (or the generic data layout) and fails with a
 clear message when the required input is absent.
 """
 from pathlib import Path
+import json
 
 import matplotlib
 matplotlib.use("Agg")
@@ -922,3 +923,146 @@ def plot_module_summary(data_root, out_path=None, modality=None, top_n=70,
 
 
 __all__ += ["plot_module_summary"]
+
+
+def _module_graph(data_root, modality=None, top_n=55, threshold=0.3,
+                  method="spearman", max_modules=4, min_module_size=3):
+    import networkx as nx
+    root = Path(data_root)
+    feats = _feature_tables(root)
+    if not feats:
+        raise FileNotFoundError("features/*.tsv are required")
+    if modality:
+        table = feats[modality]
+    else:
+        table = max(feats.values(), key=lambda d: d.shape[1])
+        modality = next(k for k, v in feats.items() if v is table)
+    X = table.apply(pd.to_numeric, errors="coerce").fillna(0.0)
+    X = X.loc[:, X.var().sort_values(ascending=False).head(int(top_n)).index]
+    corr = _corr_matrix(X, method)
+    G = nx.Graph(); G.add_nodes_from(map(str, corr.columns))
+    for i, a in enumerate(corr.columns):
+        for b in corr.columns[i + 1:]:
+            r = corr.loc[a, b]
+            if np.isfinite(r) and abs(r) >= threshold:
+                G.add_edge(str(a), str(b), weight=float(abs(r)), sign=float(r))
+    comms = [set(c) for c in nx.community.greedy_modularity_communities(
+        G, weight="weight") if len(c) >= int(min_module_size)]
+    comms = sorted(comms, key=len, reverse=True)[:int(max_modules)]
+    node_mod = {n: k for k, c in enumerate(comms) for n in c}
+    G = G.subgraph(node_mod).copy()
+    return G, comms, node_mod, modality
+
+
+def plot_module_panels(data_root, out_path=None, modality=None, top_n=55,
+                       threshold=0.30, method="spearman", max_modules=2,
+                       max_nodes=12, hub_top=2):
+    """Two selected module networks + module-link heatmap (no hairball).
+
+    Designed for the Nature-style module figure: a small, fully labelled
+    network per module, hub boxes, signed edges, and a compact cross-module
+    heatmap. Exports the edge table and a provenance-tagged figure.
+    """
+    import networkx as nx
+    from matplotlib.lines import Line2D
+    set_style("nature")
+    G, comms, node_mod, modality = _module_graph(
+        data_root, modality, top_n, threshold, method, max_modules)
+    if not comms:
+        raise ValueError("no modules found")
+    dest = Path(out_path) if out_path else Path(data_root) / "viz" / "module_panels"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    cross = []
+    for a, b, d in G.edges(data=True):
+        if node_mod[a] != node_mod[b]:
+            cross.append({"source": a, "target": b,
+                          "source_module": node_mod[a], "target_module": node_mod[b],
+                          "weight": float(d["weight"]), "sign": int(np.sign(d["sign"]))})
+    if cross:
+        pd.DataFrame(cross).sort_values("weight", ascending=False).to_csv(
+            dest.parent / "cross_module_edges.tsv", sep="\t", index=False)
+    fig = plt.figure(figsize=(183 / 25.4, 78 / 25.4), layout="constrained")
+    gs = fig.add_gridspec(1, 3, width_ratios=[1.0, 1.0, 0.8])
+    handles_mod = []
+    for k, comp in enumerate(comms[:2]):
+        ax = fig.add_subplot(gs[0, k])
+        deg = {n: G.degree(n, weight="weight") for n in comp}
+        keep = sorted(comp, key=lambda n: deg.get(n, 0), reverse=True)[:int(max_nodes)]
+        sub = G.subgraph(keep).copy()
+        pos = nx.spring_layout(sub, seed=17 + k, k=1.5 / np.sqrt(len(sub)),
+                               iterations=240, weight="weight")
+        xs = [v[0] for v in pos.values()]; ys = [v[1] for v in pos.values()]
+        ax.set_xlim(min(xs) - 0.18, max(xs) + 0.18)
+        ax.set_ylim(min(ys) - 0.18, max(ys) + 0.18)
+        for a, b, d in sub.edges(data=True):
+            ax.plot([pos[a][0], pos[b][0]], [pos[a][1], pos[b][1]],
+                    color=POS if d["sign"] >= 0 else NEG,
+                    lw=0.45 + 1.8 * d["weight"],
+                    ls="-" if d["sign"] >= 0 else "--",
+                    alpha=0.35 + 0.35 * d["weight"], zorder=1)
+        colors = [SOFT[k % len(SOFT)]] * len(sub.nodes)
+        sizes = [20 + 30 * deg.get(n, 1) for n in sub.nodes]
+        nx.draw_networkx_nodes(sub, pos, ax=ax, node_size=sizes,
+                               node_color=colors, edgecolors="white",
+                               linewidths=0.6, alpha=0.95)
+        nx.draw_networkx_labels(sub, pos, ax=ax, font_size=5.2,
+                                font_color=INK,
+                                labels={n: (n if len(str(n)) <= 30 else str(n)[:28] + "…")
+                                        for n in sub.nodes})
+        for txt in ax.texts:
+            txt.set_clip_on(False)
+        hubs = sorted(sub.nodes, key=lambda n: deg.get(n, 0), reverse=True)[:int(hub_top)]
+        for n in hubs:
+            ax.scatter([pos[n][0]], [pos[n][1]], s=120, facecolors="none",
+                       edgecolors="#B4525C", linewidths=1.3, zorder=4)
+        ax.set_title(f"Module {chr(65 + k)}  (n={len(sub)})", loc="left")
+        ax.set_axis_off()
+        handles_mod.append(Line2D([0], [0], marker="o", linestyle="", markersize=5,
+                                  markerfacecolor=SOFT[k % len(SOFT)],
+                                  markeredgecolor="white", label=f"Module {chr(65 + k)}"))
+        _panel(ax, chr(97 + k))
+    # module-link heatmap
+    ax = fig.add_subplot(gs[0, 2])
+    n = len(comms)
+    M = np.zeros((n, n)); Cnt = np.zeros((n, n), dtype=int)
+    for r in cross:
+        i, j = int(r["source_module"]), int(r["target_module"])
+        M[i, j] += r["weight"]; Cnt[i, j] += 1
+        M[j, i] += r["weight"]; Cnt[j, i] += 1
+    ax.imshow(M, cmap="Blues", vmin=0, vmax=max(1e-9, M.max()))
+    for i in range(n):
+        for j in range(n):
+            if Cnt[i, j]:
+                frac = M[i, j] / max(1e-9, M.max())
+                ax.text(j, i, f"{Cnt[i,j]}\n{M[i,j]/Cnt[i,j]:.2f}",
+                        ha="center", va="center", fontsize=5.5,
+                        color="white" if frac > 0.55 else INK)
+    ax.set_xticks(range(n)); ax.set_yticks(range(n))
+    ax.set_xticklabels([chr(65 + k) for k in range(n)])
+    ax.set_yticklabels([chr(65 + k) for k in range(n)])
+    ax.set_title("Cross-module links\n(n; mean |r|)", loc="left", pad=10)
+    _panel(ax, "c", x=-0.18, y=1.04)
+    handles = handles_mod + [
+        Line2D([0], [0], color=POS, lw=1.2, label="positive"),
+        Line2D([0], [0], color=NEG, lw=1.2, ls="--", label="negative"),
+        Line2D([0], [0], marker="o", linestyle="", markersize=7,
+               markerfacecolor="none", markeredgecolor="#B4525C", label="hub")]
+    fig.legend(handles=handles, loc="outside lower center", ncol=5, fontsize=6)
+    fig.suptitle(f"Module networks — {modality}  ({method} |r| ≥ {threshold:g})",
+                 x=0.01, ha="left", fontsize=8, fontweight="bold")
+    fig.savefig(dest.with_suffix(".pdf"))
+    fig.savefig(dest.with_suffix(".png"), dpi=600)
+    fig.savefig(dest.with_suffix(".tiff"), dpi=600,
+                pil_kwargs={"compression": "tiff_lzw"})
+    plt.close(fig)
+    (dest.parent / "figure_provenance.json").write_text(json.dumps({
+        "figure": "module_panels", "data_root": str(data_root),
+        "modality": modality, "top_n": top_n, "threshold": threshold,
+        "method": method, "max_nodes": max_nodes,
+        "modules": [sorted(c) for c in comms[:2]],
+        "note": "research figure; no compliance claim",
+    }, indent=2))
+    print(f"  + {dest}.pdf / .png / .tiff", flush=True)
+
+
+__all__ += ["plot_module_panels"]

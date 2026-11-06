@@ -1,3 +1,9 @@
+## 1.7.0
+- `plot_module_panels`: selected-module networks (small, fully labelled
+  per-module panels) plus a compact cross-module link heatmap; avoids the
+  hairball while keeping cross-module relationships visible.
+- No analysis or reported result changes.
+
 ## 1.6.0
 - `plot_module_summary`: clean three-panel alternative to a hairball network
   (module sizes, cross-module link heatmap, strongest cross-module pairs).

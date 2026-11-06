@@ -1,3 +1,7 @@
+## 1.7.0
+- Selected-module network panels: small, fully labelled per-module networks
+  plus a compact cross-module link heatmap.
+
 ## 1.6.0
 - Clean three-panel module summary (module sizes, cross-module link heatmap,
   strongest cross-module pairs) as an alternative to dense networks.
