@@ -112,6 +112,22 @@ Outputs: `meta_benchmark_results.tsv`, `per_class_auc.tsv`, `loo_predictions.tsv
 `biomarkers_top20_per_modality.tsv`, `diff_abundance_*.tsv`, publication figures,
 and the AI advisor report (with PubMed literature).
 
+## Visualization toolkit (v1.2.0)
+
+Soft-palette, publication-ready figures from the package:
+
+| Network | ROC / calibration | Availability |
+|---|---|---|
+| <img src="docs/assets/viz/network.png" width="330"> | <img src="docs/assets/viz/roc_calibration.png" width="330"> | <img src="docs/assets/viz/availability.png" width="330"> |
+
+```bash
+avail-omics plot --out results --data-root mydata \
+  --type network,roc,availability,umap,volcano,forest
+```
+
+Also included: UMAP/PCA, volcano and forest plots. Full gallery:
+https://busdel.github.io/avail-cloud-runner/viz/
+
 ## Live demo and own-data analysis
 
 - **Public demo (demo-only):** https://avail-ai.onrender.com &mdash; fixed,
