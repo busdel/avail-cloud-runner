@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "avail-omics"
-version = "1.1.0"
+version = "1.2.0"
 description = "AVAIL-omics: availability-aware multimodal integration for clinical cohorts with missing modalities."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -35,6 +35,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# Optional UMAP for the visualization toolkit; PCA fallback works without it.
+viz = ["umap-learn>=0.5"]
 # Neural (MLP/MoE/GNN/Transformer) and deep-tabular meta-learners.
 deep = [
     "torch>=1.13",

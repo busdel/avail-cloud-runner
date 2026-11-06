@@ -70,7 +70,9 @@ def _feature_tables(data_root):
     if fdir.exists():
         for p in sorted(fdir.glob("*.tsv")):
             try:
-                feats[p.stem] = pd.read_csv(p, sep="\t").set_index("SampleID")
+                d = pd.read_csv(p, sep="\t")
+                d["SampleID"] = d["SampleID"].astype(str).str.strip()
+                feats[p.stem] = d.set_index("SampleID")
             except Exception:
                 continue
     return feats
@@ -369,3 +371,198 @@ def plot_availability(data_root, out_path=None, group_col=None):
 
 __all__ = ["SOFT", "set_soft_style", "plot_network",
            "plot_roc_calibration", "plot_availability"]
+
+
+def plot_umap(data_root, out_path=None, group_col=None, modality=None,
+              n_neighbors=15, min_dist=0.10, random_state=0):
+    """2-D UMAP of the concatenated feature space (PCA fallback if umap-learn
+    is not installed). Points are coloured by group with the soft palette."""
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.decomposition import PCA
+    set_soft_style()
+    root = Path(data_root)
+    meta_path = root / "metadata.tsv"
+    if not meta_path.exists():
+        meta_path = root / "metadata.csv"
+    if not meta_path.exists():
+        raise FileNotFoundError("metadata.tsv is required for the UMAP plot")
+    meta = pd.read_csv(meta_path, sep="\t" if meta_path.suffix == ".tsv" else ",",
+                       dtype=str)
+    id_col = "SampleID" if "SampleID" in meta.columns else meta.columns[0]
+    gcol = group_col or ("Group" if "Group" in meta.columns else ("group" if "group" in meta.columns else None))
+    ids = meta[id_col].astype(str).str.strip().tolist()
+    groups = meta[gcol].astype(str).tolist() if gcol else ["all"] * len(ids)
+    feats = _feature_tables(root)
+    if modality:
+        feats = {k: v for k, v in feats.items() if str(k) == str(modality)}
+    if not feats:
+        raise FileNotFoundError("features/*.tsv are required for the UMAP plot")
+    parts = []
+    for m, df in sorted(feats.items()):
+        d = df.reindex(ids)
+        d = d.apply(pd.to_numeric, errors="coerce")
+        d = d.loc[:, d.notna().any(axis=0)]
+        if d.shape[1]:
+            parts.append(d.add_prefix(f"{m}::"))
+    if not parts:
+        raise ValueError("no numeric features found")
+    X = pd.concat(parts, axis=1)
+    X = X.fillna(X.median(numeric_only=True)).fillna(0.0)
+    Xs = StandardScaler().fit_transform(X.values)
+    try:
+        import umap  # type: ignore
+        emb = umap.UMAP(n_components=2, n_neighbors=int(n_neighbors),
+                        min_dist=float(min_dist), random_state=random_state,
+                        n_jobs=1).fit_transform(Xs)
+        method = "UMAP"
+    except Exception:
+        emb = PCA(n_components=2, random_state=random_state).fit_transform(Xs)
+        method = "PCA (install avail-omics[viz] for UMAP)"
+    fig, ax = plt.subplots(figsize=(7.2, 5.6))
+    ug = list(dict.fromkeys(groups))
+    for i, g in enumerate(ug):
+        idx = [j for j, x in enumerate(groups) if x == g]
+        ax.scatter(emb[idx, 0], emb[idx, 1], s=28, alpha=0.85,
+                   color=SOFT[i % len(SOFT)], edgecolor="white",
+                   linewidth=0.4, label=str(g))
+    short = method.split(" (")[0]
+    ax.set_xlabel(f"{short}-1")
+    ax.set_ylabel(f"{short}-2")
+    ax.set_title(f"Feature embedding ({short})", loc="left")
+    if "install" in method:
+        ax.text(0.99, 0.01, "install avail-omics[viz] for UMAP",
+                transform=ax.transAxes, ha="right", va="bottom",
+                fontsize=7, color=MUTED)
+    ax.legend(title=gcol or "group", loc="best")
+    ax.grid(color=GRID, lw=0.6)
+    ax.set_axisbelow(True)
+    _save(fig, out_path or root / "viz" / "umap")
+
+
+def plot_volcano(out, out_path=None, comparison=None, modality=None,
+                 q_thresh=0.05, fc_thresh=1.0):
+    """Volcano plot from diff_abundance_*.tsv (log2 fold change vs q-value)."""
+    set_soft_style()
+    out = Path(out)
+    if modality:
+        cand = out / f"diff_abundance_{modality}.tsv"
+        candidates = [cand] if cand.exists() else []
+    else:
+        candidates = [out / "diff_abundance_all.tsv"] + sorted(out.glob("diff_abundance_*.tsv"))
+    path = next((p for p in candidates if p.exists()), None)
+    if path is None:
+        raise FileNotFoundError("diff_abundance_*.tsv is required for the volcano plot")
+    d = pd.read_csv(path, sep="\t")
+    need = {"feature", "log2fc"}
+    if not need.issubset(d.columns):
+        raise ValueError(f"{path.name} needs feature and log2fc columns")
+    if comparison is not None and "comparison" in d.columns:
+        d = d[d["comparison"].astype(str) == str(comparison)]
+    elif "comparison" in d.columns and d["comparison"].nunique() > 1:
+        first = d["comparison"].astype(str).iloc[0]
+        d = d[d["comparison"].astype(str) == first]
+    pcol = "q_value" if "q_value" in d.columns else ("p_value" if "p_value" in d.columns else None)
+    if pcol is None:
+        raise ValueError("diff_abundance file needs q_value or p_value")
+    x = pd.to_numeric(d["log2fc"], errors="coerce")
+    p = pd.to_numeric(d[pcol], errors="coerce").clip(lower=1e-300)
+    y = -np.log10(p)
+    ok = np.isfinite(x) & np.isfinite(y)
+    d = d[ok].copy(); x = x[ok]; y = y[ok]
+    sig = (p[ok].values <= q_thresh) & (np.abs(x.values) >= fc_thresh)
+    up = sig & (x.values > 0)
+    down = sig & (x.values < 0)
+    fig, ax = plt.subplots(figsize=(8.2, 5.8))
+    ax.scatter(x[~sig], y[~sig], s=14, color="#C9D2D9", alpha=0.65,
+               edgecolor="white", linewidth=0.3, label="not significant")
+    ax.scatter(x[up], y[up], s=22, color=NEG, alpha=0.9,
+               edgecolor="white", linewidth=0.4, label="up")
+    ax.scatter(x[down], y[down], s=22, color=POS, alpha=0.9,
+               edgecolor="white", linewidth=0.4, label="down")
+    ax.axhline(-np.log10(q_thresh), color=MUTED, ls="--", lw=0.9)
+    for v in (-fc_thresh, fc_thresh):
+        ax.axvline(v, color=MUTED, ls="--", lw=0.9)
+    score = y.values * (np.abs(x.values) + 1.0)
+    top = d.assign(_y=y.values, _score=score).sort_values(
+        "_score", ascending=False).head(6)
+    xr = max(1e-6, float(np.nanmax(np.abs(x.values))))
+    yr = max(1e-6, float(np.nanmax(y.values)))
+    for i, (_, r) in enumerate(top.iterrows()):
+        xv = float(r["log2fc"]); yv = float(r["_y"])
+        xo = 0.015 * xr * (1 if xv >= 0 else -1)
+        yo = 0.035 * yr * (i % 3 + 1)
+        ax.annotate(str(r["feature"])[:26], (xv, yv),
+                    xytext=(xv + xo, yv + yo), textcoords="data",
+                    fontsize=6.5, color=INK,
+                    ha="left" if xv >= 0 else "right")
+    ax.set_xlabel("log2 fold change")
+    ax.set_ylabel(f"-log10({pcol})")
+    comp = ""
+    if "comparison" in d.columns and d["comparison"].nunique():
+        comp = f" — {d['comparison'].astype(str).iloc[0]}"
+    ax.set_title(f"Volcano{comp}", loc="left")
+    ax.legend(loc="upper left", fontsize=8)
+    ax.grid(color=GRID, lw=0.6)
+    ax.set_axisbelow(True)
+    _save(fig, out_path or out / "viz" / "volcano")
+
+
+def plot_forest(out, out_path=None, table=None, label_col=None,
+                effect_col=None, lo_col=None, hi_col=None, title=None):
+    """Forest plot for a table with effect + 95% CI columns.
+
+    Accepted column aliases include label/competitor/feature/model/term,
+    effect/delta/log2fc/estimate/mean, lo95/ci_low/lower/ci_lo and
+    hi95/ci_high/upper/ci_hi.
+    """
+    set_soft_style()
+    out = Path(out)
+    path = Path(table) if table else None
+    if path is None or not path.exists():
+        for name in ("forest.tsv", "effect_sizes.tsv", "effects.tsv",
+                     "TableS5_delta_ci_multi.tsv", "TableS5_delta_ci_binary.tsv"):
+            q = out / name
+            if q.exists():
+                path = q
+                break
+    if path is None or not path.exists():
+        raise FileNotFoundError(
+            "forest plot needs a table with effect and 95% CI columns "
+            "(e.g. forest.tsv / TableS5_delta_ci_*.tsv)")
+    d = pd.read_csv(path, sep="\t")
+    def pick(*names):
+        for n in names:
+            if n in d.columns:
+                return n
+        return None
+    lab = label_col or pick("label", "competitor", "feature", "model", "term")
+    eff = effect_col or pick("delta", "effect", "log2fc", "estimate", "mean")
+    lo = lo_col or pick("lo95", "ci_low", "lower", "ci_lo")
+    hi = hi_col or pick("hi95", "ci_high", "upper", "ci_hi")
+    if not all((lab, eff, lo, hi)):
+        raise ValueError(f"{path.name} needs label/effect/lo/hi columns; "
+                         f"found {list(d.columns)}")
+    d = d[[lab, eff, lo, hi]].dropna()
+    d[eff] = pd.to_numeric(d[eff], errors="coerce")
+    d[lo] = pd.to_numeric(d[lo], errors="coerce")
+    d[hi] = pd.to_numeric(d[hi], errors="coerce")
+    d = d.dropna().sort_values(eff)
+    y = np.arange(len(d))
+    fig, ax = plt.subplots(figsize=(8.2, max(3.2, 0.32 * len(d) + 1.4)))
+    ax.axvline(0, color=MUTED, lw=1, ls="--")
+    for i, (_, r) in enumerate(d.iterrows()):
+        c = NEG if r[eff] > 0 else POS
+        ax.plot([r[lo], r[hi]], [i, i], color=c, lw=1.8, solid_capstyle="round")
+        ax.plot(r[eff], i, "o", color=c, ms=6, markeredgecolor="white")
+    ax.set_yticks(y)
+    ax.set_yticklabels([str(v)[:38] for v in d[lab]], fontsize=8)
+    ax.set_xlabel("effect (95% CI)")
+    ax.set_title(title or f"Forest — {path.stem}", loc="left")
+    ax.grid(axis="x", color=GRID, lw=0.6)
+    ax.set_axisbelow(True)
+    _save(fig, out_path or out / "viz" / "forest")
+
+
+__all__ = ["SOFT", "set_soft_style", "plot_network",
+           "plot_roc_calibration", "plot_availability",
+           "plot_umap", "plot_volcano", "plot_forest"]

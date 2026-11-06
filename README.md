@@ -94,7 +94,7 @@ avail-omics figures     --out results
 avail-omics report      --out results   # AI advisor report (own LLM key)
 avail-omics chat        --out results   # results-grounded Dr. AVAIL agent
 avail-omics plot --out results --data-root mydata \
-    --type network,roc,availability   # soft-palette figures
+    --type network,roc,availability,umap,volcano,forest   # soft-palette figures
 ```
 
 Generic data layout (any omics layers):

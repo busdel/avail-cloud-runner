@@ -53,7 +53,7 @@ avail-omics sensitivity --data-root mydata --out sensitivity
 
 ```bash
 avail-omics plot --out results --data-root mydata \
-    --type network,roc,availability
+    --type network,roc,availability,umap,volcano,forest
 ```
 
 - `network` — top-biomarker Spearman network (needs `data_root` for feature values;
@@ -62,6 +62,11 @@ avail-omics plot --out results --data-root mydata \
   `loo_predictions.tsv`.
 - `availability` — subject × modality availability heatmap, group coverage and
   top availability patterns from `metadata.tsv` + `features/*.tsv`.
+- `umap` — 2-D UMAP of the concatenated feature space (PCA fallback;
+  install `avail-omics[viz]` for UMAP), coloured by group.
+- `volcano` — log2 fold change vs q-value from `diff_abundance_*.tsv`.
+- `forest` — effect sizes with 95% CI from a table such as
+  `TableS5_delta_ci_*.tsv` or `forest.tsv`.
 
 Outputs are PDF + 400 dpi PNG in `results/viz/` by default, using a muted,
 colour-vision-friendly palette. Missing inputs are reported explicitly.

@@ -1,3 +1,7 @@
+## 1.2.0
+- Visualization toolkit expanded: UMAP (PCA fallback), volcano, and forest.
+- `avail-omics plot` accepts network,roc,availability,umap,volcano,forest.
+
 ## 1.1.0
 - New `avail_omics.viz` soft-palette visualization toolkit and
   `avail-omics plot`: biomarker network, one-vs-rest ROC/calibration, and

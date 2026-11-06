@@ -179,6 +179,20 @@ def _cmd_plot(args):
                     print('[viz] availability needs --data-root; skipped')
                     continue
                 viz.plot_availability(args.data_root, out_path=dest / 'availability')
+            elif kind == 'umap':
+                if not args.data_root:
+                    print('[viz] umap needs --data-root; skipped')
+                    continue
+                viz.plot_umap(args.data_root, out_path=dest / 'umap',
+                              group_col=args.group_col, modality=args.modality)
+            elif kind == 'volcano':
+                viz.plot_volcano(out, out_path=dest / 'volcano',
+                                 comparison=args.comparison,
+                                 modality=args.modality,
+                                 q_thresh=args.q_thresh,
+                                 fc_thresh=args.fc_thresh)
+            elif kind == 'forest':
+                viz.plot_forest(out, out_path=dest / 'forest', table=args.table)
             else:
                 print(f'[viz] unknown type {kind!r}; skipped')
         except Exception as e:
@@ -323,9 +337,15 @@ def main(argv=None):
                     help='generic data root (metadata + features/) for network/availability')
     pl.add_argument('--out-dir', default=None,
                     help='output directory (default: <out>/viz)')
-    pl.add_argument('--type', default='network,roc,availability',
-                    help='comma list: network,roc,availability')
+    pl.add_argument('--type', default='network,roc,availability,umap,volcano,forest',
+                    help='comma list: network,roc,availability,umap,volcano,forest')
     pl.add_argument('--model', default=None, help='model for ROC/calibration')
+    pl.add_argument('--group-col', default=None, help='metadata group column')
+    pl.add_argument('--modality', default=None, help='restrict UMAP/volcano to one modality')
+    pl.add_argument('--comparison', default=None, help='volcano comparison')
+    pl.add_argument('--q-thresh', type=float, default=0.05)
+    pl.add_argument('--fc-thresh', type=float, default=1.0)
+    pl.add_argument('--table', default=None, help='forest table (effect + CI)')
     pl.add_argument('--top-n', type=int, default=24)
     pl.add_argument('--threshold', type=float, default=0.30)
     pl.set_defaults(func=_cmd_plot)
