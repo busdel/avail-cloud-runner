@@ -146,6 +146,20 @@ taxonomy colouring and a `cross_module_edges.tsv` export.
 
 <p align="center"><img src="docs/assets/viz/network_modules.png" width="880" alt="Module-aware correlation network"></p>
 
+## Multi-omics sample-loss figures
+
+Reference-style figures for the de-identified AVAIL cohort (n=87;
+85 with at least one layer, 40 complete-case; fMRI 53, saliva16S 77,
+stool16S 67):
+
+| Sample loss / UpSet | Multi-omics networks | Key subnetwork |
+|---|---|---|
+| <img src="docs/assets/viz/fig1_availability.png" width="300"> | <img src="docs/assets/viz/fig2_multomics_networks.png" width="300"> | <img src="docs/assets/viz/fig3_key_subnetwork.png" width="300"> |
+
+Full gallery: https://busdel.github.io/avail-cloud-runner/viz/
+Source: `docs/avail_multomics_figures.py`; provenance:
+`docs/assets/viz/multomics_provenance.json`.
+
 ## R interoperability
 
 ```bash
