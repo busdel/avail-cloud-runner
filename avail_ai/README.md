@@ -127,7 +127,7 @@ OpenRouter (OpenAI-compatible endpoints).
 
 ## Validation suite and coverage audit
 
-Full notes: [VALIDATION.md](VALIDATION.md).
+Full notes: [VALIDATION.md](https://github.com/busdel/avail-cloud-runner/blob/main/avail_ai/VALIDATION.md).
 
 The software paper uses role-separated evidence rather than a leaderboard:
 
