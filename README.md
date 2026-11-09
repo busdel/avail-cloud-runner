@@ -212,8 +212,8 @@ Writes phyloseq-ready `otu_table.tsv`, `sample_data.tsv`, `tax_table.tsv`,
 
 - **Public overview:** https://avail-research-platform.pages.dev/ &mdash; static
   introduction; **no uploads, no public compute**.
-- **Fixed demo:** https://avail-research-platform.pages.dev/demo &mdash; stable,
-  upload-free synthetic/illustrative demo.
+- **Cloud runner live app:** https://busdel.github.io/avail-cloud-runner/
+  (fixed project link; session password).
 - **Protected workspace:** https://avail-research-platform.pages.dev/platform
   &mdash; password-protected reference analysis, documentation, Dr. AVAIL and
   imaging pages. Credentials are shared through the manuscript/reviewer access
