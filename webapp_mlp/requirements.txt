@@ -1,4 +1,0 @@
-avail-omics==1.8.0
-gradio>=4.44
-pandas
-numpy
