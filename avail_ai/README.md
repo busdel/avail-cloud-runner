@@ -187,6 +187,13 @@ GNN learners are excluded by default; use `--include-gnn` to retain them.
 
 Figure: [example cross-cohort comparison](https://raw.githubusercontent.com/busdel/avail-cloud-runner/main/viz/cohort_comparison.png).
 
+## Research platform
+
+- Public overview: https://avail-research-platform.pages.dev/
+- Password-protected workspace: https://avail-research-platform.pages.dev/platform
+- No public uploads and no public compute; full runs stay local, in Docker,
+  Colab or on a user-owned GPU worker.
+
 ## R interoperability
 
 ```bash

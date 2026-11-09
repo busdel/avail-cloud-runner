@@ -208,15 +208,17 @@ Writes phyloseq-ready `otu_table.tsv`, `sample_data.tsv`, `tax_table.tsv`,
 **mixOmics/PMA**. No R packages are bundled. Full guide:
 [docs/R_INTEROP.md](docs/R_INTEROP.md).
 
-## Live demo and own-data analysis
+## Research platform and own-data analysis
 
-- **Public demo (demo-only):** https://avail-ai.onrender.com &mdash; fixed,
-  de-identified cohort; **no uploads**, no server-side user jobs; four
-  meta-learners on the free CPU tier. The full **11-model zoo** is available
-  in the package/full run. The free instance may take ~30&ndash;60 s to wake.
+- **Public overview:** https://avail-research-platform.pages.dev/ &mdash; static
+  introduction; **no uploads, no public compute**.
+- **Protected workspace:** https://avail-research-platform.pages.dev/platform
+  &mdash; password-protected reference analysis, documentation, Dr. AVAIL and
+  imaging pages. Credentials are shared through the manuscript/reviewer access
+  channel, not in this repository.
 - **Canonical project page:** https://busdel.github.io/avail-cloud-runner/
-- **Own data:** install the package, use the local runner, or attach your own
-  worker. See [BYO_COMPUTE.md](BYO_COMPUTE.md) (four deployment tiers),
+- **Own data:** install the package, use the local runner, Docker, Colab or your
+  own worker. See [BYO_COMPUTE.md](BYO_COMPUTE.md) (four deployment tiers),
   [DATA_SECURITY.md](DATA_SECURITY.md) and [WORKER.md](WORKER.md).
 - **Reviewers:** start with [REVIEWER_GUIDE.md](REVIEWER_GUIDE.md); the
   manuscript package and cover letter carry the access details.
