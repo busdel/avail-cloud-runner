@@ -51,6 +51,13 @@ avail-omics compare --entry "Cohort A=results/a" \
   --entry "Cohort B=results/b" --out comparison
 ```
 
+## Web demo (MLP-style)
+
+A Dockerized demo with Documentation / Tutorial / Download / About tabs is in
+[`webapp_mlp/`](https://github.com/busdel/avail-cloud-runner/tree/main/webapp_mlp).
+It runs three fast meta-learners on an uploaded generic ZIP; full 11-model runs
+stay local or on your own GPU worker.
+
 ## Soft-palette visualization toolkit
 
 ```bash

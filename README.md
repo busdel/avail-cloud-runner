@@ -147,6 +147,23 @@ Outputs: `meta_benchmark_results.tsv`, `per_class_auc.tsv`, `loo_predictions.tsv
 `biomarkers_top20_per_modality.tsv`, `diff_abundance_*.tsv`, publication figures,
 and the AI advisor report (with PubMed literature).
 
+## Web demo (MLP-style, Docker)
+
+A self-contained demo app lives in [`webapp_mlp/`](webapp_mlp/). It has
+**Demo / Documentation / Tutorial / Download / About** tabs, validates a
+generic AVAIL ZIP, runs three fast meta-learners, and returns a results ZIP.
+
+```bash
+cd webapp_mlp
+docker build -t avail-demo .
+docker run --rm -p 7860:7860 avail-demo
+# open http://localhost:7860
+```
+
+The public demo is for de-identified or synthetic data only. Full 11-model
+runs stay local or on a user-owned GPU worker; see
+[`webapp_mlp/docs/`](webapp_mlp/docs/).
+
 ## Visualization toolkit (v1.8.0)
 
 Soft-palette, publication-ready figures from the package:
