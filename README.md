@@ -6,6 +6,9 @@
 <p align="center"><b>Availability-Aware Multi-Omics Integration &amp; Learning</b><br>
 Every subject with at least one modality contributes to the model &mdash; no complete-case discard; all-missing subjects are explicitly reported.</p>
 
+<p align="center"><b>Authors:</b> Busranur Delice &middot; Ahmet Kaplan &middot; Suleyman Yildirim</p>
+<p align="center"><a href="https://avail-research-platform.pages.dev/platform"><b>Open the password-protected research platform</b></a></p>
+
 <p align="center">
   <a href="https://pypi.org/project/avail-omics/"><img src="https://img.shields.io/pypi/v/avail-omics?color=0e7490" alt="PyPI"></a>
   <a href="https://pypi.org/project/avail-omics/"><img src="https://img.shields.io/pypi/pyversions/avail-omics" alt="Python"></a>
@@ -212,12 +215,10 @@ Writes phyloseq-ready `otu_table.tsv`, `sample_data.tsv`, `tax_table.tsv`,
 
 - **Public overview:** https://avail-research-platform.pages.dev/ &mdash; static
   introduction; **no uploads, no public compute**.
-- **Cloud runner live app:** https://busdel.github.io/avail-cloud-runner/
-  (fixed project link; session password).
 - **Protected workspace:** https://avail-research-platform.pages.dev/platform
-  &mdash; password-protected reference analysis, documentation, Dr. AVAIL and
-  imaging pages. Credentials are shared through the manuscript/reviewer access
-  channel, not in this repository.
+  &mdash; password-protected reference analysis, documentation, Dr. AVAIL,
+  Imageomics and downloadable artifacts. Credentials are shared through the
+  manuscript/reviewer access channel, not in this repository.
 - **Canonical project page:** https://busdel.github.io/avail-cloud-runner/
 - **Own data:** install the package, use the local runner, Docker, Colab or your
   own worker. See [BYO_COMPUTE.md](BYO_COMPUTE.md) (four deployment tiers),
@@ -287,15 +288,21 @@ metadata is in [CITATION.cff](CITATION.cff):
 
 ```bibtex
 @software{delice2026avail,
-  title   = {AVAIL-AI: availability-aware multimodal learning for incomplete clinical cohorts},
-  author  = {Delice, Busranur},
-  version = {1.0.14},
+  title   = {AVAIL Research Platform: availability-aware multimodal analytics for incomplete clinical cohorts},
+  author  = {Delice, Busranur and Kaplan, Ahmet and Yildirim, Suleyman},
+  version = {1.8.0},
   year    = {2026},
-  url     = {https://github.com/busdel/avail-cloud-runner}
+  url     = {https://avail-research-platform.pages.dev/}
 }
 ```
 
 The companion manuscripts are in preparation; this entry will be updated with the DOIs.
+
+## Authors
+
+- **Busranur Delice**
+- **Ahmet Kaplan**
+- **Suleyman Yildirim**
 
 ## License
 

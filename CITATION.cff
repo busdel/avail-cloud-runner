@@ -11,11 +11,15 @@ abstract: >-
 authors:
   - family-names: Delice
     given-names: Busranur
-version: "1.0.17"
-date-released: "2026-10-20"
+  - family-names: Kaplan
+    given-names: Ahmet
+  - family-names: Yildirim
+    given-names: Suleyman
+version: "1.8.0"
+date-released: "2026-11-09"
 license: MIT
 repository-code: "https://github.com/busdel/avail-cloud-runner"
-url: "https://busdel.github.io/avail-cloud-runner/"
+url: "https://avail-research-platform.pages.dev/"
 keywords:
   - missing-data
   - multimodal

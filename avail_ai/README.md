@@ -215,8 +215,13 @@ the project repository.
 
 ## Citing
 
-Manuscript in preparation. Until the paper is out, please cite the
-repository and package: `avail-omics` v1.8.0.
+Manuscript in preparation. Until the paper is out, please cite:
+
+> Busranur Delice, Ahmet Kaplan, Suleyman Yildirim. *AVAIL Research Platform:
+> availability-aware multimodal analytics for incomplete clinical cohorts*
+> (avail-omics v1.8.0). https://avail-research-platform.pages.dev/
+
+Package: `avail-omics` v1.8.0. Repository: https://github.com/busdel/avail-cloud-runner
 
 ## License
 
