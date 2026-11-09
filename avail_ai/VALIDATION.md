@@ -6,7 +6,7 @@ paper. It is not a leaderboard, and it is not a clinical validation claim.
 | Role | Dataset | n | Blocks | Missingness | Claim |
 |---|---|---:|---|---|---|
 | Anchor | MetaCardis | 1087 (complete-case 536) | 6 | natural, informative | reproduction + coverage |
-| Independent replication | HMP2 / IBD | 130 | multi-omics | complete-block subset | disease/generalisation, not missingness |
+| Independent replication | HMP2 / IBD | 131 | 3 block types | natural block missingness | disease/generalisation + missingness |
 | Imaging failure mode | OpenNeuro ds004392 | 53 | imaging-only | none | no detectable transfer; failure handling |
 | Companion application | AVAIL cohort | 150 | five modules | natural | end-to-end software use; no new biology |
 | Coverage audit | OpenNeuro ds004856 | 295 labeled | MRI + tau + cognition | label-confounded | complete-case bias only |

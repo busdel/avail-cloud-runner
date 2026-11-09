@@ -122,8 +122,8 @@ OpenRouter (OpenAI-compatible endpoints).
   (p = 0.039), ruling out leakage as the source of the separation
 - Sustains prediction where complete-case collapses (25-55% dropout)
 - Role-separated public evidence: MetaCardis anchor (n=1087; reproduction +
-  coverage), HMP2/IBD independent replication (n=130; non-GNN mean 0.639,
-  best XGBoost 0.771; complete-block subset), and OpenNeuro ds004392 imaging failure-mode (n=53;
+  coverage), HMP2/IBD 3-block independent replication (n=131; non-GNN mean 0.634,
+  best 0.659; natural block missingness), and OpenNeuro ds004392 imaging failure-mode (n=53;
   no detectable transfer). Wallen 2022, preclinical AD and the label-free
   reconstruction are reported in the companion application paper.
 
@@ -136,7 +136,7 @@ The software paper uses role-separated evidence rather than a leaderboard:
 | Role | Dataset | n | What it tests |
 |---|---|---:|---|
 | Anchor | MetaCardis | 1087 (CC 536) | natural, informative missingness |
-| Independent replication | HMP2 / IBD | 130 | different disease; complete-block subset |
+| Independent replication | HMP2 / IBD | 131 | different disease; natural block missingness |
 | Imaging failure mode | OpenNeuro ds004392 | 53 | imaging-only transfer; failure handling |
 | Companion application | AVAIL cohort | 150 | end-to-end software use; no new biology |
 | Coverage audit | OpenNeuro ds004856 | 295 labeled | complete-case bias only |
@@ -187,13 +187,6 @@ GNN learners are excluded by default; use `--include-gnn` to retain them.
 
 Figure: [example cross-cohort comparison](https://raw.githubusercontent.com/busdel/avail-cloud-runner/main/viz/cohort_comparison.png).
 
-## Research platform
-
-- Public overview: https://avail-research-platform.pages.dev/
-- Password-protected workspace: https://avail-research-platform.pages.dev/platform
-- No public uploads and no public compute; full runs stay local, in Docker,
-  Colab or on a user-owned GPU worker.
-
 ## R interoperability
 
 ```bash
@@ -214,13 +207,8 @@ the project repository.
 
 ## Citing
 
-Manuscript in preparation. Until the paper is out, please cite:
-
-> Busranur Delice, Ahmet Kaplan, Suleyman Yildirim. *AVAIL Research Platform:
-> availability-aware multimodal analytics for incomplete clinical cohorts*
-> (avail-omics v1.8.0). https://avail-research-platform.pages.dev/
-
-Package: `avail-omics` v1.8.0. Repository: https://github.com/busdel/avail-cloud-runner
+Manuscript in preparation. Until the paper is out, please cite the
+repository and package: `avail-omics` v1.8.0.
 
 ## License
 
