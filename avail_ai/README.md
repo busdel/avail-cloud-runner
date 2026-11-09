@@ -190,7 +190,6 @@ Figure: [example cross-cohort comparison](https://raw.githubusercontent.com/busd
 ## Research platform
 
 - Public overview: https://avail-research-platform.pages.dev/
-- Cloud runner live app: https://busdel.github.io/avail-cloud-runner/
 - Password-protected workspace: https://avail-research-platform.pages.dev/platform
 - No public uploads and no public compute; full runs stay local, in Docker,
   Colab or on a user-owned GPU worker.
