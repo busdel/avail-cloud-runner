@@ -6,7 +6,7 @@
 <p align="center"><b>Availability-Aware Multi-Omics Integration &amp; Learning</b><br>
 Every subject with at least one modality contributes to the model &mdash; no complete-case discard; all-missing subjects are explicitly reported.</p>
 
-<p align="center"><b>Authors:</b> Busranur Delice &middot; Ahmet Kaplan &middot; Suleyman Yildirim</p>
+<p align="center"><b>Authors:</b> Busranur Delice &middot; Ahmet Kaplan <i>(corresponding)</i> &middot; Suleyman Yildirim <i>(corresponding)</i></p>
 <p align="center"><a href="https://avail-research-platform.pages.dev/platform"><b>Open the password-protected research platform</b></a></p>
 
 <p align="center">
@@ -301,8 +301,8 @@ The companion manuscripts are in preparation; this entry will be updated with th
 ## Authors
 
 - **Busranur Delice**
-- **Ahmet Kaplan**
-- **Suleyman Yildirim**
+- **Ahmet Kaplan** — corresponding author
+- **Suleyman Yildirim** — corresponding author
 
 ## License
 
