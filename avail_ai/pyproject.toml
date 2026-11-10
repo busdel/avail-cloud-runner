@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "avail-omics"
-version = "1.9.1"
+version = "1.9.2"
 description = "AVAIL-omics: availability-aware multimodal integration for clinical cohorts with missing modalities."
 readme = "README.md"
 requires-python = ">=3.9"

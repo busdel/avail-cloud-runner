@@ -1,3 +1,8 @@
+## 1.9.2
+- Network figures redesigned: compact modality-grouped fallback layouts, top-edge
+  display, offset labels with white backing, curated hub labels, and circular
+  module-panel layouts with labelled hubs. No analysis or reported result changes.
+
 ## 1.9.1
 - Accessibility/provenance pass for package figures: bootstrap ROC-AUC CIs,
   redundant line styles and marker shapes, exact physical PDF/PNG/TIFF

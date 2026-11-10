@@ -290,7 +290,7 @@ metadata is in [CITATION.cff](CITATION.cff):
 @software{delice2026avail,
   title   = {AVAIL Research Platform: availability-aware multimodal analytics for incomplete clinical cohorts},
   author  = {Delice, Busranur and Kaplan, Ahmet and Yildirim, Suleyman},
-  version = {1.9.1},
+  version = {1.9.2},
   year    = {2026},
   url     = {https://avail-research-platform.pages.dev/}
 }
