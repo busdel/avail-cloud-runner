@@ -1,3 +1,8 @@
+## 1.9.3
+- Network figures now use curated top-node/top-edge circular layouts for dense
+  graphs, label offsets, outside legends and compact fallback clusters.
+  Module panels use circular layouts with leader-line labels. No analysis change.
+
 ## 1.9.2
 - Network figures redesigned: compact modality-grouped fallback layouts, top-edge
   display, offset labels with white backing, curated hub labels, and circular
