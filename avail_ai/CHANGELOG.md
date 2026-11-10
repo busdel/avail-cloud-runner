@@ -1,3 +1,9 @@
+## 1.9.1
+- Accessibility/provenance pass for package figures: bootstrap ROC-AUC CIs,
+  redundant line styles and marker shapes, exact physical PDF/PNG/TIFF
+  dimensions, white backgrounds, and per-figure `.manifest.json` exports.
+  No analysis or reported result changes.
+
 ## 1.9.0
 - Visualization quality pass: journal-width figures, constrained layouts,
   exact-size PDF/PNG/TIFF export, improved ROC/calibration labels with class n,
