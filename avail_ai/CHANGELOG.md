@@ -1,3 +1,8 @@
+## 1.9.4
+- Collision-QA pass: ROC legend moved outside, availability heatmap cells use a
+  colorbar instead of overlapping numbers, and module-panel labels meet the
+  5-pt floor. No analysis or reported result changes.
+
 ## 1.9.3
 - Network figures now use curated top-node/top-edge circular layouts for dense
   graphs, label offsets, outside legends and compact fallback clusters.
