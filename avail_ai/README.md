@@ -208,7 +208,7 @@ the project repository.
 ## Citing
 
 Manuscript in preparation. Until the paper is out, please cite the
-repository and package: `avail-omics` v1.8.0.
+repository and package: `avail-omics` v1.9.0.
 
 ## License
 

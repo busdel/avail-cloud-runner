@@ -15,7 +15,7 @@ authors:
     given-names: Ahmet
   - family-names: Yildirim
     given-names: Suleyman
-version: "1.8.0"
+version: "1.9.0"
 date-released: "2026-11-09"
 license: MIT
 repository-code: "https://github.com/busdel/avail-cloud-runner"

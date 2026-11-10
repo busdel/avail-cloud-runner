@@ -1,3 +1,9 @@
+## 1.9.0
+- Visualization quality pass: journal-width figures, constrained layouts,
+  exact-size PDF/PNG/TIFF export, improved ROC/calibration labels with class n,
+  PCA explained-variance axes, compact availability group-coverage heatmap,
+  and non-overlapping volcano annotations. No analysis or reported result changes.
+
 ## 1.8.0
 - Documentation: role-separated validation suite, companion-application
   framing and a ds004856 coverage audit. Corrected the quick-start CLI to
