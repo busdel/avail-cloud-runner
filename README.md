@@ -92,9 +92,9 @@ as biological estimates. The cohort is retained only to show that
 complete-case analysis can be structurally non-estimable; it is not used to
 claim diagnostic accuracy.
 
-<p align="center"><img src="docs/assets/viz/figM2_3_validation_story.png" width="900" alt="Validation suite: complete-case retention and performance"></p>
+<p align="center"><img src="docs/assets/viz/figure_dataset_roles.png" width="900" alt="Cohort roles, complete-case loss, and validation coverage"></p>
 
-Source table: [`validation_suite.tsv`](docs/assets/viz/validation_suite.tsv).
+Source table: [`validation_suite.tsv`](docs/assets/viz/validation_suite.tsv). Current reference figures: [Fig. 1–4](viz/).
 
 The companion AVAIL cohort (n=150) is an application/regression check:
 biological interpretation belongs to the companion paper; this repository
@@ -154,9 +154,9 @@ and the AI advisor report (with PubMed literature).
 
 Soft-palette, publication-ready figures from the package:
 
-| Network | ROC / calibration | Availability |
-|---|---|---|
-| <img src="docs/assets/viz/network.png" width="330"> | <img src="docs/assets/viz/roc_calibration.png" width="330"> | <img src="docs/assets/viz/availability.png" width="330"> |
+Current reference gallery: [Fig. 1–4](viz/). The package API still exposes
+`network`, `roc`, `availability`, `umap`, `volcano`, `forest`, and module-aware
+network figures; the manuscript-specific examples are kept outside the wheel.
 
 ```bash
 avail-omics plot --out results --data-root mydata \
@@ -182,21 +182,18 @@ https://busdel.github.io/avail-cloud-runner/viz/
 or `--combined` single view with cross-module edges, hub highlighting,
 taxonomy colouring and a `cross_module_edges.tsv` export.
 
-<p align="center"><img src="docs/assets/viz/network_modules.png" width="880" alt="Module-aware correlation network"></p>
+## Current reference figures (CMPB)
 
-## Multi-omics sample-loss figures
+| Figure 1 · Architecture | Figure 2 · Cohort roles |
+|---|---|
+| <img src="docs/assets/viz/figure_architecture.png" width="430"> | <img src="docs/assets/viz/figure_dataset_roles.png" width="430"> |
 
-Reference-style figures for the de-identified AVAIL cohort (n=87;
-85 with at least one layer, 40 complete-case; fMRI 53, saliva16S 77,
-stool16S 67):
-
-| Sample loss / UpSet | Multi-omics networks | Key subnetwork |
-|---|---|---|
-| <img src="docs/assets/viz/fig1_availability.png" width="300"> | <img src="docs/assets/viz/fig2_multomics_networks.png" width="300"> | <img src="docs/assets/viz/fig3_key_subnetwork.png" width="300"> |
+| Figure 3 · Performance | Figure 4 · Failure / coverage audit |
+|---|---|
+| <img src="docs/assets/viz/figure_performance.png" width="430"> | <img src="docs/assets/viz/figure_failure_audit.png" width="430"> |
 
 Full gallery: https://busdel.github.io/avail-cloud-runner/viz/
-Source: `docs/avail_multomics_figures.py`; provenance:
-`docs/assets/viz/multomics_provenance.json`.
+Source table: [`validation_suite.tsv`](docs/assets/viz/validation_suite.tsv).
 
 ## R interoperability
 
