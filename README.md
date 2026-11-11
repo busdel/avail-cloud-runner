@@ -55,7 +55,7 @@ missingness handled as data instead of discarded or fabricated.
 - **Benchmarked, not just built** &mdash; every design choice quantified against
   14 missing-data strategies and 11 meta-learners.
 - **Role-separated public evidence** &mdash; MetaCardis anchor (n=1087;
-  reproduction + coverage), HMP2/IBD independent replication (n=130;
+  reproduction + coverage), HMP2/IBD independent replication (n=131;
   complete-block subset), and OpenNeuro ds004392 imaging failure-mode (n=53;
   no detectable transfer). The companion cohort (n=150) is an end-to-end
   application check; Wallen 2022, preclinical AD and the label-free
@@ -70,6 +70,34 @@ missingness handled as data instead of discarded or fabricated.
   bundle can also act as a worker (`python run_me.py --serve`) so the web page
   dispatches jobs straight to your machine, no pip install needed.
 
+## Current evidence snapshot (11-model, 2026-11)
+
+These are the current reference results, not universal performance claims.
+See [docs/DATASETS_AND_METHODS.md](docs/DATASETS_AND_METHODS.md) and the
+[Fig. 1–4 gallery](viz/) for full definitions.
+
+| Comparison | Result | Reading |
+|---|---|---|
+| MetaCardis paired ΔAUC | −0.003 [−0.009, 0.002] | no difference |
+| HMP2 paired ΔAUC | +0.050 [−0.011, 0.114] | interval crosses zero |
+| AVAIL application paired ΔAUC | +0.014 [−0.107, 0.122] | inconclusive |
+| AVAIL HC vs PDD | 0.850 all / 0.795 complete | dedicated binary contrast |
+| ds004392 3-class | 0.386 | imaging-only failure audit |
+| ds004392 binary PDD vs rest | 0.850–0.900, exploratory | 5 PDD cases; not validation |
+
+The take-home message is **coverage and honest failure reporting**, not a
+state-of-the-art 3-class leaderboard. Availability flags, calibrated
+uncertainty and reproducible software are the contribution.
+
+### Limitations
+
+- HMP2 is a difficult replication; its paired interval crosses zero.
+- ds004392 has only five PDD cases; binary PDD results are exploratory.
+- ds004856 has zero positive complete cases; it is a coverage audit only.
+- The AVAIL cohort is an application/regression check, not external validation.
+- The factorial grid across all cohorts is still being completed; see the
+  manuscript package Table S24 before submission.
+
 ## Validation suite and coverage audit
 
 The software paper uses role-separated evidence rather than a leaderboard:
@@ -77,7 +105,7 @@ The software paper uses role-separated evidence rather than a leaderboard:
 | Role | Dataset | n | What it tests |
 |---|---|---:|---|
 | Anchor | MetaCardis | 1087 (CC 536) | natural, informative missingness |
-| Independent replication | HMP2 / IBD | 130 | different disease; complete-block subset |
+| Independent replication | HMP2 / IBD | 131 (complete 82) | different disease; block missingness |
 | Imaging failure mode | OpenNeuro ds004392 | 53 | imaging-only transfer; failure handling |
 | Companion application | AVAIL cohort | 150 | end-to-end software use; no new biology |
 | Coverage audit | OpenNeuro ds004856 | 295 labeled | complete-case bias only |
@@ -101,6 +129,26 @@ biological interpretation belongs to the companion paper; this repository
 uses the same verified cohort to exercise the command line, figures, report
 and R export end to end.
 
+## Web platform
+
+The public landing is static and accepts no data:
+https://avail-research-platform.pages.dev/
+
+The protected workspace contains the reference figures, documentation and
+fixed Analyze demo. Credentials are shared through the manuscript/reviewer
+access channel; the public repository does not contain them.
+
+| Public landing | Reference figures |
+|---|---|
+| <img src="docs/assets/webapp/01_public_landing.png" width="430" alt="Public landing"> | <img src="docs/assets/webapp/03_platform_figures.png" width="430" alt="Protected Figures tab"> |
+
+| Analyze tab | Tutorial tab |
+|---|---|
+| <img src="docs/assets/webapp/02_platform_analyze.png" width="430" alt="Protected Analyze tab"> | <img src="docs/assets/webapp/04_platform_tutorial.png" width="430" alt="Protected Tutorial tab"> |
+
+Full description, privacy model and screenshot notes:
+[docs/WEBAPP.md](docs/WEBAPP.md).
+
 ## Gallery
 
 <p align="center"><img src="docs/assets/avail_pipeline.png" width="860" alt="How AVAIL works: base learners, availability representation, 11 meta-learners, validation core, outputs"></p>
@@ -119,7 +167,7 @@ and R export end to end.
 
 ## Install the Python package
 
-**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.8.0**, MIT, Python 3.10&ndash;3.13) &mdash; `pip install avail-omics`
+**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.9.4**, MIT, Python 3.10&ndash;3.13) &mdash; `pip install avail-omics`
 
 ```bash
 pip install avail-omics            # core (CPU is fine)
@@ -150,7 +198,7 @@ Outputs: `meta_benchmark_results.tsv`, `per_class_auc.tsv`, `loo_predictions.tsv
 `biomarkers_top20_per_modality.tsv`, `diff_abundance_*.tsv`, publication figures,
 and the AI advisor report (with PubMed literature).
 
-## Visualization toolkit (v1.8.0)
+## Visualization toolkit (v1.9.4)
 
 Soft-palette, publication-ready figures from the package:
 
@@ -252,6 +300,8 @@ avail-omics advise  --out results
 | [IMAGING_ADAPTER.md](IMAGING_ADAPTER.md) | Raw rs-fMRI / T1 processing protocol |
 | [DATA_SECURITY.md](DATA_SECURITY.md) | Outbound-call inventory, offline mode |
 | [CHANGELOG.md](CHANGELOG.md) | Release history |
+| [docs/DATASETS_AND_METHODS.md](docs/DATASETS_AND_METHODS.md) | Cohort cards, leakage controls, models, factorial designs, limitations |
+| [docs/WEBAPP.md](docs/WEBAPP.md) | Web app tour, privacy model, screenshots |
 
 ## Data & tools
 
