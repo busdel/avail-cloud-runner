@@ -302,6 +302,7 @@ avail-omics advise  --out results
 | [CHANGELOG.md](CHANGELOG.md) | Release history |
 | [docs/DATASETS_AND_METHODS.md](docs/DATASETS_AND_METHODS.md) | Cohort cards, leakage controls, models, factorial designs, limitations |
 | [docs/WEBAPP.md](docs/WEBAPP.md) | Web app tour, privacy model, screenshots |
+| [docs/PAPER_DIVISION_AND_NOVELTY.md](docs/PAPER_DIVISION_AND_NOVELTY.md) | Paper 1 (Bioinformatics) vs Paper 2 (GigaScience) boundary |
 
 ## Data & tools
 
