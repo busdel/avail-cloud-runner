@@ -41,7 +41,7 @@ missingness handled as data instead of discarded or fabricated.
    bootstrap CIs, conformal prediction sets, calibration
 5. **Biomarker discovery** &mdash; SHAP importance + differential abundance (Mann&ndash;Whitney, BH-FDR)
 6. **AI advisor** &mdash; model decision, biomarker plausibility with **real PubMed citations**
-   (free NCBI E-utilities, no API key), manuscript-ready interpretation
+   (free NCBI E-utilities, no API key), structured interpretation
 7. **Publication figures** &mdash; 600 dpi PDF/PNG + 300 dpi TIFF
 
 ### Why it is different
@@ -59,7 +59,7 @@ missingness handled as data instead of discarded or fabricated.
   complete-block subset), and OpenNeuro ds004392 imaging failure-mode (n=53;
   no detectable transfer). The companion cohort (n=150) is an end-to-end
   application check; Wallen 2022, preclinical AD and the label-free
-  reconstruction belong to the companion paper. A public coverage audit
+  reconstruction belong to the application-specific analysis. A public coverage audit
   (ds004856) is reported separately (see below), not as a performance claim.
 - **Group-aware readouts** &mdash; every run reports HC / MCI / PDD breakdowns:
   coverage by group, per-class one-vs-rest AUC, and group profiles of the top
@@ -96,7 +96,7 @@ uncertainty and reproducible software are the contribution.
 - ds004856 has zero positive complete cases; it is a coverage audit only.
 - The AVAIL cohort is an application/regression check, not external validation.
 - The factorial grid across all cohorts is still being completed; see the
-  manuscript package Table S24 before submission.
+  research package Table S24 before using the grid.
 
 ## Validation suite and coverage audit
 
@@ -125,7 +125,7 @@ claim diagnostic accuracy.
 Source table: [`validation_suite.tsv`](docs/assets/viz/validation_suite.tsv). Current reference figures: [Fig. 1–4](viz/).
 
 The companion AVAIL cohort (n=150) is an application/regression check:
-biological interpretation belongs to the companion paper; this repository
+biological interpretation belongs to the application-specific analysis; this repository
 uses the same verified cohort to exercise the command line, figures, report
 and R export end to end.
 
@@ -135,7 +135,7 @@ The public landing is static and accepts no data:
 https://avail-research-platform.pages.dev/
 
 The protected workspace contains the reference figures, documentation and
-fixed Analyze demo. Credentials are shared through the manuscript/reviewer
+fixed Analyze demo. Credentials are shared through the authorized
 access channel; the public repository does not contain them.
 
 | Public landing | Reference figures |
@@ -204,7 +204,7 @@ Soft-palette, publication-ready figures from the package:
 
 Current reference gallery: [Fig. 1–4](viz/). The package API still exposes
 `network`, `roc`, `availability`, `umap`, `volcano`, `forest`, and module-aware
-network figures; the manuscript-specific examples are kept outside the wheel.
+network figures; the application-specific examples are kept outside the wheel.
 
 ```bash
 avail-omics plot --out results --data-root mydata \
@@ -215,7 +215,7 @@ avail-omics plot --out results --data-root mydata --modality taxa \
   --type network_modules --method sparcc --combined --taxonomy taxonomy.tsv
 ```
 
-Figures use the manuscript CPAL palette and a journal-style preset (Arial,
+Figures use the CPAL palette and a publication-style preset (Arial,
 7–8 pt, 600 dpi PDF/PNG/TIFF, panel letters). For dense networks, use the
 clean `module_panels` (selected-module networks + cross-module heatmap) or
 `module_summary` (module sizes, cross-module heatmap, strongest pairs)
@@ -263,13 +263,13 @@ Writes phyloseq-ready `otu_table.tsv`, `sample_data.tsv`, `tax_table.tsv`,
 - **Protected workspace:** https://avail-research-platform.pages.dev/platform
   &mdash; password-protected reference analysis, documentation, Dr. AVAIL,
   Imageomics and downloadable artifacts. Credentials are shared through the
-  manuscript/reviewer access channel, not in this repository.
+  authorized access channel, not in this repository.
 - **Canonical project page:** https://busdel.github.io/avail-cloud-runner/
 - **Own data:** install the package, use the local runner, Docker, Colab or your
   own worker. See [BYO_COMPUTE.md](BYO_COMPUTE.md) (four deployment tiers),
   [DATA_SECURITY.md](DATA_SECURITY.md) and [WORKER.md](WORKER.md).
 - **Reviewers:** start with [REVIEWER_GUIDE.md](REVIEWER_GUIDE.md); the
-  manuscript package and cover letter carry the access details.
+  access details are provided to authorized collaborators.
 
 Imaging is first-class: raw rs-fMRI and T1 volumes are processed end-to-end
 (Schaefer-100 connectivity + optional radiomics) on **your** machine &mdash; see
@@ -302,7 +302,6 @@ avail-omics advise  --out results
 | [CHANGELOG.md](CHANGELOG.md) | Release history |
 | [docs/DATASETS_AND_METHODS.md](docs/DATASETS_AND_METHODS.md) | Cohort cards, leakage controls, models, factorial designs, limitations |
 | [docs/WEBAPP.md](docs/WEBAPP.md) | Web app tour, privacy model, screenshots |
-| [docs/PAPER_DIVISION_AND_NOVELTY.md](docs/PAPER_DIVISION_AND_NOVELTY.md) | Paper 1 (Bioinformatics) vs Paper 2 (GigaScience) boundary |
 
 ## Data & tools
 
@@ -344,7 +343,7 @@ metadata is in [CITATION.cff](CITATION.cff):
 }
 ```
 
-The companion manuscripts are in preparation; this entry will be updated with the DOIs.
+Citation metadata will be updated when a DOI is assigned.
 
 ## Authors
 

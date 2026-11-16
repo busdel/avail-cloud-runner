@@ -1,4 +1,4 @@
-# Datasets and methods (Paper 2 / AVAIL)
+# Datasets and methods (AVAIL)
 
 This document is the reviewer-facing data and method supplement. It describes
 what each cohort contributes, how the pipeline is fit, and where leakage
@@ -57,9 +57,9 @@ data are redistributed.
 
 ### AVAIL cohort
 - Role: companion application/regression check; biological interpretation
-  belongs to the companion paper.
+  is outside this software documentation.
 - `n=150`; 147 have at least one modality; 3 subjects have no modality and are
-  retained through availability flags in the manuscript protocol.
+  retained through availability flags in the reference protocol.
 - Five modules: fMRI ROI connectivity, stool 16S, stool shotgun, saliva 16S,
   saliva shotgun. Complete-case `n=50`.
 - Source/access: de-identified in-house cohort; raw data are not redistributed.
@@ -71,7 +71,7 @@ data are redistributed.
 For subject `i` and modality `m`, let `a_im in {0,1}` indicate whether modality
 `m` is available. The model never fabricates a missing measurement. A subject
 with no modality is excluded from the public pipeline and reported separately;
-the manuscript also reports the n=147 sensitivity.
+the reference protocol also reports the n=147 sensitivity.
 
 ### 2.2 Stage 1: per-modality base learners
 - One Random Forest (300 trees) per modality, trained only on subjects with

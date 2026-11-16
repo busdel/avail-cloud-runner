@@ -11,7 +11,7 @@
 ## What the workspace contains
 - **Analyze**: fixed reference run, 11-model benchmark, example report, and
   explanation of what the full pipeline returns.
-- **Figures**: current manuscript reference figures 1-4 (architecture,
+- **Figures**: current reference figures 1-4 (architecture,
   cohort roles, paired 11-model performance, failure/coverage audit).
 - **Documentation / Tutorial**: generic AVAIL layout, run-it-yourself path,
   Docker, and Colab instructions.
@@ -34,8 +34,8 @@
 ![Reference figures tab](assets/webapp/03_platform_figures.png)
 ![Tutorial tab](assets/webapp/04_platform_tutorial.png)
 
-## Reviewer notes
-- The Figures tab shows the same four reference figures as the manuscript
+## Platform notes
+- The Figures tab shows the same four reference figures as the research
   package; it does not generate figures from visitor data.
 - The Analyze tab is a fixed illustrative reference run, not a live result for
   any visitor.
