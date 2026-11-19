@@ -125,6 +125,12 @@ biological interpretation belongs to the application-specific analysis; this rep
 uses the same verified cohort to exercise the command line, figures, report
 and R export end to end.
 
+## Cloud runner demo
+
+The original cloud-runner landing is preserved as a static demo at
+[cloud-runner/](cloud-runner/); it links to the reviewer demo, package and
+deployment documentation without exposing a live compute endpoint.
+
 ## Reviewer demo
 
 A static preview of the analysis workspace, Dr. AVAIL chat and Imageomics view
