@@ -31,7 +31,6 @@
 ## Screenshots
 ![Public landing](assets/webapp/01_public_landing.png)
 ![Protected Analyze tab](assets/webapp/02_platform_analyze.png)
-![Reference figures tab](assets/webapp/03_platform_figures.png)
 ![Tutorial tab](assets/webapp/04_platform_tutorial.png)
 
 ## Platform notes

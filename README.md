@@ -18,7 +18,6 @@ Every subject with at least one modality contributes to the model &mdash; no com
 </p>
 
 <p align="center">
-  <img src="docs/assets/avail_hero.png" width="880" alt="AVAIL-AI: availability-aware ML for incomplete multimodal clinical data">
 </p>
 
 ---
@@ -73,8 +72,7 @@ missingness handled as data instead of discarded or fabricated.
 ## Current evidence snapshot (11-model, 2026-11)
 
 These are the current reference results, not universal performance claims.
-See [docs/DATASETS_AND_METHODS.md](docs/DATASETS_AND_METHODS.md) and the
-[Fig. 1–4 gallery](viz/) for full definitions.
+See [docs/DATASETS_AND_METHODS.md](docs/DATASETS_AND_METHODS.md) for definitions.
 
 | Comparison | Result | Reading |
 |---|---|---|
@@ -120,19 +118,12 @@ as biological estimates. The cohort is retained only to show that
 complete-case analysis can be structurally non-estimable; it is not used to
 claim diagnostic accuracy.
 
-<p align="center"><img src="docs/assets/viz/figure_dataset_roles.png" width="900" alt="Cohort roles, complete-case loss, and validation coverage"></p>
 
-Source table: [`validation_suite.tsv`](docs/assets/viz/validation_suite.tsv). Current reference figures: [Fig. 1–4](viz/).
 
 The companion AVAIL cohort (n=150) is an application/regression check:
 biological interpretation belongs to the application-specific analysis; this repository
 uses the same verified cohort to exercise the command line, figures, report
 and R export end to end.
-
-## Biological study figures
-
-Revised biological reference figures (study design, staging, biomarkers,
-validation, mechanism, ecology): [biology/](biology/).
 
 ## Web platform
 
@@ -143,32 +134,12 @@ The protected workspace contains the reference figures, documentation and
 fixed Analyze demo. Credentials are shared through the authorized
 access channel; the public repository does not contain them.
 
-| Public landing | Reference figures |
+| Public landing | Analyze tab |
 |---|---|
-| <img src="docs/assets/webapp/01_public_landing.png" width="430" alt="Public landing"> | <img src="docs/assets/webapp/03_platform_figures.png" width="430" alt="Protected Figures tab"> |
-
-| Analyze tab | Tutorial tab |
-|---|---|
-| <img src="docs/assets/webapp/02_platform_analyze.png" width="430" alt="Protected Analyze tab"> | <img src="docs/assets/webapp/04_platform_tutorial.png" width="430" alt="Protected Tutorial tab"> |
+| <img src="docs/assets/webapp/01_public_landing.png" width="430" alt="Public landing"> | <img src="docs/assets/webapp/02_platform_analyze.png" width="430" alt="Protected Analyze tab"> |
 
 Full description, privacy model and screenshot notes:
 [docs/WEBAPP.md](docs/WEBAPP.md).
-
-## Gallery
-
-<p align="center"><img src="docs/assets/avail_pipeline.png" width="860" alt="How AVAIL works: base learners, availability representation, 11 meta-learners, validation core, outputs"></p>
-
-| Method schematic | Availability patterns |
-|---|---|
-| <img src="docs/assets/method_schematic.png" width="430"> | <img src="docs/assets/availability_patterns.png" width="430"> |
-
-<p align="center"><img src="docs/assets/fig8_group_profiles.png" width="880" alt="Group profiles of the top differential features (HC / MCI / PDD), individual subjects shown"></p>
-
-| Per-class performance | Effect sizes |
-|---|---|
-| <img src="docs/assets/fig7_per_class_auc.png" width="420"> | <img src="docs/assets/fig9_effect_sizes.png" width="420"> |
-
-<p align="center"><img src="docs/assets/avail_architecture.png" width="880" alt="AVAIL system architecture: data layer, availability-aware core, strategy layer, outputs, validation wrap, bring-your-own-compute interfaces"></p>
 
 ## Install the Python package
 
@@ -207,7 +178,7 @@ and the AI advisor report (with PubMed literature).
 
 Soft-palette, publication-ready figures from the package:
 
-Current reference gallery: [Fig. 1–4](viz/). The package API still exposes
+The package API exposes
 `network`, `roc`, `availability`, `umap`, `volcano`, `forest`, and module-aware
 network figures; the application-specific examples are kept outside the wheel.
 
@@ -229,24 +200,10 @@ correlation.
 
 Also included: UMAP/PCA, volcano and forest plots. Correlations: `sparcc`
 (CLR approximation), `spearman` or `pearson`. Full gallery:
-https://busdel.github.io/avail-cloud-runner/viz/
 
 **Module-aware network** — automatic community detection, per-module panels
 or `--combined` single view with cross-module edges, hub highlighting,
 taxonomy colouring and a `cross_module_edges.tsv` export.
-
-## Current reference figures (CMPB)
-
-| Figure 1 · Architecture | Figure 2 · Cohort roles |
-|---|---|
-| <img src="docs/assets/viz/figure_architecture.png" width="430"> | <img src="docs/assets/viz/figure_dataset_roles.png" width="430"> |
-
-| Figure 3 · Performance | Figure 4 · Failure / coverage audit |
-|---|---|
-| <img src="docs/assets/viz/figure_performance.png" width="430"> | <img src="docs/assets/viz/figure_failure_audit.png" width="430"> |
-
-Full gallery: https://busdel.github.io/avail-cloud-runner/viz/
-Source table: [`validation_suite.tsv`](docs/assets/viz/validation_suite.tsv).
 
 ## R interoperability
 
