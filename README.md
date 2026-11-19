@@ -125,6 +125,12 @@ biological interpretation belongs to the application-specific analysis; this rep
 uses the same verified cohort to exercise the command line, figures, report
 and R export end to end.
 
+## Reviewer demo
+
+A static preview of the analysis workspace, Dr. AVAIL chat and Imageomics view
+is available at [demo/](demo/). It links to the password-protected workspace;
+the public page does not accept uploads.
+
 ## Web platform
 
 The public landing is static and accepts no data:
