@@ -129,6 +129,11 @@ biological interpretation belongs to the application-specific analysis; this rep
 uses the same verified cohort to exercise the command line, figures, report
 and R export end to end.
 
+## Biological study figures
+
+Revised biological reference figures (study design, staging, biomarkers,
+validation, mechanism, ecology): [biology/](biology/).
+
 ## Web platform
 
 The public landing is static and accepts no data:
