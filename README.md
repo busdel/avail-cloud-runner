@@ -164,6 +164,10 @@ Full description, privacy model and screenshot notes:
 
 **PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.9.4**, MIT, Python **>=3.9**) &mdash; `pip install avail-omics`
 
+**Release status:** use **1.9.4**. Earlier `1.0.x`–`1.9.2` releases are
+yanked; `1.9.3` remains available as the previous stable release.
+
+
 ```bash
 pip install avail-omics            # core (CPU is fine)
 pip install "avail-omics[deep]"    # + torch, TabNet, TabPFN, TabICL

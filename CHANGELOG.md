@@ -1,3 +1,8 @@
+## 1.9.4
+- Current stable release.
+- Figure outputs use the project palette with PDF/PNG/TIFF exports.
+- Figure and package-interface documentation updated.
+
 ## 1.7.0
 - Selected-module network panels: small, fully labelled per-module networks
   plus a compact cross-module link heatmap.

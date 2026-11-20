@@ -20,7 +20,7 @@ validation evidence.
 ## 2. Python package
 
 ```bash
-pip install avail-omics==1.0.17
+pip install avail-omics==1.9.4
 avail-omics --help
 ```
 
