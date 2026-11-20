@@ -30,11 +30,26 @@ a{color:var(--blue)}.wrap{max-width:1120px;margin:0 auto;padding:22px}
 </div>
 <div class="grid">
  <div class="box"><h2>Research platform</h2><p>Protected reference workspace with documentation, fixed analysis demo and downloadable artifacts.</p><a class="btn" href="https://avail-research-platform.pages.dev/platform">Open platform</a></div>
- <div class="box"><h2>Public CPU demo</h2><p>Fixed de-identified cohort. No login, no uploads, no user data. Opens a rendered job on the free-cloud instance.</p><form method="post" action="https://avail-ai.onrender.com/demo" target="_self" style="display:inline-block"><button class="btn" type="submit">Run public demo</button></form></div>
+ <div class="box"><h2>Public CPU demo</h2><p>Fixed de-identified cohort. No login, no uploads, no user data. Opens a rendered job on the free-cloud instance. One run per minute per browser; the server also rate-limits by IP.</p><form method="post" action="https://avail-ai.onrender.com/demo" target="_self" style="display:inline-block"><button class="btn" type="submit">Run public demo</button></form></div>
  <div class="box"><h2>Reviewer workspace</h2><p>Password-protected Analyze, Dr. AVAIL agent, Imageomics and run-it-yourself views.</p><a class="btn" href="demo/">Open reviewer demo</a></div>
  <div class="box"><h2>Cloud runner demo</h2><p>Original cloud-runner landing, restored as a static demo with package, platform and deployment links.</p><a class="btn alt" href="cloud-runner/">Open cloud runner</a></div>
  <div class="box"><h2>Documentation</h2><p>Datasets, methods, privacy model and reproducible commands.</p><a class="btn alt" href="docs/DATASETS_AND_METHODS.md">Read documentation</a></div>
  <div class="box"><h2>Python package</h2><p>Install the reusable pipeline: <code>pip install -U avail-omics</code> · Python ≥3.9 · v1.9.4.</p><a class="btn alt" href="https://pypi.org/project/avail-omics/">avail-omics on PyPI</a></div>
 </div>
 <div class="footer">AVAIL-AI · research software · no clinical claims · MIT license</div>
-</div></body></html>
+</div><script>
+(function(){
+  var forms=document.querySelectorAll('form[action="https://avail-ai.onrender.com/demo"]');
+  var key='avail_public_demo_last';
+  forms.forEach(function(f){
+    f.addEventListener('submit', function(e){
+      var last=0; try{last=parseInt(localStorage.getItem(key)||'0',10)||0}catch(_){}
+      var wait=60000-(Date.now()-last);
+      if(wait>0){ e.preventDefault(); alert('Please wait '+Math.ceil(wait/1000)+' s before starting another demo.'); return; }
+      try{localStorage.setItem(key,String(Date.now()))}catch(_){}
+      var b=f.querySelector('button'); if(b){ b.disabled=true; b.textContent='Starting demo…'; }
+    });
+  });
+})();
+</script>
+</body></html>

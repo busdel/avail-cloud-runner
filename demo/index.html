@@ -42,4 +42,19 @@ a{color:var(--blue)}.wrap{max-width:1180px;margin:0 auto;padding:22px}
 </div>
 <p style="margin-top:18px"><a class="btn" href="https://taxes-acne-oil-principles.trycloudflare.com">Open live agent demo →</a> <a class="btn alt" href="https://avail-research-platform.pages.dev/platform">Secure workspace</a> <a class="btn alt" href="../">← AVAIL home</a></p>
 <div class="footer">AVAIL-AI · research software · no clinical claims · MIT license</div>
-</div></body></html>
+</div><script>
+(function(){
+  var forms=document.querySelectorAll('form[action="https://avail-ai.onrender.com/demo"]');
+  var key='avail_public_demo_last';
+  forms.forEach(function(f){
+    f.addEventListener('submit', function(e){
+      var last=0; try{last=parseInt(localStorage.getItem(key)||'0',10)||0}catch(_){}
+      var wait=60000-(Date.now()-last);
+      if(wait>0){ e.preventDefault(); alert('Please wait '+Math.ceil(wait/1000)+' s before starting another demo.'); return; }
+      try{localStorage.setItem(key,String(Date.now()))}catch(_){}
+      var b=f.querySelector('button'); if(b){ b.disabled=true; b.textContent='Starting demo…'; }
+    });
+  });
+})();
+</script>
+</body></html>
