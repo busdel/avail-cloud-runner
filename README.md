@@ -131,6 +131,13 @@ The original cloud-runner landing is preserved as a static demo at
 [cloud-runner/](cloud-runner/); it links to the reviewer demo, package and
 deployment documentation without exposing a live compute endpoint.
 
+## Public CPU demo
+
+A fixed, de-identified cohort can be run from the public landing without an
+account or uploads: [Run public CPU demo](https://busdel.github.io/avail-cloud-runner/)
+(button posts to the free-cloud instance). The public demo does not accept
+user data and does not expose the full 11-model/agent workspace.
+
 ## Reviewer demo
 
 A static preview of the analysis workspace, Dr. AVAIL chat and Imageomics view
