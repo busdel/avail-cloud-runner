@@ -41,14 +41,14 @@ missingness handled as data instead of discarded or fabricated.
 5. **Biomarker discovery** &mdash; SHAP importance + differential abundance (Mann&ndash;Whitney, BH-FDR)
 6. **AI advisor** &mdash; model decision, biomarker plausibility with **real PubMed citations**
    (free NCBI E-utilities, no API key), structured interpretation
-7. **Publication figures** &mdash; 600 dpi PDF/PNG + 300 dpi TIFF
+7. **Publication figures** &mdash; PDF plus 600 dpi PNG/TIFF
 
 ### Why it is different
 
 - **Missingness is data, not noise** &mdash; availability flags enter the
   representation; sparse subjects are kept, never imputed away or dropped.
   Subjects with no modality at all are excluded by the public pipeline and
-  reported; the paper's n=147 sensitivity is 0.663 vs 0.690 at rung 5 (Table S19).
+  reported; the reference protocol's n=147 sensitivity is 0.663 vs 0.690 at rung 5.
 - **Leak-free by construction** &mdash; fold-internal preprocessing, meta-level
   leave-one-out, permutation nulls at chance.
 - **Benchmarked, not just built** &mdash; every design choice quantified against
@@ -98,7 +98,7 @@ uncertainty and reproducible software are the contribution.
 
 ## Validation suite and coverage audit
 
-The software paper uses role-separated evidence rather than a leaderboard:
+The reference evaluation uses role-separated evidence rather than a leaderboard:
 
 | Role | Dataset | n | What it tests |
 |---|---|---:|---|
@@ -155,7 +155,7 @@ Full description, privacy model and screenshot notes:
 
 ## Install the Python package
 
-**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.9.4**, MIT, Python 3.10&ndash;3.13) &mdash; `pip install avail-omics`
+**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.9.4**, MIT, Python **>=3.9**) &mdash; `pip install avail-omics`
 
 ```bash
 pip install avail-omics            # core (CPU is fine)
@@ -185,6 +185,23 @@ mydata/
 Outputs: `meta_benchmark_results.tsv`, `per_class_auc.tsv`, `loo_predictions.tsv`,
 `biomarkers_top20_per_modality.tsv`, `diff_abundance_*.tsv`, publication figures,
 and the AI advisor report (with PubMed literature).
+
+## Library interface
+
+The same package is both a CLI and a Python library. Full interface reference:
+[docs/PACKAGE_INTERFACE.md](docs/PACKAGE_INTERFACE.md).
+
+```python
+from avail_omics.generic import run_generic_pipeline
+from avail_omics import viz
+
+run_generic_pipeline("mydata", "results", classes=["HC", "MCI", "PDD"])
+viz.plot_roc_calibration("results")
+viz.plot_availability("mydata")
+```
+
+Standard output includes benchmark tables, per-class AUC, LOO predictions,
+biomarkers/differential abundance, and `fig1`–`fig9` as PDF/PNG/TIFF.
 
 ## Visualization toolkit (v1.9.4)
 
@@ -276,6 +293,7 @@ avail-omics advise  --out results
 | [CHANGELOG.md](CHANGELOG.md) | Release history |
 | [docs/DATASETS_AND_METHODS.md](docs/DATASETS_AND_METHODS.md) | Cohort cards, leakage controls, models, factorial designs, limitations |
 | [docs/WEBAPP.md](docs/WEBAPP.md) | Web app tour, privacy model, screenshots |
+| [docs/PACKAGE_INTERFACE.md](docs/PACKAGE_INTERFACE.md) | CLI, Python API, output contract, figure exports |
 
 ## Data & tools
 
