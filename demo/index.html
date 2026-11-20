@@ -22,8 +22,10 @@ a{color:var(--blue)}.wrap{max-width:1180px;margin:0 auto;padding:22px}
 </div>
 <div class="note"><b>Reviewer access:</b> credentials are provided through the authorized reviewer channel. This entry page does not accept uploads or run models; the live agent and workspace open from the buttons below.</div>
 <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 14px">
- <a class="btn" href="https://avail-ai.onrender.com/#upload">Run the CPU demo (free cloud) →</a>
- <span style="font-size:12px;color:#5f7185">Opens the free-cloud CPU demo; the workspace may take 30–60 s to wake.</span>
+ <form method="post" action="https://avail-ai.onrender.com/demo" target="_blank" style="display:inline-block;margin:0 8px 0 0">
+ <button class="btn" type="submit">Run the CPU demo (free cloud) →</button>
+</form>
+ <span style="font-size:12px;color:#5f7185">Starts the fixed CPU demo directly on the free-cloud instance; it may take 30–60 s to wake.</span>
 </div>
 <div class="grid">
  <div class="card"><img src="../docs/assets/webapp/02_platform_analyze.png" alt="Analyze tab with reference benchmark"><h2>Analyze</h2><p>Fixed reference benchmark, example report and the full-pipeline output description.</p></div>
