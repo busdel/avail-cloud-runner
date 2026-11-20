@@ -22,6 +22,17 @@ Every subject with at least one modality contributes to the model &mdash; no com
 
 ---
 
+## At a glance
+
+| | |
+|---|---|
+| Current package | **avail-omics 1.9.4** on PyPI |
+| Python | >=3.9 |
+| Public demo | fixed de-identified CPU demo; no login/upload |
+| Reviewer workspace | password-protected Analyze, Dr. AVAIL, Imageomics |
+| Docs | [datasets/methods](docs/DATASETS_AND_METHODS.md), [package interface](docs/PACKAGE_INTERFACE.md), [web app](docs/WEBAPP.md) |
+| Citation | [CITATION.cff](CITATION.cff) |
+
 ## What is AVAIL-AI?
 
 A framework for multimodal clinical cohorts with **missing modalities**. Built for the

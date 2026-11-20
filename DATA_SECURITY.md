@@ -3,8 +3,7 @@
 **Zero telemetry.** The AVAIL software contains no analytics, no tracking,
 no accounts and no phone-home of any kind. Every outbound network call it
 can make is listed below, together with what is sent and how to switch it
-off. Audited for v1.0.3; the audit is one `grep` away (see *Verify it
-yourself*).
+off. The outbound-call inventory was last audited at v1.0.3; verify it against the installed release (the audit is one `grep` away; see *Verify it yourself*). Current package: v1.9.4.
 
 ## Complete outbound-call inventory
 

@@ -1,15 +1,16 @@
 # Reviewer quick start
 
-This repository accompanies two companion manuscripts on availability-aware
-multimodal learning for incomplete clinical cohorts. The guide below gives a
-short, reproducible path through the software, the live interface, and the
-validation evidence.
+This repository supports the AVAIL software and its reference evaluation for
+availability-aware multimodal learning with incomplete cohorts. The guide
+below gives a short, reproducible path through the package, the public demo,
+the reviewer workspace, and the validation evidence.
 
 ## 1. Live interface
 
 - Landing page: **https://busdel.github.io/avail-cloud-runner/**
-  (redirects to the current live session; access credentials are provided in
-  the cover letter and should not be posted publicly).
+- Public CPU demo: run the fixed de-identified cohort from the landing page.
+- Reviewer workspace: password-protected; credentials are provided through the
+  authorized access channel and are not stored in this repository.
 - The hosted instance runs only the **fixed, de-identified demo** on the
   server. User-uploaded jobs run on the free cloud runner, the local runner,
   or a user-owned worker; `AVAIL_ALLOW_SERVER_RUN=0` is the default.
@@ -67,7 +68,7 @@ utilities, radiomics utilities and the worker.
 - Raw patient data cannot be shared. The live demo uses a fixed,
   de-identified cohort excerpt.
 - The public pipeline excludes subjects with **no modality at all** and reports
-  the count; the manuscript also reports the n=147 sensitivity for this
+  the count; the reference protocol also reports the n=147 sensitivity for this
   exclusion (0.663 vs 0.690 at rung 5).
 - External cohorts are independent public datasets; the ds004392 imaging-only
   result is reported as no detectable transfer, not as anti-learning.
@@ -82,6 +83,7 @@ utilities, radiomics utilities and the worker.
 - [DATA_SECURITY.md](DATA_SECURITY.md) — outbound-call inventory and offline mode
 - [WORKER.md](WORKER.md) — attaching a user-owned worker
 - [IMAGING_ADAPTER.md](IMAGING_ADAPTER.md) — DICOM/NIfTI to connectivity/radiomics
+- [docs/PACKAGE_INTERFACE.md](docs/PACKAGE_INTERFACE.md) — CLI/Python API and output contract
 
 ## 8. Contact
 
