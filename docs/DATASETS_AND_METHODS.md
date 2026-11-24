@@ -1,6 +1,6 @@
 # Datasets and methods (AVAIL)
 
-This document is the reviewer-facing data and method supplement. It describes
+This document is the data and method supplement. It describes
 what each cohort contributes, how the pipeline is fit, and where leakage
 controls sit. It is intentionally aggregate-level; no subject-level clinical
 data are redistributed.

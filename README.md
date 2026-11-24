@@ -28,7 +28,7 @@ Every subject with at least one modality contributes to the model &mdash; no com
 | Current package | **avail-omics 1.9.4** on PyPI |
 | Python | >=3.9 |
 | Public demo | fixed de-identified CPU demo; no login/upload |
-| Public demo | fixed CPU demo + illustrative Analyze/Dr. AVAIL/Imageomics |
+| Public demo | static demo preview; compute stays local |
 | Docs | [datasets/methods](docs/DATASETS_AND_METHODS.md), [package interface](docs/PACKAGE_INTERFACE.md), [web app](docs/WEBAPP.md) |
 | Citation | [CITATION.cff](CITATION.cff) |
 
