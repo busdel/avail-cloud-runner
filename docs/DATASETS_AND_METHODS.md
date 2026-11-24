@@ -7,13 +7,12 @@ data are redistributed.
 
 ## 1. Role-separated cohorts
 
-| Role | Cohort | n | Purpose |
-|---|---|---:|---|
-| Anchor | MetaCardis | 1087 (complete-case 536) | reproduction and natural informative missingness |
-| Independent replication | HMP2 / IBD | 131 (complete-block 82) | different disease and block missingness |
-| Imaging failure mode | OpenNeuro ds004392 | 53 with imaging | imaging-only transfer / failure audit |
-| Companion application | AVAIL cohort | 150 (147 with >=1 modality) | end-to-end software use; no new biology |
-| Coverage audit | OpenNeuro ds004856 | 295 labelled (complete-case 60) | complete-case bias only; no performance claim |
+| Cohort | n | Purpose |
+|---|---:|---|
+| **MetaCardis** | 1087 (complete-case 536) | reproduction and natural informative missingness |
+| **AVAIL cohort** | 150 (147 with >=1 modality) | end-to-end software use; no new biology |
+| **OpenNeuro ds004392** | 53 with imaging | imaging-only transfer / failure audit |
+| **OpenNeuro ds004856** | 295 labelled (complete-case 60) | complete-case bias only; no performance claim |
 
 ### MetaCardis
 - Role: anchor cohort; six modalities.
@@ -22,15 +21,6 @@ data are redistributed.
 - The complete-case arm is a separately trained model on the complete subjects.
 - Source/access: MetaCardis consortium data; access conditions apply. The
   repository does not redistribute raw subject data.
-
-### HMP2 / IBD
-- Role: independent disease replication and block-missingness test.
-- `n=131`; taxa 130, pathways 104, proteomics 89; complete-block subset 82.
-- Three blocks (taxa, pathways, proteomics), natural block missingness.
-- The 11-model all-available run and a separately trained complete-block
-  11-model arm are kept distinct.
-- Source/access: HMP2 / IBD Multi'omics Database portal; public data access
-  conditions apply. Derived aggregate tables only are included here.
 
 ### OpenNeuro ds004392
 - Role: imaging-only failure audit; not a performance-validation cohort.
@@ -104,9 +94,7 @@ the reference protocol also reports the n=147 sensitivity.
 - Fold-internal feature selection, imputation, scaling and weighting.
 - Full-pipeline label permutation tests; observed AUC is compared with the
   permutation null.
-- Complete-case comparators are separately trained where reported. For HMP2,
-  the original "complete" subgroup was not a separate training arm; the
-  revised complete-arm results are in `hmp2_complete_11model/`.
+- Complete-case comparators are separately trained where reported.
 - Binary imaging audit: repeated stratified nested CV (5-fold outer, 3-fold
   inner), age/sex residualization inside each outer training fold, and 100
   label permutations.
@@ -153,8 +141,6 @@ the reference protocol also reports the n=147 sensitivity.
   scripts under `02_MAKALE2/figur_scriptleri/`.
 
 ## 4. Limitations
-- HMP2 is a difficult external replication; the 11-model mean is 0.633 and
-  the paired all-vs-complete difference has a CI crossing zero.
 - ds004392 has only five PDD cases; binary PDD signals are exploratory.
 - ds004856 has zero positive complete cases; it cannot support a performance
   claim.

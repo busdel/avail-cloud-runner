@@ -64,13 +64,11 @@ missingness handled as data instead of discarded or fabricated.
   leave-one-out, permutation nulls at chance.
 - **Benchmarked, not just built** &mdash; every design choice quantified against
   14 missing-data strategies and 11 meta-learners.
-- **Role-separated public evidence** &mdash; MetaCardis anchor (n=1087;
-  reproduction + coverage), HMP2/IBD independent replication (n=131;
-  complete-block subset), and OpenNeuro ds004392 imaging failure-mode (n=53;
-  no detectable transfer). The companion cohort (n=150) is an end-to-end
-  application check; Wallen 2022, preclinical AD and the label-free
-  reconstruction belong to the application-specific analysis. A public coverage audit
-  (ds004856) is reported separately (see below), not as a performance claim.
+- **Role-separated public evidence** &mdash; **MetaCardis** (n=1087;
+  reproduction + coverage), **AVAIL cohort** (n=150; application check),
+  **OpenNeuro ds004392** (n=53; imaging-only failure audit), and
+  **OpenNeuro ds004856** (n=295 labelled; coverage audit). ds004856 is not a
+  performance claim.
 - **Group-aware readouts** &mdash; every run reports HC / MCI / PDD breakdowns:
   coverage by group, per-class one-vs-rest AUC, and group profiles of the top
   differential features (with individual subjects shown).
@@ -88,36 +86,33 @@ See [docs/DATASETS_AND_METHODS.md](docs/DATASETS_AND_METHODS.md) for definitions
 | Comparison | Result | Reading |
 |---|---|---|
 | MetaCardis paired ΔAUC | −0.003 [−0.009, 0.002] | no difference |
-| HMP2 paired ΔAUC | +0.050 [−0.011, 0.114] | interval crosses zero |
 | AVAIL application paired ΔAUC | +0.014 [−0.107, 0.122] | inconclusive |
 | AVAIL HC vs PDD | 0.850 all / 0.795 complete | dedicated binary contrast |
 | ds004392 3-class | 0.386 | imaging-only failure audit |
 | ds004392 binary PDD vs rest | 0.850–0.900, exploratory | 5 PDD cases; not validation |
 
-The take-home message is **coverage and honest failure reporting**, not a
-state-of-the-art 3-class leaderboard. Availability flags, calibrated
-uncertainty and reproducible software are the contribution.
+The take-home message is **coverage, role-separated validation and honest
+failure reporting**, not a state-of-the-art 3-class leaderboard. The software
+and reproducible evaluation protocol are the contribution.
 
 ### Limitations
 
-- HMP2 is a difficult replication; its paired interval crosses zero.
 - ds004392 has only five PDD cases; binary PDD results are exploratory.
 - ds004856 has zero positive complete cases; it is a coverage audit only.
 - The AVAIL cohort is an application/regression check, not external validation.
-- The factorial grid across all cohorts is still being completed; see the
-  research package Table S24 before using the grid.
+- Factorial-grid evidence is reported for the active cohorts; archived
+  cross-disease analyses are not part of the current scope.
 
 ## Validation suite and coverage audit
 
 The reference evaluation uses role-separated evidence rather than a leaderboard:
 
-| Role | Dataset | n | What it tests |
-|---|---|---:|---|
-| Anchor | MetaCardis | 1087 (CC 536) | natural, informative missingness |
-| Independent replication | HMP2 / IBD | 131 (complete 82) | different disease; block missingness |
-| Imaging failure mode | OpenNeuro ds004392 | 53 | imaging-only transfer; failure handling |
-| Companion application | AVAIL cohort | 150 | end-to-end software use; no new biology |
-| Coverage audit | OpenNeuro ds004856 | 295 labeled | complete-case bias only |
+| Cohort | n | What it tests |
+|---|---:|---|
+| **MetaCardis** | 1087 (CC 536) | natural, informative missingness |
+| **AVAIL cohort** | 150 | end-to-end software use; no new biology |
+| **OpenNeuro ds004392** | 53 | imaging-only transfer; failure handling |
+| **OpenNeuro ds004856** | 295 labeled | complete-case bias only |
 
 The **ds004856 coverage audit** is intentionally not a performance result.
 Its processed OpenNeuro tables contain 295 amyloid-labeled subjects, but the
@@ -323,8 +318,6 @@ External datasets and methods used by the platform and the demo:
 
 - **OpenNeuro ds004392** — Wylie KP et al., *Parkinson's disease, functional
   connectivity, and cognition* (CC0) — [DOI 10.18112/openneuro.ds004392.v1.0.2](https://doi.org/10.18112/openneuro.ds004392.v1.0.2)
-- **OpenNeuro ds005892** — Kemp AS et al., *Resting-state MRI from HC, PD-NC
-  and PD-MCI cohorts* (CC0) — [DOI 10.18112/openneuro.ds005892.v1.0.0](https://doi.org/10.18112/openneuro.ds005892.v1.0.0)
 - **Schaefer atlas** — [DOI 10.1093/cercor/bhx179](https://doi.org/10.1093/cercor/bhx179)
 - **Nilearn** — [DOI 10.3389/fninf.2014.00014](https://doi.org/10.3389/fninf.2014.00014) ·
   **AFNI** — [DOI 10.1006/cbmr.1996.0014](https://doi.org/10.1006/cbmr.1996.0014) ·
