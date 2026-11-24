@@ -71,7 +71,7 @@ missingness handled as data instead of discarded or fabricated.
 - **Group-aware readouts** &mdash; every run reports HC / MCI / PDD breakdowns:
   coverage by group, per-class one-vs-rest AUC, and group profiles of the top
   differential features (with individual subjects shown).
-- **Yours to run** &mdash; free cloud, local runner, self-hosted, or your own
+- **Yours to run** &mdash; local runner, self-hosted, Docker/Colab, or your own
   server. Raw data is never sent to AI providers or used for model training;
   user jobs run on the compute you choose. The local-runner
   bundle can also act as a worker (`python run_me.py --serve`) so the web page
@@ -134,13 +134,6 @@ and R export end to end.
 
 The original cloud-runner landing is preserved as a static demo at
 [cloud-runner/](cloud-runner/); it links to the public demo, package and deployment documentation.
-
-## Public CPU demo
-
-A fixed, de-identified cohort can be run from the public landing without an
-account or uploads: [Run public CPU demo](https://busdel.github.io/avail-cloud-runner/)
-(button posts to the free-cloud instance). The public demo does not accept
-user data and does not expose the full 11-model/agent workspace.
 
 ## Public demo
 
@@ -249,8 +242,7 @@ Writes phyloseq-ready `otu_table.tsv`, `sample_data.tsv`, `tax_table.tsv`,
 
 ## Research platform and own-data analysis
 
-- **Public overview:** https://avail-research-platform.pages.dev/ &mdash; static
-  introduction; **no uploads, no public compute**.
+- **Public overview:** https://busdel.github.io/avail-cloud-runner/ &mdash; static introduction; **no uploads, no public compute**.
 - **Canonical project page:** https://busdel.github.io/avail-cloud-runner/
 - **Own data:** install the package, use the local runner, Docker, Colab or your
   own worker. See [BYO_COMPUTE.md](BYO_COMPUTE.md) (four deployment tiers),
