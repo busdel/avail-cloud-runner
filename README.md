@@ -7,7 +7,6 @@
 Every subject with at least one modality contributes to the model &mdash; no complete-case discard; all-missing subjects are explicitly reported.</p>
 
 <p align="center"><b>Authors:</b> Busranur Delice &middot; Ahmet Kaplan <i>(corresponding)</i> &middot; Suleyman Yildirim <i>(corresponding)</i></p>
-<p align="center"><a href="https://avail-research-platform.pages.dev/platform"><b>Open the password-protected research platform</b></a></p>
 
 <p align="center">
   <a href="https://pypi.org/project/avail-omics/"><img src="https://img.shields.io/pypi/v/avail-omics?color=0e7490" alt="PyPI"></a>
@@ -29,7 +28,7 @@ Every subject with at least one modality contributes to the model &mdash; no com
 | Current package | **avail-omics 1.9.4** on PyPI |
 | Python | >=3.9 |
 | Public demo | fixed de-identified CPU demo; no login/upload |
-| Reviewer workspace | password-protected Analyze, Dr. AVAIL, Imageomics |
+| Public demo | fixed CPU demo + illustrative Analyze/Dr. AVAIL/Imageomics |
 | Docs | [datasets/methods](docs/DATASETS_AND_METHODS.md), [package interface](docs/PACKAGE_INTERFACE.md), [web app](docs/WEBAPP.md) |
 | Citation | [CITATION.cff](CITATION.cff) |
 
@@ -134,8 +133,7 @@ and R export end to end.
 ## Cloud runner demo
 
 The original cloud-runner landing is preserved as a static demo at
-[cloud-runner/](cloud-runner/); it links to the reviewer demo, package and
-deployment documentation without exposing a live compute endpoint.
+[cloud-runner/](cloud-runner/); it links to the public demo, package and deployment documentation.
 
 ## Public CPU demo
 
@@ -144,26 +142,11 @@ account or uploads: [Run public CPU demo](https://busdel.github.io/avail-cloud-r
 (button posts to the free-cloud instance). The public demo does not accept
 user data and does not expose the full 11-model/agent workspace.
 
-## Reviewer demo
+## Public demo
 
-A static preview of the analysis workspace, Dr. AVAIL chat and Imageomics view
-is available at [demo/](demo/). It links to the password-protected workspace;
-the public page does not accept uploads.
-
-## Web platform
-
-The public landing is static and accepts no data:
-https://avail-research-platform.pages.dev/
-
-The protected workspace contains the reference figures, documentation and
-fixed Analyze demo. Credentials are shared through the authorized
-access channel; the public repository does not contain them.
-
-| Public landing | Analyze tab |
-|---|---|
-| <img src="docs/assets/webapp/01_public_landing.png" width="430" alt="Public landing"> | <img src="docs/assets/webapp/02_platform_analyze.png" width="430" alt="Protected Analyze tab"> |
-
-Full description, privacy model and screenshot notes:
+A fixed, de-identified CPU demo is available at [demo/](demo/). It accepts no
+account and no uploads; user data stays in the package, local runner,
+Docker/Colab or a user-owned worker. Screenshots and the privacy model are in
 [docs/WEBAPP.md](docs/WEBAPP.md).
 
 ## Install the Python package
@@ -268,16 +251,10 @@ Writes phyloseq-ready `otu_table.tsv`, `sample_data.tsv`, `tax_table.tsv`,
 
 - **Public overview:** https://avail-research-platform.pages.dev/ &mdash; static
   introduction; **no uploads, no public compute**.
-- **Protected workspace:** https://avail-research-platform.pages.dev/platform
-  &mdash; password-protected reference analysis, documentation, Dr. AVAIL,
-  Imageomics and downloadable artifacts. Credentials are shared through the
-  authorized access channel, not in this repository.
 - **Canonical project page:** https://busdel.github.io/avail-cloud-runner/
 - **Own data:** install the package, use the local runner, Docker, Colab or your
   own worker. See [BYO_COMPUTE.md](BYO_COMPUTE.md) (four deployment tiers),
   [DATA_SECURITY.md](DATA_SECURITY.md) and [WORKER.md](WORKER.md).
-- **Reviewers:** start with [REVIEWER_GUIDE.md](REVIEWER_GUIDE.md); the
-  access details are provided to authorized collaborators.
 
 Imaging is first-class: raw rs-fMRI and T1 volumes are processed end-to-end
 (Schaefer-100 connectivity + optional radiomics) on **your** machine &mdash; see

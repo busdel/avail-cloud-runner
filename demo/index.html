@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AVAIL-AI · reviewer demo</title>
+<title>AVAIL-AI · public demo</title>
 <style>
 :root{--ink:#10263d;--muted:#5f7185;--line:#dbe4ee;--soft:#f5f8fb;--blue:#2E5A87;--teal:#2f7d74;--amber:#B7791F}
 *{box-sizing:border-box}body{margin:0;background:#fbfdff;color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
@@ -16,31 +16,31 @@ a{color:var(--blue)}.wrap{max-width:1180px;margin:0 auto;padding:22px}
 .footer{border-top:1px solid var(--line);margin-top:26px;padding-top:12px;font-size:11px;color:#6b7c8f}
 </style></head><body><div class="wrap">
 <div class="hero">
- <h1>Reviewer demo</h1>
- <p>The reviewer entry point for the analysis workspace, the live Dr. AVAIL chat agent, and the Imageomics view. The live agent is invite-only; the workspace is password-protected.</p>
+ <h1>Public demo</h1>
+ <p>Run the fixed, de-identified CPU demo and preview the analysis workspace, Dr. AVAIL assistant and Imageomics view. No account and no uploads.</p>
  <span class="pill">Fixed demo</span><span class="pill">No uploads</span><span class="pill">Research use only</span><span class="pill">Not a medical device</span>
 </div>
-<div class="note"><b>Reviewer access:</b> credentials are provided through the authorized reviewer channel. This entry page does not accept uploads or run models; the live agent and workspace open from the buttons below.</div>
+<div class="note"><b>Demo only:</b> the public interface accepts no user data. For your own data use the Python package, local Docker/Colab, or your own worker.</div>
 <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 14px">
  <form method="post" action="https://avail-ai.onrender.com/demo" target="_self" style="display:inline-block;margin:0 8px 0 0">
  <button class="btn" type="submit">Run the CPU demo (free cloud) →</button>
 </form>
- <span style="font-size:12px;color:#5f7185">Starts the fixed CPU demo directly on the free-cloud instance; it may take 30–60 s to wake.</span>
+ <span style="font-size:12px;color:#5f7185">Fixed de-identified cohort; 30–60 s if the free instance is waking.</span>
 </div>
 <div class="grid">
  <div class="card"><img src="../docs/assets/webapp/02_platform_analyze.png" alt="Analyze tab with reference benchmark"><h2>Analyze</h2><p>Fixed reference benchmark, example report and the full-pipeline output description.</p></div>
- <div class="card"><img src="../docs/assets/webapp/05_platform_dr_avail.png" alt="Dr. AVAIL assistant interface"><h2>Dr. AVAIL agent</h2><p>Results-grounded chat: model selection, interpretation, biomarker context and literature-aware discussion.</p></div>
+ <div class="card"><img src="../docs/assets/webapp/05_platform_dr_avail.png" alt="Dr. AVAIL assistant interface"><h2>Dr. AVAIL agent</h2><p>Illustrative assistant view: model selection, interpretation and biomarker context.</p></div>
  <div class="card"><img src="../docs/assets/webapp/06_platform_imageomics.png" alt="Imageomics interface"><h2>Imageomics</h2><p>Imaging context and the rs-fMRI/T1 processing path; real analysis runs on your own compute.</p></div>
  <div class="card"><img src="../docs/assets/webapp/04_platform_tutorial.png" alt="Tutorial tab"><h2>Run it yourself</h2><p>Local package, Docker, Colab and bring-your-own-compute instructions.</p></div>
 </div>
 <div class="chat">
  <h2>Dr. AVAIL — illustrative interaction</h2>
- <div class="q"><b>Reviewer:</b> How should I read the availability-aware vs complete-case comparison?</div>
+ <div class="q"><b>User:</b> How should I read the availability-aware vs complete-case comparison?</div>
  <div class="a"><b>Dr. AVAIL:</b> Treat it as a coverage and stability result, not a claim of universal AUC superiority. The binary cross-cohort figure is the main comparison; the 3-class analysis is supplementary, and the imaging-only cohort is a failure audit.</div>
- <div class="q"><b>Reviewer:</b> What should I check before reusing the framework?</div>
- <div class="a"><b>Dr. AVAIL:</b> Check fold-internal preprocessing, the availability-flag contract, the exact endpoint definition, and the factorial-grid status. The package and documentation provide the reproducible commands and source tables.</div>
+ <div class="q"><b>User:</b> What should I check before reusing the framework?</div>
+ <div class="a"><b>Dr. AVAIL:</b> Check fold-internal preprocessing, the availability contract, the endpoint definition, and the factorial-grid status. The package and documentation provide the reproducible commands and source tables.</div>
 </div>
-<p style="margin-top:18px"><a class="btn" href="https://taxes-acne-oil-principles.trycloudflare.com">Open live agent demo →</a> <a class="btn alt" href="https://avail-research-platform.pages.dev/platform">Secure workspace</a> <a class="btn alt" href="../">← AVAIL home</a></p>
+<p style="margin-top:18px"><a class="btn" href="https://busdel.github.io/avail-cloud-runner/">← AVAIL home</a></p>
 <div class="footer">AVAIL-AI · research software · no clinical claims · MIT license</div>
 </div><script>
 (function(){
