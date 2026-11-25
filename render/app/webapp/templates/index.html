@@ -399,7 +399,7 @@ input layout identical to this platform (metadata.tsv + features/*.tsv) ·
 <div class="section" id="upload">
 <div class="eyebrow">Get started</div>
 <h2 class="sec">{% if demo_only and not public_uploads %}Run the demo{% else %}Upload &amp; validate{% endif %}</h2>
-{% if not (demo_only and not public_uploads) %}
+{% if demo_run or not (demo_only and not public_uploads) %}
 <details style="background:rgba(77,163,255,.07);border:1px solid rgba(77,163,255,.3);border-radius:14px;padding:.6rem 1.1rem;margin-bottom:.8rem;max-width:820px">
  <summary style="cursor:pointer;font-weight:800;font-size:.92rem;padding:.4rem 0">{{ icon('file','ic') }} Data format  -  information notes</summary>
  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1rem;margin:.6rem 0">

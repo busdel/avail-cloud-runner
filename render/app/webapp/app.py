@@ -1302,7 +1302,8 @@ def index():
     return _render("index.html", jobs=_list_jobs(), max_mb=MAX_MB,
                    public_url=_public_url(), demo_bundle=demo_bundle,
                    demo_own=demo_own, server_run=SERVER_RUN,
-                   demo_only=DEMO_ONLY, contact=CONTACT_EMAIL,
+                   demo_only=DEMO_ONLY, demo_run=DEMO_RUN,
+                   contact=CONTACT_EMAIL,
                    public_uploads=PUBLIC_UPLOADS)
 
 
