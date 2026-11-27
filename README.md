@@ -145,10 +145,10 @@ Docker/Colab or a user-owned worker. Screenshots and the privacy model are in
 
 ## Install the Python package
 
-**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.9.4**, MIT, Python **>=3.9**) &mdash; `pip install avail-omics`
+**PyPI: [avail-omics](https://pypi.org/project/avail-omics/)** (latest: **v1.9.5**, MIT, Python **>=3.9**) &mdash; `pip install avail-omics`
 
-**Release status:** use **1.9.4**. Earlier `1.0.x`–`1.9.2` releases are
-yanked; `1.9.3` remains available as the previous stable release.
+**Release status:** use **1.9.5**. Earlier `1.0.x`–`1.9.2` releases are
+yanked; `1.9.3` and `1.9.4` remain available as prior stable releases.
 
 
 ```bash
@@ -197,7 +197,7 @@ viz.plot_availability("mydata")
 Standard output includes benchmark tables, per-class AUC, LOO predictions,
 biomarkers/differential abundance, and `fig1`–`fig9` as PDF/PNG/TIFF.
 
-## Visualization toolkit (v1.9.4)
+## Visualization toolkit (v1.9.5)
 
 Soft-palette, publication-ready figures from the package:
 

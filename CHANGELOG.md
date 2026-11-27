@@ -1,3 +1,7 @@
+## 1.9.5
+- Package metadata lists all three authors and co-maintainers.
+- Figure-output styling and documentation updates.
+
 ## 1.9.4
 - Current stable release.
 - Figure outputs use the project palette with PDF/PNG/TIFF exports.

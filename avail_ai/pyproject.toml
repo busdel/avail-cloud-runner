@@ -4,12 +4,20 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "avail-omics"
-version = "1.9.4"
+version = "1.9.5"
 description = "AVAIL-omics: availability-aware multimodal integration for clinical cohorts with missing modalities."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
-authors = [{ name = "Busranur Delice" }]
+authors = [
+    { name = "Busranur Delice" },
+    { name = "Ahmet Kaplan" },
+    { name = "Suleyman Yildirim" },
+]
+maintainers = [
+    { name = "Busranur Delice" },
+    { name = "Ahmet Kaplan" },
+]
 keywords = ["multimodal", "missing-modality", "microbiome", "neuroimaging",
             "parkinson", "machine-learning", "benchmark", "availability"]
 classifiers = [
