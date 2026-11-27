@@ -7,6 +7,7 @@
 Every subject with at least one modality contributes to the model &mdash; no complete-case discard; all-missing subjects are explicitly reported.</p>
 
 <p align="center"><b>Authors:</b> Busranur Delice &middot; Ahmet Kaplan <i>(corresponding)</i> &middot; Suleyman Yildirim <i>(corresponding)</i></p>
+<p align="center"><a href="https://avail-research-platform.pages.dev/"><b>Research platform</b></a> &middot; <a href="https://busdel.github.io/avail-cloud-runner/demo/"><b>Public demo</b></a> &middot; <a href="https://avail-research-platform.pages.dev/platform"><b>Protected workspace</b></a></p>
 
 <p align="center">
   <a href="https://pypi.org/project/avail-omics/"><img src="https://img.shields.io/pypi/v/avail-omics?color=0e7490" alt="PyPI"></a>
@@ -242,7 +243,7 @@ Writes phyloseq-ready `otu_table.tsv`, `sample_data.tsv`, `tax_table.tsv`,
 
 ## Research platform and own-data analysis
 
-- **Public overview:** https://busdel.github.io/avail-cloud-runner/ &mdash; static introduction; **no uploads, no public compute**.
+- **Research platform:** https://avail-research-platform.pages.dev/ &mdash; static introduction; **no uploads, no public compute**.
 - **Canonical project page:** https://busdel.github.io/avail-cloud-runner/
 - **Own data:** install the package, use the local runner, Docker, Colab or your
   own worker. See [BYO_COMPUTE.md](BYO_COMPUTE.md) (four deployment tiers),
