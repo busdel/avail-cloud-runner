@@ -7,7 +7,7 @@
 Every subject with at least one modality contributes to the model &mdash; no complete-case discard; all-missing subjects are explicitly reported.</p>
 
 <p align="center"><b>Authors:</b> Busranur Delice &middot; Ahmet Kaplan <i>(corresponding)</i> &middot; Suleyman Yildirim <i>(corresponding)</i></p>
-<p align="center"><a href="https://avail-research-platform.pages.dev/"><b>Research platform</b></a> &middot; <a href="https://busdel.github.io/avail-cloud-runner/demo/"><b>Public demo</b></a></p>
+<p align="center"><a href="https://avail-research-platform.pages.dev/"><b>Research platform</b></a> &middot; <a href="https://busdel.github.io/avail-cloud-runner/demo/"><b>Public demo</b></a> &middot; <a href="https://pypi.org/project/avail-omics/"><b>PyPI package</b></a></p>
 
 <p align="center">
   <a href="https://pypi.org/project/avail-omics/"><img src="https://img.shields.io/pypi/v/avail-omics?color=0e7490" alt="PyPI"></a>
